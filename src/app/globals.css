@@ -1,0 +1,37 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: theme("colors.ink.950");
+  color: theme("colors.white");
+}
+
+/* Простая типографика для юридических страниц (политика, согласие) */
+.legal-content h2 {
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: theme("colors.white");
+}
+
+.legal-content p {
+  margin-bottom: 0.75rem;
+  line-height: 1.7;
+}
+
+.legal-content ul {
+  margin-bottom: 0.75rem;
+  padding-left: 1.25rem;
+  list-style-type: disc;
+}
+
+.legal-content li {
+  margin-bottom: 0.25rem;
+  line-height: 1.6;
+}
