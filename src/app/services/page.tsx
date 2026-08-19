@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { services } from "@/lib/site-config";
 import { FinalCTA } from "@/components/home/FinalCTA";
+import { RepairVariants } from "@/components/home/RepairVariants";
+import { GearboxPricing } from "@/components/home/GearboxPricing";
 import { TiltCard } from "@/components/ui/TiltCard";
 
 export const metadata: Metadata = {
@@ -45,6 +47,8 @@ export default function ServicesPage() {
           </div>
         </div>
       </section>
+      <RepairVariants />
+      <GearboxPricing />
       <FinalCTA />
     </>
   );

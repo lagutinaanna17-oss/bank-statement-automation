@@ -6,11 +6,16 @@
 // Перед запуском в production замените их на настоящие (чек-лист — в README).
 
 import type {
+  AdvantageItem,
   Brand,
   CaseItem,
   FaqItem,
+  GearboxPriceItem,
+  RepairVariant,
   ReviewItem,
   ServiceItem,
+  StatItem,
+  SymptomItem,
   WorkStage,
 } from "./types";
 
@@ -279,4 +284,95 @@ export const trustBadges = [
   { label: "лет на рынке", value: `${company.yearsOnMarket}+` },
   { label: "отремонтированных коробок", value: `${company.gearboxesRepaired}+` },
   { label: "года гарантии", value: `до ${company.warrantyYears}` },
+];
+
+// Цены по конкретным моделям коробок — ориентир, актуальная цена всегда
+// определяется после бесплатной дефектовки.
+export const gearboxPricing: GearboxPriceItem[] = [
+  { code: "JF010E", generation: "1-е поколение", localRepairFrom: 13000, fullRepairFrom: 60000, overhaulFrom: 130000 },
+  { code: "JF011E", generation: "1-е поколение", localRepairFrom: 8000, fullRepairFrom: 45000, overhaulFrom: 95000 },
+  { code: "JF015E", generation: "1-е поколение", localRepairFrom: 8000, fullRepairFrom: 42000, overhaulFrom: 90000 },
+  { code: "JF016E", generation: "2-е поколение", localRepairFrom: 8000, fullRepairFrom: 55000, overhaulFrom: 140000 },
+  { code: "JF017E", generation: "2-е поколение", localRepairFrom: 13000, fullRepairFrom: 60000, overhaulFrom: 150000 },
+  { code: "K313 / K111", generation: "Toyota K3", localRepairFrom: 10000, fullRepairFrom: 40000, overhaulFrom: 100000 },
+];
+
+export const repairVariants: RepairVariant[] = [
+  {
+    title: "Профилактический ремонт",
+    description: "Плановое обслуживание без замены силовых узлов — предотвращает развитие серьёзной неисправности.",
+    works: [
+      "Снятие и разбор вариатора",
+      "Мойка и дефектовка узлов",
+      "Замена сальников и уплотнений",
+      "Замена масляного фильтра",
+      "Замена трансмиссионного масла",
+    ],
+    parts: ["Комплект сальников и уплотнений", "Масляный фильтр", "Трансмиссионное масло"],
+  },
+  {
+    title: "Капитальный ремонт",
+    description: "Полная переборка с заменой всех изношенных силовых элементов — когда профилактики уже недостаточно.",
+    works: [
+      "Полная разборка и дефектовка",
+      "Замена ремня/цепи и конусов",
+      "Замена или ремонт гидроблока",
+      "Замена подшипников и втулок",
+      "Замена масляного насоса",
+      "Сборка и обкатка на стенде",
+    ],
+    parts: ["Ремень/цепь вариатора", "Конусы", "Гидроблок", "Масляный насос", "Комплект подшипников"],
+  },
+];
+
+export const symptoms: SymptomItem[] = [
+  {
+    title: "Гул или шум при движении",
+    priceFrom: 8000,
+    priceTo: 74000,
+    description: "Часто связано с износом подшипников на конусах или потерей свойств масла. Требует диагностики для точной причины.",
+  },
+  {
+    title: "Машина не едет вперёд",
+    priceFrom: 37000,
+    priceTo: 74000,
+    description: "Возможен обрыв элемента планетарного ряда. Точная стоимость — после дефектовки.",
+  },
+  {
+    title: "Машина не едет ни вперёд, ни назад",
+    priceFrom: 94000,
+    priceTo: 150000,
+    description: "Часто связано с обрывом ремня или разрушением гидротрансформатора — серьёзная неисправность.",
+  },
+  {
+    title: "Рывки и пробуксовка при разгоне",
+    priceFrom: 14000,
+    priceTo: 120000,
+    description: "От банальной замены масла до пробуксовки ремня относительно конуса — диапазон причин широкий.",
+  },
+];
+
+export const advantages: AdvantageItem[] = [
+  { title: "Специализация именно на CVT", description: "Не универсальный автосервис, а фокус на вариаторах и их особенностях." },
+  { title: "Опыт на рынке", description: `Работаем более ${company.yearsOnMarket} лет, знаем типовые болезни каждой модели.` },
+  { title: "Прозрачная смета", description: "Показываем цену после дефектовки и не меняем её без вашего согласия." },
+  { title: "Гарантия на ремонт", description: `До ${company.warrantyYears} лет без ограничения пробега.` },
+  { title: "Ремонт, а не замена на контрактную", description: "Восстанавливаем узел с новыми деталями вместо непроверенной б/у коробки." },
+  { title: "Можно присутствовать при ремонте", description: "Дефектовка и сборка — при вас, если это важно." },
+];
+
+// ДЕМО — вымышленный руководитель для примера блока доверия.
+// Заменить на реального человека, его фото и подпись перед запуском.
+export const founder = {
+  name: "[Имя Фамилия] — заменить на реального руководителя",
+  role: `Основатель ${company.brandName}`,
+  quote: "Мы ремонтируем вариаторы, а не меняем их на «кота в мешке» — контрактную коробку без истории.",
+  bio: "Текст о руководителе и истории компании — заменить на реальный перед запуском.",
+};
+
+export const extraStats: StatItem[] = [
+  { value: `${company.yearsOnMarket}+`, label: "лет практического опыта" },
+  { value: `${company.gearboxesRepaired}+`, label: "отремонтированных вариаторов" },
+  { value: "1", label: "минимум обслуживаем автомобилей в день" },
+  { value: `до ${company.warrantyYears}`, label: "года гарантии на ремонт" },
 ];

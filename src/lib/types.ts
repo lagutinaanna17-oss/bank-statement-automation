@@ -88,3 +88,38 @@ export interface WorkStage {
   title: string;
   description: string;
 }
+
+/** Цены ремонта по конкретной модели коробки (для страницы услуг/цен). */
+export interface GearboxPriceItem {
+  code: string;
+  generation: string;
+  localRepairFrom: number;
+  fullRepairFrom: number;
+  overhaulFrom: number;
+}
+
+/** Вариант ремонта (профилактический / капитальный) с составом работ. */
+export interface RepairVariant {
+  title: string;
+  description: string;
+  works: string[];
+  parts: string[];
+}
+
+/** Симптом неисправности с ориентировочной вилкой цены ремонта. */
+export interface SymptomItem {
+  title: string;
+  priceFrom: number;
+  priceTo: number;
+  description: string;
+}
+
+export interface AdvantageItem {
+  title: string;
+  description: string;
+}
+
+export interface StatItem {
+  value: string;
+  label: string;
+}
