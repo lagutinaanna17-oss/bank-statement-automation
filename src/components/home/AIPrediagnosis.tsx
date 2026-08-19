@@ -53,7 +53,7 @@ export function AIPrediagnosis() {
           <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-electric" />
           Только у нас
         </span>
-        <h2 className="mt-3 text-2xl font-bold text-white sm:text-3xl">ИИ-предиагностика</h2>
+        <h2 className="mt-3 text-2xl font-bold text-ink-deep sm:text-3xl">ИИ-предиагностика</h2>
         <p className="mt-2 text-sm text-ink-600">
           Опишите, что происходит с коробкой своими словами — например,
           «дёргается на разгоне» или «воет на 60 км/ч». Мы подскажем вероятную
@@ -68,7 +68,7 @@ export function AIPrediagnosis() {
             rows={4}
             required
             minLength={10}
-            className="w-full rounded-xl border border-ink-600 bg-ink-800 px-4 py-3 text-base text-white placeholder:text-ink-600 focus:border-electric focus:outline-none"
+            className="w-full rounded-xl border border-ink-600 bg-ink-800 px-4 py-3 text-base text-ink-deep placeholder:text-ink-600 focus:border-electric focus:outline-none"
           />
 
           <Honeypot value={honeypot} onChange={setHoneypot} name="prediagnosis_website" />
@@ -92,7 +92,7 @@ export function AIPrediagnosis() {
 
         {status === "done" && result && (
           <div className="glass mt-6 rounded-xl p-5 shadow-depth">
-            <p className="text-sm font-semibold text-white">Вероятные причины:</p>
+            <p className="text-sm font-semibold text-ink-deep">Вероятные причины:</p>
             <ul className="mt-2 list-inside list-disc space-y-1 text-sm text-ink-600">
               {result.possibleCauses.map((cause) => (
                 <li key={cause}>{cause}</li>

@@ -8,7 +8,7 @@ html {
 
 body {
   background-color: theme("colors.ink.950");
-  color: theme("colors.white");
+  color: theme("colors.ink.deep");
 }
 
 /* Простая типографика для юридических страниц (политика, согласие) */
@@ -17,7 +17,7 @@ body {
   margin-bottom: 0.75rem;
   font-size: 1.25rem;
   font-weight: 700;
-  color: theme("colors.white");
+  color: theme("colors.ink.deep");
 }
 
 .legal-content p {
@@ -41,17 +41,24 @@ body {
 /* Тонкая инженерная сетка-фон — трендовый приём (Vercel/Linear) для ощущения "техничности" */
 .bg-grid {
   background-image:
-    linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    linear-gradient(to right, rgba(11, 20, 36, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(11, 20, 36, 0.06) 1px, transparent 1px);
   background-size: 56px 56px;
   mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 100%);
 }
 
-/* Стеклянная панель (glassmorphism) поверх градиентного/тёмного фона */
+/* Стеклянная панель (glassmorphism) поверх светлого фона */
 .glass {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.72));
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(15, 23, 42, 0.07);
+}
+
+/* Тёмный "бэнд" — подвал и cookie-баннер намеренно остаются тёмными
+   для контраста и якоря на светлой странице. */
+.glass-dark {
+  background: linear-gradient(180deg, rgba(11, 20, 36, 0.97), rgba(11, 20, 36, 0.99));
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
@@ -63,7 +70,7 @@ body {
   border-radius: inherit;
   background: radial-gradient(
     320px circle at var(--glare-x, 50%) var(--glare-y, 50%),
-    rgba(255, 255, 255, 0.08),
+    rgba(255, 107, 53, 0.14),
     transparent 65%
   );
   opacity: 0;
@@ -75,16 +82,17 @@ body {
   opacity: 1;
 }
 
-/* Градиентный текст для акцентных заголовков и цифр */
+/* Градиентный текст для акцентных заголовков и цифр — оба стопа достаточно
+   тёмные, чтобы сохранять контраст на светлом фоне */
 .text-gradient-accent {
-  background: linear-gradient(135deg, #ff6b35 0%, #ffb199 100%);
+  background: linear-gradient(135deg, #ff6b35 0%, #e8384f 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
 .text-gradient-electric {
-  background: linear-gradient(135deg, #2f80ed 0%, #8ecbff 100%);
+  background: linear-gradient(135deg, #2f80ed 0%, #7c3aed 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;

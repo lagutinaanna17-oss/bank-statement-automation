@@ -14,7 +14,7 @@ export function Header() {
   return (
     <header className="sticky top-0 z-40 border-b border-ink-700/60 bg-ink-950/95 backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
-        <Link href="/" className="text-lg font-bold text-white">
+        <Link href="/" className="text-lg font-bold text-ink-deep">
           {company.brandName}
         </Link>
 
@@ -23,7 +23,7 @@ export function Header() {
             <Link
               key={link.href}
               href={link.href}
-              className="text-sm font-medium text-ink-600 hover:text-white"
+              className="text-sm font-medium text-ink-600 hover:text-ink-deep"
             >
               {link.label}
             </Link>
@@ -31,7 +31,7 @@ export function Header() {
         </nav>
 
         <div className="hidden items-center gap-4 sm:flex">
-          <PhoneReveal className="text-sm font-semibold text-white hover:text-accent" />
+          <PhoneReveal className="text-sm font-semibold text-ink-deep hover:text-accent" />
           <Link
             href="#lead-form"
             className="btn-3d rounded-full bg-accent px-4 py-2 text-sm font-semibold text-white shadow-depth shadow-glow"

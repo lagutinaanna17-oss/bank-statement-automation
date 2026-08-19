@@ -10,7 +10,7 @@ export function FinalCTA() {
       <GlowOrbs variant="section" />
       <div className="relative mx-auto grid max-w-5xl gap-10 lg:grid-cols-2 lg:items-center">
         <div>
-          <h2 className="text-2xl font-bold text-white sm:text-3xl">
+          <h2 className="text-2xl font-bold text-ink-deep sm:text-3xl">
             Запишитесь на бесплатную диагностику
           </h2>
           <p className="mt-3 text-ink-600">
@@ -19,7 +19,7 @@ export function FinalCTA() {
 
           <div className="mt-6 space-y-2 text-sm">
             <p>
-              <PhoneReveal className="text-lg font-semibold text-white hover:text-accent" />
+              <PhoneReveal className="text-lg font-semibold text-ink-deep hover:text-accent" />
             </p>
             <div className="flex gap-4">
               <a href={company.whatsappHref} className="text-electric hover:underline">

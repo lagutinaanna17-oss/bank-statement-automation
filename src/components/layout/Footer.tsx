@@ -4,7 +4,7 @@ import { PhoneReveal } from "./PhoneReveal";
 
 export function Footer() {
   return (
-    <footer className="border-t border-ink-700/60 bg-ink-950 py-10 text-sm text-ink-600">
+    <footer className="border-t border-white/10 bg-ink-deep py-10 text-sm text-white/60">
       <div className="mx-auto grid max-w-7xl gap-8 px-4 sm:px-6 lg:grid-cols-4 lg:px-8">
         <div>
           <p className="text-base font-semibold text-white">{company.brandName}</p>
@@ -56,7 +56,7 @@ export function Footer() {
         </div>
       </div>
 
-      <div className="mx-auto mt-8 max-w-7xl px-4 text-xs text-ink-600 sm:px-6 lg:px-8">
+      <div className="mx-auto mt-8 max-w-7xl px-4 text-xs text-white/40 sm:px-6 lg:px-8">
         © {new Date().getFullYear()} {company.legalName}. Все права защищены.
       </div>
     </footer>

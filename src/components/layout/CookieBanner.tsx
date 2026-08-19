@@ -28,9 +28,9 @@ export function CookieBanner() {
   if (!visible) return null;
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-50 border-t border-ink-700 bg-ink-900/98 px-4 py-4 shadow-lg sm:px-6">
+    <div className="fixed inset-x-0 bottom-0 z-50 border-t border-white/10 bg-ink-deep/98 px-4 py-4 shadow-lg backdrop-blur sm:px-6">
       <div className="mx-auto flex max-w-7xl flex-col items-center gap-3 sm:flex-row sm:justify-between">
-        <p className="text-sm text-ink-600">
+        <p className="text-sm text-white/70">
           Мы используем файлы cookie и сервис Яндекс.Метрика для аналитики и
           улучшения работы сайта. Продолжая пользоваться сайтом, вы
           соглашаетесь с этим. Подробнее —{" "}

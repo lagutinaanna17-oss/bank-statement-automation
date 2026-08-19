@@ -17,7 +17,7 @@ export default function PrivacyPolicyPage() {
   return (
     <section className="px-4 py-16 sm:px-6 lg:px-8">
       <div className="legal-content mx-auto max-w-3xl text-ink-600">
-        <h1 className="text-3xl font-extrabold text-white">Политика конфиденциальности</h1>
+        <h1 className="text-3xl font-extrabold text-ink-deep">Политика конфиденциальности</h1>
         <p>Дата публикации: [дд.мм.гггг]</p>
 
         <h2>1. Общие положения</h2>

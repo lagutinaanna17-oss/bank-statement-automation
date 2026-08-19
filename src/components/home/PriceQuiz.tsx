@@ -51,7 +51,7 @@ export function PriceQuiz() {
     <section id="price-quiz" className="relative overflow-hidden bg-ink-900 px-4 py-16 sm:px-6 lg:px-8">
       <GlowOrbs variant="section" />
       <div className="relative mx-auto max-w-2xl">
-        <h2 className="text-center text-2xl font-bold text-white sm:text-3xl">
+        <h2 className="text-center text-2xl font-bold text-ink-deep sm:text-3xl">
           Узнайте стоимость ремонта за 30 секунд
         </h2>
         <p className="mt-2 text-center text-sm text-ink-600">
@@ -71,7 +71,7 @@ export function PriceQuiz() {
         <div className="glass mt-8 rounded-2xl p-6 shadow-depth-lg">
           {step === 0 && (
             <div>
-              <p className="mb-4 font-semibold text-white">Марка вашего автомобиля</p>
+              <p className="mb-4 font-semibold text-ink-deep">Марка вашего автомобиля</p>
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
                 {brands.map((brand) => (
                   <button
@@ -83,8 +83,8 @@ export function PriceQuiz() {
                     }}
                     className={`btn-3d rounded-xl border px-4 py-3 text-sm font-medium ${
                       brandSlug === brand.slug
-                        ? "border-accent bg-accent/10 text-white shadow-glow"
-                        : "border-ink-600 text-ink-600 hover:border-accent hover:text-white hover:shadow-depth"
+                        ? "border-accent bg-accent/10 text-ink-deep shadow-glow"
+                        : "border-ink-600 text-ink-600 hover:border-accent hover:text-ink-deep hover:shadow-depth"
                     }`}
                   >
                     {brand.name}
@@ -96,7 +96,7 @@ export function PriceQuiz() {
 
           {step === 1 && (
             <div>
-              <p className="mb-4 font-semibold text-white">Что беспокоит?</p>
+              <p className="mb-4 font-semibold text-ink-deep">Что беспокоит?</p>
               <div className="flex flex-col gap-3">
                 {symptoms.map((symptom) => (
                   <button
@@ -108,8 +108,8 @@ export function PriceQuiz() {
                     }}
                     className={`btn-3d rounded-xl border px-4 py-3 text-left text-sm font-medium ${
                       symptomId === symptom.id
-                        ? "border-accent bg-accent/10 text-white shadow-glow"
-                        : "border-ink-600 text-ink-600 hover:border-accent hover:text-white hover:shadow-depth"
+                        ? "border-accent bg-accent/10 text-ink-deep shadow-glow"
+                        : "border-ink-600 text-ink-600 hover:border-accent hover:text-ink-deep hover:shadow-depth"
                     }`}
                   >
                     {symptom.label}
@@ -121,7 +121,7 @@ export function PriceQuiz() {
 
           {step === 2 && (
             <div>
-              <p className="mb-4 font-semibold text-white">Какая услуга нужна?</p>
+              <p className="mb-4 font-semibold text-ink-deep">Какая услуга нужна?</p>
               <div className="flex flex-col gap-3">
                 {services.map((service) => (
                   <button
@@ -133,8 +133,8 @@ export function PriceQuiz() {
                     }}
                     className={`btn-3d rounded-xl border px-4 py-3 text-left text-sm font-medium ${
                       serviceSlug === service.slug
-                        ? "border-accent bg-accent/10 text-white shadow-glow"
-                        : "border-ink-600 text-ink-600 hover:border-accent hover:text-white hover:shadow-depth"
+                        ? "border-accent bg-accent/10 text-ink-deep shadow-glow"
+                        : "border-ink-600 text-ink-600 hover:border-accent hover:text-ink-deep hover:shadow-depth"
                     }`}
                   >
                     {service.title}
@@ -152,7 +152,7 @@ export function PriceQuiz() {
               </p>
               <p className="mt-2 text-center text-xs text-ink-600">
                 Точная цена определяется после бесплатной диагностики.{" "}
-                <span className="font-semibold text-white">
+                <span className="font-semibold text-ink-deep">
                   Скидка {discountPercent}% при записи через сайт.
                 </span>
               </p>
@@ -167,7 +167,7 @@ export function PriceQuiz() {
             <button
               type="button"
               onClick={() => setStep((s) => s - 1)}
-              className="mt-4 text-xs text-ink-600 hover:text-white"
+              className="mt-4 text-xs text-ink-600 hover:text-ink-deep"
             >
               ← Назад
             </button>

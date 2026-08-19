@@ -1,13 +1,13 @@
-import Image from "next/image";
 import { trustBadges } from "@/lib/site-config";
 import { TiltCard } from "@/components/ui/TiltCard";
+import { PlaceholderVisual } from "@/components/ui/PlaceholderVisual";
 
 const photos = [
-  { src: "/images/workshop-1.jpg", alt: "[Заменить: фото цеха — рабочая зона с подъёмником]" },
-  { src: "/images/workshop-2.jpg", alt: "[Заменить: фото цеха — стенд диагностики вариаторов]" },
-  { src: "/images/team-1.jpg", alt: "[Заменить: фото команды мастеров сервиса]" },
-  { src: "/images/warranty-card.jpg", alt: "[Заменить: фото гарантийного талона]" },
-];
+  { icon: "wrench", label: "Рабочая зона с подъёмником", gradient: "accent" },
+  { icon: "gauge", label: "Стенд диагностики", gradient: "electric" },
+  { icon: "team", label: "Команда мастеров", gradient: "violet" },
+  { icon: "shield", label: "Гарантийный талон", gradient: "accent" },
+] as const;
 
 export function TrustBlock() {
   return (
@@ -25,18 +25,11 @@ export function TrustBlock() {
         </TiltCard>
 
         <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
-          {/* TODO: заменить на реальные фото цеха и команды */}
+          {/* TODO: заменить плейсхолдеры на реальные фото цеха и команды (next/image) */}
           {photos.map((photo) => (
-            <TiltCard key={photo.src} className="overflow-hidden rounded-2xl shadow-depth">
-              <div className="relative aspect-square bg-ink-800">
-                <Image
-                  src={photo.src}
-                  alt={photo.alt}
-                  fill
-                  loading="lazy"
-                  sizes="(max-width: 640px) 50vw, 25vw"
-                  className="object-cover"
-                />
+            <TiltCard key={photo.label} className="overflow-hidden rounded-2xl shadow-depth">
+              <div className="relative aspect-square">
+                <PlaceholderVisual icon={photo.icon} label={photo.label} gradient={photo.gradient} />
               </div>
             </TiltCard>
           ))}

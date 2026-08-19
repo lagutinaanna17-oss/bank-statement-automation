@@ -14,7 +14,7 @@ export default function BrandsPage() {
     <>
       <section className="px-4 py-16 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-6xl">
-          <h1 className="text-3xl font-extrabold text-white sm:text-4xl">
+          <h1 className="text-3xl font-extrabold text-ink-deep sm:text-4xl">
             Ремонт по <span className="text-gradient-accent">маркам</span>
           </h1>
           <p className="mt-3 text-ink-600">Выберите марку автомобиля, чтобы узнать особенности ремонта вашей коробки.</p>
@@ -26,7 +26,7 @@ export default function BrandsPage() {
                   href={`/brands/${brand.slug}`}
                   className="glass block h-full rounded-2xl p-5 transition-colors hover:border-accent/60"
                 >
-                  <p className="text-lg font-bold text-white">{brand.name}</p>
+                  <p className="text-lg font-bold text-ink-deep">{brand.name}</p>
                   <p className="mt-1 text-sm text-ink-600">{brand.models}</p>
                   <p className="mt-2 text-xs text-electric">{brand.gearboxCodes.join(", ")}</p>
                 </Link>

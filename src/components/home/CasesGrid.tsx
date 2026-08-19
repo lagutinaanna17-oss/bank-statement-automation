@@ -1,47 +1,38 @@
-import Image from "next/image";
 import { cases } from "@/lib/site-config";
 import { TiltCard } from "@/components/ui/TiltCard";
+import { PlaceholderVisual } from "@/components/ui/PlaceholderVisual";
 
 export function CasesGrid() {
   return (
     <section className="relative px-4 py-16 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
-        <h2 className="text-center text-2xl font-bold text-white sm:text-3xl">Кейсы: до и после</h2>
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-ink-deep sm:text-3xl">Кейсы: до и после</h2>
+          <span className="mt-2 inline-block rounded-full bg-ink-800 px-3 py-1 text-xs text-ink-600">
+            Демо-примеры — на фото заглушки, заменяются на реальные фото
+          </span>
+        </div>
 
         <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {cases.map((item) => (
             <TiltCard key={item.id} className="rounded-2xl shadow-depth-lg">
               <div className="glass rounded-2xl p-5">
                 <div className="grid grid-cols-2 gap-2">
-                  <div className="relative aspect-square overflow-hidden rounded-xl bg-ink-800">
-                    <span className="absolute left-2 top-2 z-10 rounded-full bg-ink-950/80 px-2 py-0.5 text-[10px] font-semibold text-white backdrop-blur">
+                  <div className="relative aspect-square overflow-hidden rounded-xl">
+                    <span className="absolute left-2 top-2 z-10 rounded-full bg-ink-deep/85 px-2 py-0.5 text-[10px] font-semibold text-white">
                       До
                     </span>
-                    <Image
-                      src={`/images/cases/${item.id}-before.jpg`}
-                      alt={item.photoBeforeAlt}
-                      fill
-                      loading="lazy"
-                      sizes="(max-width: 640px) 50vw, 25vw"
-                      className="object-cover"
-                    />
+                    <PlaceholderVisual icon="gauge" label={item.gearboxCode} gradient="electric" />
                   </div>
-                  <div className="relative aspect-square overflow-hidden rounded-xl bg-ink-800">
+                  <div className="relative aspect-square overflow-hidden rounded-xl">
                     <span className="absolute left-2 top-2 z-10 rounded-full bg-accent/90 px-2 py-0.5 text-[10px] font-semibold text-white">
                       После
                     </span>
-                    <Image
-                      src={`/images/cases/${item.id}-after.jpg`}
-                      alt={item.photoAfterAlt}
-                      fill
-                      loading="lazy"
-                      sizes="(max-width: 640px) 50vw, 25vw"
-                      className="object-cover"
-                    />
+                    <PlaceholderVisual icon="wrench" label="Готово" gradient="accent" />
                   </div>
                 </div>
 
-                <p className="mt-4 font-semibold text-white">
+                <p className="mt-4 font-semibold text-ink-deep">
                   {item.brand} {item.model} <span className="text-ink-600">({item.gearboxCode})</span>
                 </p>
                 <p className="mt-1 text-sm text-ink-600">Проблема: {item.problem}</p>

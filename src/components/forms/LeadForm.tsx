@@ -72,7 +72,7 @@ export function LeadForm({ source, prefillComment, compact }: LeadFormProps) {
   if (status === "success") {
     return (
       <div className="rounded-2xl border border-accent/40 bg-accent/10 p-6 text-center">
-        <p className="text-lg font-semibold text-white">Заявка принята!</p>
+        <p className="text-lg font-semibold text-ink-deep">Заявка принята!</p>
         <p className="mt-2 text-sm text-ink-600">
           Мастер перезвонит вам в течение 10 минут. Если это срочно — звоните нам прямо сейчас.
         </p>
@@ -94,7 +94,7 @@ export function LeadForm({ source, prefillComment, compact }: LeadFormProps) {
           value={name}
           onChange={(e) => setName(e.target.value)}
           required
-          className="w-full rounded-xl border border-ink-600 bg-ink-800 px-4 py-3 text-base text-white placeholder:text-ink-600 focus:border-accent focus:outline-none"
+          className="w-full rounded-xl border border-ink-600 bg-ink-800 px-4 py-3 text-base text-ink-deep placeholder:text-ink-600 focus:border-accent focus:outline-none"
         />
       </div>
 
@@ -111,7 +111,7 @@ export function LeadForm({ source, prefillComment, compact }: LeadFormProps) {
           onChange={(e) => setPhone(e.target.value)}
           onBlur={() => setPhoneError(phone && !isValidRuPhone(phone) ? "Проверьте номер телефона" : null)}
           required
-          className="w-full rounded-xl border border-ink-600 bg-ink-800 px-4 py-3 text-base text-white placeholder:text-ink-600 focus:border-accent focus:outline-none"
+          className="w-full rounded-xl border border-ink-600 bg-ink-800 px-4 py-3 text-base text-ink-deep placeholder:text-ink-600 focus:border-accent focus:outline-none"
         />
         {phoneError && <p className="mt-1 text-xs text-red-400">{phoneError}</p>}
       </div>

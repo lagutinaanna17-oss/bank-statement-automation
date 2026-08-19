@@ -16,7 +16,7 @@ export default function ConsentPage() {
   return (
     <section className="px-4 py-16 sm:px-6 lg:px-8">
       <div className="legal-content mx-auto max-w-3xl text-ink-600">
-        <h1 className="text-3xl font-extrabold text-white">
+        <h1 className="text-3xl font-extrabold text-ink-deep">
           Согласие на обработку персональных данных
         </h1>
 
