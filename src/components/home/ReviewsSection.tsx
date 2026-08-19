@@ -1,5 +1,6 @@
 import { company, reviews } from "@/lib/site-config";
 import { ReviewsSchema } from "@/components/schema/JsonLd";
+import { TiltCard } from "@/components/ui/TiltCard";
 
 function Stars({ rating }: { rating: number }) {
   return (
@@ -19,12 +20,14 @@ export function ReviewsSection() {
 
         <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {reviews.map((review) => (
-            <div key={review.id} className="rounded-2xl border border-ink-700 bg-ink-800 p-5">
-              <Stars rating={review.rating} />
-              <p className="mt-3 text-sm text-ink-600">{review.text}</p>
-              <p className="mt-4 text-sm font-semibold text-white">{review.author}</p>
-              <p className="text-xs text-ink-600">{review.carModel}</p>
-            </div>
+            <TiltCard key={review.id} className="rounded-2xl shadow-depth">
+              <div className="glass h-full rounded-2xl p-5">
+                <Stars rating={review.rating} />
+                <p className="mt-3 text-sm text-ink-600">{review.text}</p>
+                <p className="mt-4 text-sm font-semibold text-white">{review.author}</p>
+                <p className="text-xs text-ink-600">{review.carModel}</p>
+              </div>
+            </TiltCard>
           ))}
         </div>
 

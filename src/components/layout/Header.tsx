@@ -34,7 +34,7 @@ export function Header() {
           <PhoneReveal className="text-sm font-semibold text-white hover:text-accent" />
           <Link
             href="#lead-form"
-            className="rounded-full bg-accent px-4 py-2 text-sm font-semibold text-white transition hover:bg-accent-hover"
+            className="btn-3d rounded-full bg-accent px-4 py-2 text-sm font-semibold text-white shadow-depth shadow-glow"
           >
             Записаться
           </Link>

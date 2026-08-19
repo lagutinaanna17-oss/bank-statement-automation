@@ -12,7 +12,7 @@ export function FAQSection() {
           {faq.map((item) => (
             <details
               key={item.question}
-              className="group rounded-xl border border-ink-700 bg-ink-900 p-4 open:border-accent"
+              className="glass group rounded-xl p-4 transition-shadow open:shadow-glow"
             >
               <summary className="cursor-pointer list-none font-semibold text-white marker:content-none">
                 <span className="flex items-center justify-between">

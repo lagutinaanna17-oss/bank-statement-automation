@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { company } from "@/lib/site-config";
 import { PhoneReveal } from "@/components/layout/PhoneReveal";
 import { LeadForm } from "@/components/forms/LeadForm";
+import { TiltCard } from "@/components/ui/TiltCard";
 
 export const metadata: Metadata = {
   title: "Контакты",
@@ -13,7 +14,9 @@ export default function ContactsPage() {
     <section className="px-4 py-16 sm:px-6 lg:px-8">
       <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-2">
         <div>
-          <h1 className="text-3xl font-extrabold text-white sm:text-4xl">Контакты</h1>
+          <h1 className="text-3xl font-extrabold text-white sm:text-4xl">
+            <span className="text-gradient-accent">Контакты</span>
+          </h1>
 
           <dl className="mt-6 space-y-4 text-sm">
             <div>
@@ -48,7 +51,7 @@ export default function ContactsPage() {
           </dl>
 
           {/* TODO: вставить встраиваемую карту (Яндекс.Карты / 2ГИС) через company.mapEmbedSrc */}
-          <div className="mt-8 flex aspect-video items-center justify-center rounded-2xl border border-ink-700 bg-ink-900 text-sm text-ink-600">
+          <div className="glass mt-8 flex aspect-video items-center justify-center rounded-2xl p-4 text-center text-sm text-ink-600 shadow-depth">
             {company.mapEmbedSrc ? (
               <iframe
                 src={company.mapEmbedSrc}
@@ -62,12 +65,14 @@ export default function ContactsPage() {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-ink-700 bg-ink-900 p-6">
-          <h2 className="text-xl font-bold text-white">Оставить заявку</h2>
-          <div className="mt-4">
-            <LeadForm source="contacts" />
+        <TiltCard className="rounded-2xl shadow-depth-lg">
+          <div className="glass h-full rounded-2xl p-6">
+            <h2 className="text-xl font-bold text-white">Оставить заявку</h2>
+            <div className="mt-4">
+              <LeadForm source="contacts" />
+            </div>
           </div>
-        </div>
+        </TiltCard>
       </div>
     </section>
   );

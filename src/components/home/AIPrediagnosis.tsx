@@ -47,9 +47,10 @@ export function AIPrediagnosis() {
   }
 
   return (
-    <section className="px-4 py-16 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-2xl rounded-2xl border border-electric/30 bg-ink-900 p-6 sm:p-8">
-        <span className="inline-block rounded-full bg-electric/15 px-3 py-1 text-xs font-semibold text-electric">
+    <section className="relative px-4 py-16 sm:px-6 lg:px-8">
+      <div className="glass mx-auto max-w-2xl rounded-2xl border-electric/30 p-6 shadow-depth-lg shadow-glow-electric sm:p-8">
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-electric/15 px-3 py-1 text-xs font-semibold text-electric">
+          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-electric" />
           Только у нас
         </span>
         <h2 className="mt-3 text-2xl font-bold text-white sm:text-3xl">ИИ-предиагностика</h2>
@@ -77,7 +78,7 @@ export function AIPrediagnosis() {
           <button
             type="submit"
             disabled={!canSubmit || status === "loading"}
-            className="w-full rounded-full bg-electric px-6 py-3 text-base font-semibold text-white transition hover:bg-electric-hover disabled:cursor-not-allowed disabled:opacity-40"
+            className="btn-3d w-full rounded-full bg-electric px-6 py-3 text-base font-semibold text-white shadow-depth shadow-glow-electric transition-colors hover:bg-electric-hover disabled:cursor-not-allowed disabled:opacity-40"
           >
             {status === "loading" ? "Анализируем..." : "Получить предварительный ответ"}
           </button>
@@ -90,7 +91,7 @@ export function AIPrediagnosis() {
         )}
 
         {status === "done" && result && (
-          <div className="mt-6 rounded-xl border border-ink-700 bg-ink-800 p-5">
+          <div className="glass mt-6 rounded-xl p-5 shadow-depth">
             <p className="text-sm font-semibold text-white">Вероятные причины:</p>
             <ul className="mt-2 list-inside list-disc space-y-1 text-sm text-ink-600">
               {result.possibleCauses.map((cause) => (
@@ -99,7 +100,7 @@ export function AIPrediagnosis() {
             </ul>
             <p className="mt-4 text-sm text-ink-600">
               Ориентировочная стоимость:{" "}
-              <span className="font-semibold text-accent">
+              <span className="text-gradient-accent font-semibold">
                 {result.priceRangeFrom.toLocaleString("ru-RU")} – {result.priceRangeTo.toLocaleString("ru-RU")} ₽
               </span>
             </p>
@@ -107,7 +108,7 @@ export function AIPrediagnosis() {
 
             <a
               href="#lead-form"
-              className="mt-4 inline-block rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-white hover:bg-accent-hover"
+              className="btn-3d mt-4 inline-block rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-white shadow-depth shadow-glow"
             >
               Записаться на точную бесплатную диагностику
             </a>

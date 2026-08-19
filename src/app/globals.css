@@ -35,3 +35,70 @@ body {
   margin-bottom: 0.25rem;
   line-height: 1.6;
 }
+
+/* === 3D / глубина: переиспользуемые утилиты дизайн-системы === */
+
+/* Тонкая инженерная сетка-фон — трендовый приём (Vercel/Linear) для ощущения "техничности" */
+.bg-grid {
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 100%);
+}
+
+/* Стеклянная панель (glassmorphism) поверх градиентного/тёмного фона */
+.glass {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Блик по курсору внутри TiltCard — координаты задаёт компонент через CSS-переменные */
+.tilt-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    320px circle at var(--glare-x, 50%) var(--glare-y, 50%),
+    rgba(255, 255, 255, 0.08),
+    transparent 65%
+  );
+  opacity: 0;
+  transition: opacity 0.2s ease-out;
+  pointer-events: none;
+}
+
+.tilt-card:hover::before {
+  opacity: 1;
+}
+
+/* Градиентный текст для акцентных заголовков и цифр */
+.text-gradient-accent {
+  background: linear-gradient(135deg, #ff6b35 0%, #ffb199 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.text-gradient-electric {
+  background: linear-gradient(135deg, #2f80ed 0%, #8ecbff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Объёмная кнопка: приподнимается при наведении, "вжимается" при клике */
+.btn-3d {
+  transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
+}
+
+.btn-3d:hover {
+  transform: translateY(-2px);
+}
+
+.btn-3d:active {
+  transform: translateY(0px) scale(0.98);
+}

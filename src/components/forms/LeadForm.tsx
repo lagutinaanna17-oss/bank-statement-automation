@@ -128,7 +128,7 @@ export function LeadForm({ source, prefillComment, compact }: LeadFormProps) {
       <button
         type="submit"
         disabled={!canSubmit || status === "submitting"}
-        className="w-full rounded-full bg-accent px-6 py-3 text-base font-semibold text-white transition hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-40"
+        className="btn-3d w-full rounded-full bg-accent px-6 py-3 text-base font-semibold text-white shadow-depth shadow-glow transition-colors hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-40"
       >
         {status === "submitting" ? "Отправляем..." : "Записаться на бесплатную диагностику"}
       </button>

@@ -1,11 +1,14 @@
 import { company } from "@/lib/site-config";
 import { LeadForm } from "@/components/forms/LeadForm";
 import { PhoneReveal } from "@/components/layout/PhoneReveal";
+import { GlowOrbs } from "@/components/ui/GlowOrbs";
+import { TiltCard } from "@/components/ui/TiltCard";
 
 export function FinalCTA() {
   return (
-    <section id="lead-form" className="bg-ink-900 px-4 py-16 sm:px-6 lg:px-8">
-      <div className="mx-auto grid max-w-5xl gap-10 lg:grid-cols-2 lg:items-center">
+    <section id="lead-form" className="relative overflow-hidden bg-ink-900 px-4 py-16 sm:px-6 lg:px-8">
+      <GlowOrbs variant="section" />
+      <div className="relative mx-auto grid max-w-5xl gap-10 lg:grid-cols-2 lg:items-center">
         <div>
           <h2 className="text-2xl font-bold text-white sm:text-3xl">
             Запишитесь на бесплатную диагностику
@@ -30,9 +33,11 @@ export function FinalCTA() {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-ink-700 bg-ink-800 p-6">
-          <LeadForm source="final-cta" />
-        </div>
+        <TiltCard className="rounded-2xl shadow-depth-lg">
+          <div className="glass rounded-2xl p-6">
+            <LeadForm source="final-cta" />
+          </div>
+        </TiltCard>
       </div>
     </section>
   );

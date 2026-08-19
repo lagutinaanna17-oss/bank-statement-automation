@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { brands, services } from "@/lib/site-config";
 import { LeadForm } from "@/components/forms/LeadForm";
+import { GlowOrbs } from "@/components/ui/GlowOrbs";
 
 const symptoms = [
   { id: "noise", label: "Гул или вой при движении" },
@@ -47,8 +48,9 @@ export function PriceQuiz() {
   }, услуга — ${selectedService?.title ?? "-"}`;
 
   return (
-    <section id="price-quiz" className="bg-ink-900 px-4 py-16 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-2xl">
+    <section id="price-quiz" className="relative overflow-hidden bg-ink-900 px-4 py-16 sm:px-6 lg:px-8">
+      <GlowOrbs variant="section" />
+      <div className="relative mx-auto max-w-2xl">
         <h2 className="text-center text-2xl font-bold text-white sm:text-3xl">
           Узнайте стоимость ремонта за 30 секунд
         </h2>
@@ -61,12 +63,12 @@ export function PriceQuiz() {
           {steps.map((label, i) => (
             <div
               key={label}
-              className={`h-1.5 w-10 rounded-full ${i <= step ? "bg-accent" : "bg-ink-700"}`}
+              className={`h-1.5 w-10 rounded-full transition-colors ${i <= step ? "bg-accent shadow-glow" : "bg-ink-700"}`}
             />
           ))}
         </div>
 
-        <div className="mt-8 rounded-2xl border border-ink-700 bg-ink-800 p-6">
+        <div className="glass mt-8 rounded-2xl p-6 shadow-depth-lg">
           {step === 0 && (
             <div>
               <p className="mb-4 font-semibold text-white">Марка вашего автомобиля</p>
@@ -79,10 +81,10 @@ export function PriceQuiz() {
                       setBrandSlug(brand.slug);
                       goNext();
                     }}
-                    className={`rounded-xl border px-4 py-3 text-sm font-medium transition ${
+                    className={`btn-3d rounded-xl border px-4 py-3 text-sm font-medium ${
                       brandSlug === brand.slug
-                        ? "border-accent bg-accent/10 text-white"
-                        : "border-ink-600 text-ink-600 hover:border-accent hover:text-white"
+                        ? "border-accent bg-accent/10 text-white shadow-glow"
+                        : "border-ink-600 text-ink-600 hover:border-accent hover:text-white hover:shadow-depth"
                     }`}
                   >
                     {brand.name}
@@ -104,10 +106,10 @@ export function PriceQuiz() {
                       setSymptomId(symptom.id);
                       goNext();
                     }}
-                    className={`rounded-xl border px-4 py-3 text-left text-sm font-medium transition ${
+                    className={`btn-3d rounded-xl border px-4 py-3 text-left text-sm font-medium ${
                       symptomId === symptom.id
-                        ? "border-accent bg-accent/10 text-white"
-                        : "border-ink-600 text-ink-600 hover:border-accent hover:text-white"
+                        ? "border-accent bg-accent/10 text-white shadow-glow"
+                        : "border-ink-600 text-ink-600 hover:border-accent hover:text-white hover:shadow-depth"
                     }`}
                   >
                     {symptom.label}
@@ -129,10 +131,10 @@ export function PriceQuiz() {
                       setServiceSlug(service.slug);
                       goNext();
                     }}
-                    className={`rounded-xl border px-4 py-3 text-left text-sm font-medium transition ${
+                    className={`btn-3d rounded-xl border px-4 py-3 text-left text-sm font-medium ${
                       serviceSlug === service.slug
-                        ? "border-accent bg-accent/10 text-white"
-                        : "border-ink-600 text-ink-600 hover:border-accent hover:text-white"
+                        ? "border-accent bg-accent/10 text-white shadow-glow"
+                        : "border-ink-600 text-ink-600 hover:border-accent hover:text-white hover:shadow-depth"
                     }`}
                   >
                     {service.title}
@@ -145,7 +147,7 @@ export function PriceQuiz() {
           {step === 3 && priceRange && (
             <div>
               <p className="text-center text-sm text-ink-600">Ориентировочная стоимость:</p>
-              <p className="mt-1 text-center text-3xl font-extrabold text-accent">
+              <p className="text-gradient-accent mt-1 text-center text-4xl font-extrabold">
                 {priceRange.from.toLocaleString("ru-RU")} – {priceRange.to.toLocaleString("ru-RU")} ₽
               </p>
               <p className="mt-2 text-center text-xs text-ink-600">
