@@ -142,17 +142,17 @@ export const brands: Brand[] = [
   {
     slug: "nissan",
     name: "Nissan",
-    models: "Qashqai, X-Trail, Teana, Murano, Note",
-    gearboxCodes: ["JF011E", "JF015E", "JF016E"],
+    models: "Qashqai, X-Trail, Teana, Murano, Note, Juke, Tiida, Pathfinder, Almera",
+    gearboxCodes: ["JF010E", "JF011E", "JF015E", "JF016E", "JF017E"],
     description:
-      "Ремонт вариаторов Nissan / Renault-Nissan Alliance JF011E, JF015E — самых массовых CVT на рынке.",
+      "Ремонт вариаторов Nissan / Renault-Nissan Alliance — самых массовых CVT на рынке.",
     logoAlt: "Логотип Nissan",
   },
   {
     slug: "mitsubishi",
     name: "Mitsubishi",
-    models: "Outlander, ASX, Lancer",
-    gearboxCodes: ["JF011E", "F1CJC"],
+    models: "Outlander, ASX, Lancer, Pajero, Colt, Galant",
+    gearboxCodes: ["JF011E", "JF015E", "F1CJC"],
     description: "Ремонт вариаторов Mitsubishi всех поколений.",
     logoAlt: "Логотип Mitsubishi",
   },
@@ -167,12 +167,17 @@ export const brands: Brand[] = [
   {
     slug: "renault",
     name: "Renault",
-    models: "Kaptur, Duster",
+    models: "Kaptur, Duster, Megane, Fluence, Koleos",
     gearboxCodes: ["JF017E", "JF018E"],
     description: "Ремонт вариаторов Renault на платформе альянса Renault-Nissan.",
     logoAlt: "Логотип Renault",
   },
 ];
+
+// Модели других марок на тех же платформах альянса (Mitsubishi/Renault-Nissan) —
+// используют те же коробки Jatco JF0xx, поэтому тоже подлежат ремонту.
+export const relatedPlatformModels =
+  "Peugeot 4007, Citroën C-Crosser, Dodge Caliber, Jeep Compass/Patriot/Liberty — те же коробки на общей платформе";
 
 export const cases: CaseItem[] = [
   {

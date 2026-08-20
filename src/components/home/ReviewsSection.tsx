@@ -18,7 +18,7 @@ const avatarGradients = [
 
 export function ReviewsSection() {
   return (
-    <section className="bg-ink-900 px-4 py-16 sm:px-6 lg:px-8">
+    <section id="reviews" className="scroll-mt-24 bg-ink-900 px-4 py-16 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-ink-deep sm:text-3xl">Отзывы клиентов</h2>

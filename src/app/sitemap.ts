@@ -1,24 +1,14 @@
 import type { MetadataRoute } from "next";
-import { brands } from "@/lib/site-config";
 
 // TODO: заменить на реальный домен перед запуском в production
 const siteUrl = "https://example-cvt-service.ru";
 
+// Сайт одностраничный — услуги/марки/кейсы/отзывы/контакты живут как
+// секции на главной, отдельных URL для них больше нет.
 export default function sitemap(): MetadataRoute.Sitemap {
-  const staticPages = [
-    "",
-    "/services",
-    "/brands",
-    "/cases",
-    "/reviews",
-    "/contacts",
-    "/privacy-policy",
-    "/consent",
-  ];
+  const staticPages = ["", "/privacy-policy", "/consent"];
 
-  const brandPages = brands.map((brand) => `/brands/${brand.slug}`);
-
-  return [...staticPages, ...brandPages].map((path) => ({
+  return staticPages.map((path) => ({
     url: `${siteUrl}${path}`,
     lastModified: new Date(),
     changeFrequency: "weekly",

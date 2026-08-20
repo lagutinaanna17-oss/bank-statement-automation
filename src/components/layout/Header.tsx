@@ -4,11 +4,11 @@ import { company } from "@/lib/site-config";
 import { PhoneReveal } from "./PhoneReveal";
 
 const navLinks = [
-  { href: "/services", label: "Услуги" },
-  { href: "/brands", label: "Марки" },
-  { href: "/cases", label: "Кейсы" },
-  { href: "/reviews", label: "Отзывы" },
-  { href: "/contacts", label: "Контакты" },
+  { href: "/#services", label: "Услуги" },
+  { href: "/#brands", label: "Марки" },
+  { href: "/#cases", label: "Кейсы" },
+  { href: "/#reviews", label: "Отзывы" },
+  { href: "/#lead-form", label: "Контакты" },
 ];
 
 export function Header() {

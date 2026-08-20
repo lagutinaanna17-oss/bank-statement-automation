@@ -6,7 +6,7 @@ import { TiltCard } from "@/components/ui/TiltCard";
 
 export function FinalCTA() {
   return (
-    <section id="lead-form" className="relative overflow-hidden bg-ink-900 px-4 py-16 sm:px-6 lg:px-8">
+    <section id="lead-form" className="relative scroll-mt-24 overflow-hidden bg-ink-900 px-4 py-16 sm:px-6 lg:px-8">
       <GlowOrbs variant="section" />
       <div className="relative mx-auto grid max-w-5xl gap-10 lg:grid-cols-2 lg:items-center">
         <div>
@@ -29,6 +29,7 @@ export function FinalCTA() {
                 Telegram
               </a>
             </div>
+            <p className="text-ink-600">{company.actualAddress}</p>
             <p className="text-ink-600">{company.workHours}</p>
           </div>
         </div>

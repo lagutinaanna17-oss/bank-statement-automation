@@ -4,7 +4,7 @@ import { PlaceholderVisual } from "@/components/ui/PlaceholderVisual";
 
 export function CasesGrid() {
   return (
-    <section className="relative px-4 py-16 sm:px-6 lg:px-8">
+    <section id="cases" className="relative scroll-mt-24 px-4 py-16 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-ink-deep sm:text-3xl">Кейсы: до и после</h2>
