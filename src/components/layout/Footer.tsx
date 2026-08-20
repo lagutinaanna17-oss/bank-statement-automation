@@ -9,11 +9,11 @@ export function Footer() {
       <div className="mx-auto grid max-w-7xl gap-8 px-4 sm:px-6 lg:grid-cols-4 lg:px-8">
         <div>
           <Image
-            src="/images/brand/coolinauto-logo-wordmark.png"
+            src="/images/brand/coolinauto-logo-circle.png"
             alt={company.brandName}
-            width={2400}
-            height={280}
-            className="animated-logo h-7 w-auto brightness-0 invert"
+            width={1400}
+            height={779}
+            className="animated-logo h-16 w-auto brightness-0 invert"
           />
           <p className="mt-3 text-white/80">{company.fullBrandName}</p>
           <p className="mt-2">{company.legalName}</p>
