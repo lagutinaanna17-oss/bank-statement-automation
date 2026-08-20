@@ -110,3 +110,29 @@ body {
 .btn-3d:active {
   transform: translateY(0px) scale(0.98);
 }
+
+/* Живой логотип — мягкое покачивание + бирюзовое свечение по кругу.
+   Достаточно медленно и слабо, чтобы не отвлекать в закреплённой шапке. */
+@keyframes logo-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes logo-glow {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 0px rgba(11, 190, 219, 0));
+  }
+  50% {
+    filter: drop-shadow(0 0 7px rgba(11, 190, 219, 0.6));
+  }
+}
+
+.animated-logo {
+  animation: logo-float 3.4s ease-in-out infinite, logo-glow 3.4s ease-in-out infinite;
+}

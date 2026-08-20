@@ -22,7 +22,7 @@ export function Header() {
             width={2400}
             height={280}
             priority
-            className="h-8 w-auto sm:h-9"
+            className="animated-logo h-8 w-auto sm:h-9"
           />
         </Link>
 

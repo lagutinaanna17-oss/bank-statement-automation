@@ -13,7 +13,7 @@ export function Footer() {
             alt={company.brandName}
             width={2400}
             height={280}
-            className="h-7 w-auto brightness-0 invert"
+            className="animated-logo h-7 w-auto brightness-0 invert"
           />
           <p className="mt-3 text-white/80">{company.fullBrandName}</p>
           <p className="mt-2">{company.legalName}</p>
