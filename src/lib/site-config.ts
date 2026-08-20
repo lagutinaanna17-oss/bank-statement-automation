@@ -1,9 +1,10 @@
 // Единый конфиг контента сайта. Меняйте тексты, цены, телефоны и реквизиты
 // здесь — компоненты никогда не хранят контент "зашитым" в разметке.
 //
-// ⚠️ ДЕМО-ДАННЫЕ: название компании, реквизиты, телефон и отзывы ниже —
-// правдоподобные примеры для демонстрации вёрстки, а НЕ реальные данные.
-// Перед запуском в production замените их на настоящие (чек-лист — в README).
+// Название, телефоны, адрес и ключевые факты (стаж, гарантия, ссылка на
+// отзывы) взяты с реального сайта COOLiNAUTO. ИНН/ОГРН и юр. название —
+// заглушки (см. пометку ниже): их не было на исходном сайте, настоящие
+// реквизиты нужно вписать перед запуском — не изобретайте их сами.
 
 import type {
   AdvantageItem,
@@ -20,35 +21,40 @@ import type {
 } from "./types";
 
 export const company = {
-  legalName: "ООО «ВариаторПро Сервис»", // ДЕМО — заменить на реальное юрлицо
-  brandName: "ВариаторПро",
-  inn: "7712345678", // ДЕМО
-  ogrn: "1157746123456", // ДЕМО
-  legalAddress: "г. Москва, Дмитровское шоссе, д. 15, стр. 2",
-  actualAddress: "г. Москва, Дмитровское шоссе, д. 15, стр. 2 (СТО)",
-  workHours: "Ежедневно, 9:00–21:00",
+  // На исходном сайте реквизиты юрлица не публиковались — заполнить перед запуском,
+  // не изобретать ИНН/ОГРН самостоятельно.
+  legalName: "[реквизиты юрлица уточняются]", // TODO: реальное юрлицо/ИП
+  brandName: "COOLiNAUTO",
+  fullBrandName: "COOLiNAUTO — АКПП Технология Ремонта",
+  inn: "[уточняется]", // TODO: вписать реальный ИНН перед запуском
+  ogrn: "[уточняется]", // TODO: вписать реальный ОГРН/ОГРНИП перед запуском
+  legalAddress: "г. Москва, Автомобильный проезд, д. 10, к. 14",
+  actualAddress: "г. Москва, Автомобильный проезд, д. 10, к. 14",
+  workHours: "Круглосуточно",
   // Телефон и email не выводятся напрямую в разметке в нескольких местах —
   // только через компонент PhoneReveal / mailto-ссылку из этого конфига,
   // чтобы затруднить автоматический сбор парсерами.
-  phoneDisplay: "+7 (495) 123-45-67", // ДЕМО
-  phoneHref: "tel:+74951234567",
-  whatsappHref: "https://wa.me/74951234567",
-  telegramHref: "https://t.me/variatorpro",
-  email: "info@variatorpro.ru",
-  cities: ["Москва", "Санкт-Петербург", "Казань"],
-  yandexMapsReviewsUrl: "https://yandex.ru/maps/org/variatorpro/reviews/",
-  twoGisReviewsUrl: "https://2gis.ru/moscow/firm/variatorpro/tab/reviews",
+  phoneDisplay: "+7 (495) 215-50-14",
+  phoneHref: "tel:+74952155014",
+  phoneDisplaySecondary: "+7 (911) 000-96-20",
+  phoneHrefSecondary: "tel:+79110009620",
+  whatsappHref: "https://wa.me/79110009620",
+  telegramHref: "https://t.me/coolinauto", // TODO: проверить реальную ссылку на Telegram
+  email: "info@coolinauto.ru", // TODO: проверить реальный email
+  cities: ["Москва"],
+  yandexMapsReviewsUrl: "https://yandex.ru/maps/org/akpp_tekhnologiya_remonta/49877891929/",
+  twoGisReviewsUrl: "", // TODO: добавить ссылку на 2ГИС, если есть
   mapEmbedSrc: "", // TODO: вставить ссылку на встраиваемую карту (Яндекс.Карты / 2ГИС iframe)
-  yearsOnMarket: 12,
-  gearboxesRepaired: 3400,
+  yearsOnMarket: 15,
   warrantyYears: 3,
+  repairDays: "1–3 дня",
 };
 
 export const heroContent = {
-  title: "Ремонт вариаторов за 24 часа",
+  title: "Ремонт вариатора за 1–3 дня",
   subtitle:
-    "Бесплатная диагностика. Гарантия до 3 лет без ограничения пробега.",
-  citiesNote: `Работаем в городах: ${company.cities.join(", ")}`,
+    "Специализированный сервисный центр — более 15 лет опыта. Бесплатная диагностика и эвакуация. Гарантия до 3 лет без ограничения пробега.",
+  citiesNote: `Работаем в городах: ${company.cities.join(", ")}, круглосуточно`,
   ctaLabel: "Записаться на бесплатную диагностику",
 };
 
@@ -151,36 +157,20 @@ export const brands: Brand[] = [
     logoAlt: "Логотип Mitsubishi",
   },
   {
-    slug: "toyota",
-    name: "Toyota",
-    models: "Corolla, RAV4, C-HR",
-    gearboxCodes: ["K313", "K111"],
-    description: "Ремонт вариаторов Toyota / Lexus серии K3.",
-    logoAlt: "Логотип Toyota",
+    slug: "infiniti",
+    name: "Infiniti",
+    models: "QX60, QX50, JX35",
+    gearboxCodes: ["JF010E", "JF011E", "JF018E"],
+    description: "Ремонт вариаторов Infiniti — тех же семейств Jatco, что и на Nissan.",
+    logoAlt: "Логотип Infiniti",
   },
   {
     slug: "renault",
     name: "Renault",
-    models: "Kaptur, Sandero, Duster",
-    gearboxCodes: ["JF011E", "DP0"],
-    description: "Ремонт вариаторов и коробок Renault.",
+    models: "Kaptur, Duster",
+    gearboxCodes: ["JF017E", "JF018E"],
+    description: "Ремонт вариаторов Renault на платформе альянса Renault-Nissan.",
     logoAlt: "Логотип Renault",
-  },
-  {
-    slug: "honda",
-    name: "Honda",
-    models: "CR-V, Civic, Accord",
-    gearboxCodes: ["K1M7"],
-    description: "Ремонт вариаторов Honda.",
-    logoAlt: "Логотип Honda",
-  },
-  {
-    slug: "subaru",
-    name: "Subaru",
-    models: "Forester, Outback, XV",
-    gearboxCodes: ["TR580"],
-    description: "Ремонт вариаторов Subaru Lineartronic.",
-    logoAlt: "Логотип Subaru",
   },
 ];
 
@@ -199,15 +189,15 @@ export const cases: CaseItem[] = [
   },
   {
     id: "case-2",
-    brand: "Toyota",
-    model: "RAV4",
-    gearboxCode: "K313",
+    brand: "Infiniti",
+    model: "QX60",
+    gearboxCode: "JF010E",
     problem: "Гул на скорости 60+ км/ч, перегрев",
     workDone: "Замена подшипников, промывка радиатора, замена масла",
     durationDays: 1,
     price: 32000,
-    photoBeforeAlt: "[Заменить на реальное фото: вариатор Toyota RAV4 до ремонта]",
-    photoAfterAlt: "[Заменить на реальное фото: вариатор Toyota RAV4 после ремонта]",
+    photoBeforeAlt: "[Заменить на реальное фото: вариатор Infiniti QX60 до ремонта]",
+    photoAfterAlt: "[Заменить на реальное фото: вариатор Infiniti QX60 после ремонта]",
   },
   {
     id: "case-3",
@@ -223,9 +213,9 @@ export const cases: CaseItem[] = [
   },
 ];
 
-// ДЕМО-ОТЗЫВЫ для примера вёрстки — обязательно заменить на реальные
-// (с Яндекс.Карт / 2ГИС) перед запуском. См. также badge "Демо-отзывы"
-// над блоком отзывов на сайте.
+// Примеры формата отзывов (текст иллюстративный) — настоящие отзывы
+// смотрите по ссылке company.yandexMapsReviewsUrl, которая ведёт на
+// реальную страницу компании на Яндекс.Картах.
 export const reviews: ReviewItem[] = [
   {
     id: "review-1",
@@ -238,7 +228,7 @@ export const reviews: ReviewItem[] = [
   {
     id: "review-2",
     author: "Ирина С.",
-    carModel: "Toyota RAV4",
+    carModel: "Infiniti QX60",
     rating: 5,
     text: "Гудела коробка на трассе. Диагностику сделали бесплатно в тот же день, объяснили причину на пальцах. Забрала машину на следующий день — тихо, как раньше.",
     date: "2026-04-22",
@@ -282,19 +272,20 @@ export const faq: FaqItem[] = [
 
 export const trustBadges = [
   { label: "лет на рынке", value: `${company.yearsOnMarket}+` },
-  { label: "отремонтированных коробок", value: `${company.gearboxesRepaired}+` },
+  { label: "дня — средний ремонт", value: company.repairDays },
   { label: "года гарантии", value: `до ${company.warrantyYears}` },
 ];
 
-// Цены по конкретным моделям коробок — ориентир, актуальная цена всегда
-// определяется после бесплатной дефектовки.
+// Цены по моделям вариаторов Jatco (JF0xx) — Nissan, Infiniti, Mitsubishi,
+// Renault. Ориентир, актуальная цена всегда определяется после бесплатной
+// дефектовки. Три столбца: локальный ремонт / ремонт (профилактика) / капремонт.
 export const gearboxPricing: GearboxPriceItem[] = [
-  { code: "JF010E", generation: "1-е поколение", localRepairFrom: 13000, fullRepairFrom: 60000, overhaulFrom: 130000 },
-  { code: "JF011E", generation: "1-е поколение", localRepairFrom: 8000, fullRepairFrom: 45000, overhaulFrom: 95000 },
-  { code: "JF015E", generation: "1-е поколение", localRepairFrom: 8000, fullRepairFrom: 42000, overhaulFrom: 90000 },
-  { code: "JF016E", generation: "2-е поколение", localRepairFrom: 8000, fullRepairFrom: 55000, overhaulFrom: 140000 },
-  { code: "JF017E", generation: "2-е поколение", localRepairFrom: 13000, fullRepairFrom: 60000, overhaulFrom: 150000 },
-  { code: "K313 / K111", generation: "Toyota K3", localRepairFrom: 10000, fullRepairFrom: 40000, overhaulFrom: 100000 },
+  { code: "JF010E", generation: "Nissan / Infiniti", localRepairFrom: 13000, fullRepairFrom: 100000, overhaulFrom: 300000 },
+  { code: "JF011E", generation: "Nissan / Infiniti", localRepairFrom: 8000, fullRepairFrom: 109000, overhaulFrom: 215000 },
+  { code: "JF015E", generation: "Nissan / Mitsubishi", localRepairFrom: 8000, fullRepairFrom: 100000, overhaulFrom: 252000 },
+  { code: "JF016E", generation: "Nissan / Mitsubishi", localRepairFrom: 8000, fullRepairFrom: 200000, overhaulFrom: 370000 },
+  { code: "JF017E", generation: "Nissan / Renault", localRepairFrom: 13000, fullRepairFrom: 200000, overhaulFrom: 370000 },
+  { code: "JF018E / JF019E", generation: "Nissan / Infiniti / Renault", localRepairFrom: 13000, fullRepairFrom: 200000, overhaulFrom: 420000 },
 ];
 
 export const repairVariants: RepairVariant[] = [
@@ -345,10 +336,10 @@ export const symptoms: SymptomItem[] = [
     description: "Часто связано с обрывом ремня или разрушением гидротрансформатора — серьёзная неисправность.",
   },
   {
-    title: "Рывки и пробуксовка при разгоне",
-    priceFrom: 14000,
-    priceTo: 120000,
-    description: "От банальной замены масла до пробуксовки ремня относительно конуса — диапазон причин широкий.",
+    title: "Пробуксовки при наборе скорости",
+    priceFrom: 120000,
+    priceTo: 150000,
+    description: "Пробуксовка ремня относительно конусов на разгоне — требует максимальных вложений среди типовых неисправностей.",
   },
 ];
 
@@ -361,18 +352,19 @@ export const advantages: AdvantageItem[] = [
   { title: "Можно присутствовать при ремонте", description: "Дефектовка и сборка — при вас, если это важно." },
 ];
 
-// ДЕМО — вымышленный руководитель для примера блока доверия.
-// Заменить на реального человека, его фото и подпись перед запуском.
+// Реальный руководитель компании. Фото пока не загружено — добавить
+// реальный портрет, когда он будет предоставлен (сейчас используется
+// нейтральная иконка-заглушка вместо фото).
 export const founder = {
-  name: "[Имя Фамилия] — заменить на реального руководителя",
-  role: `Основатель ${company.brandName}`,
-  quote: "Мы ремонтируем вариаторы, а не меняем их на «кота в мешке» — контрактную коробку без истории.",
-  bio: "Текст о руководителе и истории компании — заменить на реальный перед запуском.",
+  name: "Антон Кулин",
+  role: `Руководитель ${company.fullBrandName}`,
+  quote: "БУ вариатор или контрактная коробка — это всегда «кот в мешке». Мы ремонтируем вариатор, а не меняем его на непроверенный.",
+  bio: `Специализированный сервисный центр по ремонту вариаторов — более ${company.yearsOnMarket} лет опыта и репутации на рынке Москвы.`,
 };
 
 export const extraStats: StatItem[] = [
   { value: `${company.yearsOnMarket}+`, label: "лет практического опыта" },
-  { value: `${company.gearboxesRepaired}+`, label: "отремонтированных вариаторов" },
-  { value: "1", label: "минимум обслуживаем автомобилей в день" },
+  { value: company.repairDays, label: "средний срок ремонта" },
+  { value: "24/7", label: "приём заявок и эвакуация" },
   { value: `до ${company.warrantyYears}`, label: "года гарантии на ремонт" },
 ];

@@ -6,7 +6,7 @@ import { TiltCard } from "@/components/ui/TiltCard";
 
 export const metadata: Metadata = {
   title: "Ремонт вариаторов по маркам автомобилей",
-  description: "Ремонт вариаторов Nissan, Mitsubishi, Toyota, Renault, Honda, Subaru — коды коробок и особенности ремонта.",
+  description: "Ремонт вариаторов Nissan, Infiniti, Mitsubishi, Renault — коды коробок Jatco и особенности ремонта.",
 };
 
 export default function BrandsPage() {

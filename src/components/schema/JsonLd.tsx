@@ -17,7 +17,8 @@ export function LocalBusinessSchema({ siteUrl }: { siteUrl: string }) {
     "@context": "https://schema.org",
     "@type": "AutoRepair",
     name: company.brandName,
-    legalName: company.legalName,
+    // legalName умышленно не заполняется, пока не указаны реальные реквизиты
+    // юрлица — placeholder-текст не должен попадать в структурированные данные.
     image: `${siteUrl}/images/workshop-cover.jpg`,
     url: siteUrl,
     telephone: company.phoneHref.replace("tel:", ""),
@@ -27,7 +28,7 @@ export function LocalBusinessSchema({ siteUrl }: { siteUrl: string }) {
       streetAddress: company.actualAddress,
       addressCountry: "RU",
     },
-    openingHours: "Mo-Su 09:00-21:00",
+    openingHours: "Mo-Su 00:00-23:59",
     priceRange: "₽₽",
     areaServed: company.cities,
   };
@@ -53,7 +54,14 @@ export function FaqSchema() {
   return <JsonLdScript data={data} />;
 }
 
-/** Review — агрегированные отзывы клиентов. */
+/**
+ * Review — агрегированные отзывы клиентов.
+ * ВАЖНО: не подключать, пока `reviews` в site-config содержит иллюстративные
+ * примеры, а не настоящие отзывы — публикация выдуманных Review/AggregateRating
+ * в JSON-LD для реальной компании нарушает правила Google по структурированным
+ * данным. Подключить `<ReviewsSchema />` в ReviewsSection только после того,
+ * как массив reviews будет заполнен настоящими отзывами.
+ */
 export function ReviewsSchema() {
   const data = {
     "@context": "https://schema.org",

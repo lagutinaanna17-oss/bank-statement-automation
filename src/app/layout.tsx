@@ -17,15 +17,15 @@ const siteUrl = "https://example-cvt-service.ru";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: `${company.brandName} — ремонт вариаторов и АКПП`,
+    default: `${company.fullBrandName} — ремонт вариаторов и АКПП`,
     template: `%s — ${company.brandName}`,
   },
   description:
-    "Ремонт вариаторов (CVT) и АКПП за 24 часа. Бесплатная диагностика, гарантия до 3 лет без ограничения пробега.",
+    "Ремонт вариаторов (CVT) и АКПП за 1–3 дня. Бесплатная диагностика и эвакуация, гарантия до 3 лет без ограничения пробега.",
   openGraph: {
-    title: `${company.brandName} — ремонт вариаторов и АКПП`,
+    title: `${company.fullBrandName} — ремонт вариаторов и АКПП`,
     description:
-      "Ремонт вариаторов (CVT) и АКПП за 24 часа. Бесплатная диагностика, гарантия до 3 лет без ограничения пробега.",
+      "Ремонт вариаторов (CVT) и АКПП за 1–3 дня. Бесплатная диагностика и эвакуация, гарантия до 3 лет без ограничения пробега.",
     url: siteUrl,
     siteName: company.brandName,
     locale: "ru_RU",

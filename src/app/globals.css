@@ -70,7 +70,7 @@ body {
   border-radius: inherit;
   background: radial-gradient(
     320px circle at var(--glare-x, 50%) var(--glare-y, 50%),
-    rgba(255, 107, 53, 0.14),
+    rgba(11, 190, 219, 0.18),
     transparent 65%
   );
   opacity: 0;
@@ -85,14 +85,14 @@ body {
 /* Градиентный текст для акцентных заголовков и цифр — оба стопа достаточно
    тёмные, чтобы сохранять контраст на светлом фоне */
 .text-gradient-accent {
-  background: linear-gradient(135deg, #ff6b35 0%, #e8384f 100%);
+  background: linear-gradient(135deg, #00477a 0%, #0bbedb 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
 .text-gradient-electric {
-  background: linear-gradient(135deg, #2f80ed 0%, #7c3aed 100%);
+  background: linear-gradient(135deg, #0bbedb 0%, #00477a 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;

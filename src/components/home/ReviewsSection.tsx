@@ -1,5 +1,4 @@
 import { company, reviews } from "@/lib/site-config";
-import { ReviewsSchema } from "@/components/schema/JsonLd";
 import { TiltCard } from "@/components/ui/TiltCard";
 
 function Stars({ rating }: { rating: number }) {
@@ -20,12 +19,11 @@ const avatarGradients = [
 export function ReviewsSection() {
   return (
     <section className="bg-ink-900 px-4 py-16 sm:px-6 lg:px-8">
-      <ReviewsSchema />
       <div className="mx-auto max-w-7xl">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-ink-deep sm:text-3xl">Отзывы клиентов</h2>
           <span className="mt-2 inline-block rounded-full bg-ink-800 px-3 py-1 text-xs text-ink-600">
-            Демо-отзывы для примера — заменяются на реальные с Я.Карт и 2ГИС
+            Примеры формата — настоящие отзывы читайте по ссылке ниже
           </span>
         </div>
 
@@ -55,10 +53,14 @@ export function ReviewsSection() {
           <a href={company.yandexMapsReviewsUrl} className="text-electric hover:underline">
             Читать отзывы на Яндекс Картах
           </a>
-          <span className="hidden text-ink-700 sm:inline">•</span>
-          <a href={company.twoGisReviewsUrl} className="text-electric hover:underline">
-            Читать отзывы на 2ГИС
-          </a>
+          {company.twoGisReviewsUrl && (
+            <>
+              <span className="hidden text-ink-700 sm:inline">•</span>
+              <a href={company.twoGisReviewsUrl} className="text-electric hover:underline">
+                Читать отзывы на 2ГИС
+              </a>
+            </>
+          )}
         </div>
       </div>
     </section>

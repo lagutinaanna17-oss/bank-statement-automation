@@ -14,8 +14,8 @@ export function Hero() {
         </span>
 
         <h1 className="mt-6 text-4xl font-extrabold tracking-tight text-ink-deep sm:text-6xl">
-          Ремонт вариаторов{" "}
-          <span className="text-gradient-accent">за 24 часа</span>
+          Ремонт вариатора{" "}
+          <span className="text-gradient-accent">за {company.repairDays}</span>
         </h1>
         <p className="mt-5 text-lg text-ink-600 sm:text-xl">{heroContent.subtitle}</p>
         <p className="mt-2 text-sm text-ink-600">{heroContent.citiesNote}</p>
@@ -37,8 +37,8 @@ export function Hero() {
             <p className="text-xs text-ink-600">лет на рынке</p>
           </div>
           <div className="glass animate-float-slow rounded-2xl px-6 py-4 shadow-depth" style={{ animationDelay: "1s" }}>
-            <p className="text-2xl font-extrabold text-ink-deep">{company.gearboxesRepaired}+</p>
-            <p className="text-xs text-ink-600">коробок отремонтировано</p>
+            <p className="text-2xl font-extrabold text-ink-deep">{company.repairDays}</p>
+            <p className="text-xs text-ink-600">средний ремонт</p>
           </div>
           <div className="glass animate-float rounded-2xl px-6 py-4 shadow-depth" style={{ animationDelay: "2s" }}>
             <p className="text-2xl font-extrabold text-ink-deep">до {company.warrantyYears} лет</p>

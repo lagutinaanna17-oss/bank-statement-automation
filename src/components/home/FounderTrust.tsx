@@ -3,9 +3,8 @@ import { TiltCard } from "@/components/ui/TiltCard";
 import { PlaceholderVisual } from "@/components/ui/PlaceholderVisual";
 
 /**
- * Блок доверия "от основателя" — по образцу конкурентов, но с плейсхолдером:
- * реального имени, фото и биографии у демо-компании нет. Обязательно
- * заменить перед запуском на настоящего человека.
+ * Блок доверия "от руководителя". Имя, роль и цитата реальные — фото
+ * пока не загружено, добавить портрет, когда он будет предоставлен.
  */
 export function FounderTrust() {
   return (
@@ -19,7 +18,7 @@ export function FounderTrust() {
 
         <div>
           <span className="inline-block rounded-full bg-ink-800 px-3 py-1 text-xs text-ink-600">
-            Демо-блок — заменить на реального руководителя
+            Фото добавим позже
           </span>
           <p className="mt-3 text-xl font-bold italic text-ink-deep">«{founder.quote}»</p>
           <p className="mt-4 text-sm font-semibold text-ink-deep">{founder.name}</p>
