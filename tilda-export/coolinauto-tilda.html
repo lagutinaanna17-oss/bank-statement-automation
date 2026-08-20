@@ -2,13 +2,28 @@
   ============================================================================
   COOLiNAUTO — код для Тильды (главная страница)
   ============================================================================
+  ВАЖНО: этот файл — НЕ полный HTML-документ (без <html>/<head>/<body>),
+  а готовый фрагмент кода специально для вставки внутрь существующей
+  страницы Тильды. Если вставить сюда <!DOCTYPE html>/<html>/<head> —
+  Тильда обрежет тег <meta name="viewport">, и на телефоне сайт будет
+  показываться как уменьшенная копия десктопной версии (именно так
+  выглядит "не адаптировался под мобильную"). Вставляйте файл ЦЕЛИКОМ,
+  ничего от себя не добавляя сверху.
+
   КАК ВСТАВИТЬ:
-  1. В редакторе Тильды добавьте блок "Zero Block" (T123) ИЛИ блок
-     "HTML-код" (T045 / Другое → HTML-код) на пустую страницу.
+  1. В редакторе Тильды добавьте блок "Zero Block" (T123) — он же "Другое
+     → HTML-код" / T123. НЕ используйте блоки, которые открывают код
+     в отдельном iframe с фиксированной высотой (в них тоже может не
+     сработать адаптив) — для Zero Block это не нужно.
   2. Откройте настройки блока → "Вставить код" → вставьте содержимое
-     этого файла целиком (от <!DOCTYPE html> и до конца).
+     этого файла целиком (от первого <!-- ... до самого конца файла).
   3. Логотип и favicon уже встроены внутрь файла как data:-картинки —
-     ничего дополнительно загружать не нужно.
+     ничего дополнительно загружать не нужно. Отдельную иконку сайта
+     (favicon) для всего сайта Тильды настройте в Настройки сайта → SEO.
+  4. После вставки откройте предпросмотр НЕ в режиме "мобильный" внутри
+     редактора (у него своё масштабирование, которое может искажать
+     position:fixed-элементы), а на реальном телефоне через опубликованную
+     страницу — так вы увидите настоящий результат.
 
   ЧТО НУЖНО НАСТРОИТЬ ПЕРЕД ПУБЛИКАЦИЕЙ:
   - LEAD_WEBHOOK_URL (см. <script> внизу файла, ищите "НАСТРОЙКИ ФОРМЫ") —
@@ -24,21 +39,14 @@
     не изобретайте их.
   - Фото руководителя, фото цеха, фото кейсов "до/после" — сейчас везде
     подставлены цветные плейсхолдеры-иконки вместо реальных фото
-    (см. блоки с классом "ph-visual"). Замените background-image у этих
-    блоков на реальные фото, когда они появятся.
+    (см. блоки с классом "ph-visual"). Замените их на реальные фото,
+    когда они появятся.
   - Раздел "ИИ-предварительная диагностика" сюда не перенесён: на сайте
     Next.js он обращается к серверному API (/api/prediagnosis), которого
     в статичном HTML-блоке Тильды нет и быть не может. Вместо него ниже
     стоит упрощённая карточка-заглушка, которая просто ведёт к форме заявки.
   ============================================================================
 -->
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>COOLiNAUTO — ремонт вариаторов и АКПП за 1–3 дня</title>
-<link rel="icon" href="data:image/png;base64,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">
 <style>
   :root{
     --bg:#F3F6FB; --card:#FFFFFF; --panel:#F7F9FC; --border:#E4E9F2;
@@ -249,8 +257,7 @@
   .cia .stars{ color:var(--accent); letter-spacing:2px; }
   .cia .stars .off{ color:var(--border); }
 </style>
-</head>
-<body>
+
 <div class="cia">
 
   <!-- ================= HEADER ================= -->
@@ -1011,5 +1018,3 @@
 
 })();
 </script>
-</body>
-</html>
