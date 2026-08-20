@@ -30,31 +30,44 @@ export const company = {
   ogrn: "[уточняется]", // TODO: вписать реальный ОГРН/ОГРНИП перед запуском
   legalAddress: "г. Москва, Автомобильный проезд, д. 10, к. 14",
   actualAddress: "г. Москва, Автомобильный проезд, д. 10, к. 14",
-  workHours: "Круглосуточно",
+  // Второй филиал — Санкт-Петербург (третий филиал упоминается на исходном
+  // сайте, но его адрес там не был указан).
+  secondAddress: "г. Санкт-Петербург, ул. Пражская, д. 8, к. 1",
+  workHours: "Пн–Сб, 10:00–19:00",
+  towHours: "Эвакуация и приём автомобиля в ремонт — круглосуточно",
   // Телефон и email не выводятся напрямую в разметке в нескольких местах —
   // только через компонент PhoneReveal / mailto-ссылку из этого конфига,
   // чтобы затруднить автоматический сбор парсерами.
   phoneDisplay: "+7 (495) 215-50-14",
   phoneHref: "tel:+74952155014",
-  phoneDisplaySecondary: "+7 (911) 000-96-20",
+  phoneDisplaySecondary: "+7 (911) 000-96-20", // Санкт-Петербург
   phoneHrefSecondary: "tel:+79110009620",
   whatsappHref: "https://wa.me/79110009620",
   telegramHref: "https://t.me/coolinauto", // TODO: проверить реальную ссылку на Telegram
   email: "info@coolinauto.ru", // TODO: проверить реальный email
-  cities: ["Москва"],
+  cities: ["Москва", "Санкт-Петербург"],
+  yandexRating: "5.0",
   yandexMapsReviewsUrl: "https://yandex.ru/maps/org/akpp_tekhnologiya_remonta/49877891929/",
   twoGisReviewsUrl: "", // TODO: добавить ссылку на 2ГИС, если есть
   mapEmbedSrc: "", // TODO: вставить ссылку на встраиваемую карту (Яндекс.Карты / 2ГИС iframe)
   yearsOnMarket: 15,
   warrantyYears: 3,
   repairDays: "1–3 дня",
+  expressRepairNote: "Есть услуга «Ремонт за 24 часа» для срочных случаев",
+  gearboxesRepaired: 7237,
+  happyClients: 11780,
+  regionsServed: 41,
+  branchesCount: 3,
+  liftsCount: 6,
+  specialistsCount: 20,
+  facilityAreaM2: 1350,
 };
 
 export const heroContent = {
   title: "Ремонт вариатора за 1–3 дня",
   subtitle:
-    "Специализированный сервисный центр — более 15 лет опыта. Бесплатная диагностика и эвакуация. Гарантия до 3 лет без ограничения пробега.",
-  citiesNote: `Работаем в городах: ${company.cities.join(", ")}, круглосуточно`,
+    "Специализированный сервисный центр — более 15 лет опыта. Бесплатная диагностика. Гарантия до 3 лет без ограничения пробега.",
+  citiesNote: `Работаем в городах: ${company.cities.join(", ")}. ${company.workHours}`,
   ctaLabel: "Записаться на бесплатную диагностику",
 };
 
@@ -63,25 +76,25 @@ export const services: ServiceItem[] = [
     slug: "oil-change",
     title: "Замена масла в вариаторе",
     priceFrom: 14000,
-    unit: "₽",
+    unit: "₽ частичная / от 20 000 ₽ полная",
     description:
-      "Полная замена масла методом аппаратной прокачки с заменой фильтра.",
+      "Частичная или полная замена масла «под ключ» — с чисткой магнитов поддона, заменой фильтра тонкой очистки и уплотнительного кольца.",
     details: [
-      "Аппаратная замена (до 90% старого масла)",
-      "Замена фильтра и прокладки поддона",
-      "Диагностика адаптаций коробки после замены",
+      "Частичная замена — от 14 000 ₽",
+      "Полная замена — от 20 000 ₽",
+      "Компьютерная диагностика после замены — бонусом",
     ],
   },
   {
     slug: "cvt-repair",
     title: "Ремонт вариатора (CVT)",
-    priceFrom: 20000,
+    priceFrom: 8000,
     unit: "₽",
     description:
-      "Ремонт вариатора любой сложности: от замены ремня и конусов до полной переборки.",
+      "Ремонт вариатора Jatco любой сложности: от локального ремонта до полной переборки. Есть услуга «Ремонт за 24 часа» для срочных случаев.",
     details: [
       "Бесплатная дефектовка при ремонте у нас",
-      "Оригинальные и качественные аналоговые запчасти",
+      "Точная стоимость определяется после дефектовки",
       "Гарантия до 3 лет без ограничения пробега",
     ],
   },
@@ -103,7 +116,7 @@ export const services: ServiceItem[] = [
     priceFrom: 0,
     unit: "бесплатно",
     description:
-      "Компьютерная и механическая диагностика с выдачей точной сметы на ремонт.",
+      "Компьютерная диагностика и тестовый заезд с выдачей точной сметы на ремонт.",
     details: [
       "Считывание и расшифровка ошибок",
       "Проверка адаптаций и давления в системе",
@@ -114,70 +127,113 @@ export const services: ServiceItem[] = [
 
 export const workStages: WorkStage[] = [
   {
-    title: "Заявка",
-    description: "Оставляете заявку на сайте или звоните — перезваниваем в течение 10 минут.",
+    title: "Диагностика",
+    description: "Компьютерная диагностика и тестовый заезд, чтобы понять характер неисправности.",
   },
   {
-    title: "Бесплатная диагностика",
-    description: "Приезжаете в сервис или вызываете эвакуатор — диагностика бесплатна в любом случае.",
+    title: "Дефектовка",
+    description: "Снимаем вариатор, полностью разбираем и определяем, какие детали вышли из строя.",
   },
   {
-    title: "Согласование сметы",
-    description: "Показываем реальную стоимость ремонта и согласовываем её с вами до начала работ.",
+    title: "Расчёт стоимости",
+    description: "Определяем нужные запчасти и согласовываем с вами точную стоимость ремонта.",
   },
   {
-    title: "Ремонт",
-    description: "Выполняем ремонт в оговорённый срок — в среднем от 1 до 5 дней.",
+    title: "Ремонт вариатора",
+    description: "Заменяем детали, вышедшие из строя по результатам дефектовки. Можно присутствовать лично.",
   },
   {
-    title: "Гарантия",
-    description: "Выдаём гарантийный талон на срок до 3 лет без ограничения пробега.",
+    title: "Сборка и установка",
+    description: "Собираем агрегат и устанавливаем его обратно на автомобиль.",
+  },
+  {
+    title: "Обкатка",
+    description: "Обкатываем автомобиль, проводим повторную диагностику и проверяем работу во всех режимах.",
   },
 ];
 
 export const workStagesNote =
   "Цена не меняется после дефектовки без вашего согласования — это правило работы нашего сервиса.";
 
+// Список марок и моделей — по факту с реального сайта компании (раздел
+// «Марка и модель авто»). Основные марки — с подробным списком моделей,
+// остальные — в secondaryBrands ниже (тоже принимаются в ремонт, но без
+// заявленной специализации по конкретным кодам коробок).
 export const brands: Brand[] = [
   {
     slug: "nissan",
     name: "Nissan",
-    models: "Qashqai, X-Trail, Teana, Murano, Note, Juke, Tiida, Pathfinder, Almera",
+    models: "X-Trail, Murano, Qashqai, Teana, Juke, Pathfinder, Tiida, Sentra, Altima, Elgrand",
     gearboxCodes: ["JF010E", "JF011E", "JF015E", "JF016E", "JF017E"],
     description:
       "Ремонт вариаторов Nissan / Renault-Nissan Alliance — самых массовых CVT на рынке.",
     logoAlt: "Логотип Nissan",
   },
   {
-    slug: "mitsubishi",
-    name: "Mitsubishi",
-    models: "Outlander, ASX, Lancer, Pajero, Colt, Galant",
-    gearboxCodes: ["JF011E", "JF015E", "F1CJC"],
-    description: "Ремонт вариаторов Mitsubishi всех поколений.",
-    logoAlt: "Логотип Mitsubishi",
-  },
-  {
     slug: "infiniti",
     name: "Infiniti",
-    models: "QX60, QX50, JX35",
+    models: "QX60, JX35",
     gearboxCodes: ["JF010E", "JF011E", "JF018E"],
     description: "Ремонт вариаторов Infiniti — тех же семейств Jatco, что и на Nissan.",
     logoAlt: "Логотип Infiniti",
   },
   {
+    slug: "mitsubishi",
+    name: "Mitsubishi",
+    models: "Outlander, ASX, Eclipse Cross, Lancer, Delica",
+    gearboxCodes: ["JF011E", "JF015E", "F1CJC"],
+    description: "Ремонт вариаторов Mitsubishi всех поколений.",
+    logoAlt: "Логотип Mitsubishi",
+  },
+  {
     slug: "renault",
     name: "Renault",
-    models: "Kaptur, Duster, Megane, Fluence, Koleos",
+    models: "Kaptur, Koleos, Fluence, Megane, Scenic, Arkana, Duster",
     gearboxCodes: ["JF017E", "JF018E"],
     description: "Ремонт вариаторов Renault на платформе альянса Renault-Nissan.",
     logoAlt: "Логотип Renault",
   },
+  {
+    slug: "peugeot-citroen",
+    name: "Peugeot / Citroën",
+    models: "Peugeot 4007, 4008, Citroën C4 Aircross, C-Crosser",
+    gearboxCodes: ["JF011E"],
+    description: "Ремонт вариаторов на моделях, построенных на платформе Mitsubishi Outlander.",
+    logoAlt: "Логотипы Peugeot и Citroën",
+  },
+  {
+    slug: "jeep-dodge",
+    name: "Jeep / Dodge",
+    models: "Jeep Liberty, Compass, Patriot, Dodge Caliber",
+    gearboxCodes: ["JF011E"],
+    description: "Ремонт вариаторов на моделях альянса с Mitsubishi.",
+    logoAlt: "Логотипы Jeep и Dodge",
+  },
+  {
+    slug: "toyota-lexus",
+    name: "Toyota / Lexus",
+    models: "Toyota RAV4, Corolla, Camry, Lexus NX 200, UX 200",
+    gearboxCodes: [],
+    description: "Ремонт вариаторов Toyota и Lexus.",
+    logoAlt: "Логотипы Toyota и Lexus",
+  },
+  {
+    slug: "kia",
+    name: "Kia",
+    models: "Seltos, Soul, Cerato",
+    gearboxCodes: [],
+    description: "Ремонт вариаторов Kia.",
+    logoAlt: "Логотип Kia",
+  },
 ];
+
+// Дополнительные марки, которые тоже принимаются в ремонт (указаны на
+// исходном сайте), но без детального списка моделей на карточках.
+export const secondaryBrands =
+  "Hyundai, Suzuki, Chery, Geely, Omoda, Exeed, Lifan, JAC, Lada, Москвич";
 
 // Модели других марок на тех же платформах альянса (Mitsubishi/Renault-Nissan) —
 // используют те же коробки Jatco JF0xx, поэтому тоже подлежат ремонту.
-export const relatedPlatformModels =
-  "Peugeot 4007, Citroën C-Crosser, Dodge Caliber, Jeep Compass/Patriot/Liberty — те же коробки на общей платформе";
 
 export const cases: CaseItem[] = [
   {
@@ -298,26 +354,43 @@ export const repairVariants: RepairVariant[] = [
     title: "Профилактический ремонт",
     description: "Плановое обслуживание без замены силовых узлов — предотвращает развитие серьёзной неисправности.",
     works: [
-      "Снятие и разбор вариатора",
+      "Снятие и разборка вариатора",
       "Мойка и дефектовка узлов",
-      "Замена сальников и уплотнений",
-      "Замена масляного фильтра",
-      "Замена трансмиссионного масла",
+      "Замена сальника гидротрансформатора и сальников приводов",
+      "Замена комплекта тефлоновых уплотнений",
+      "Замена клапана масляного насоса",
+      "Замена масляного фильтра и трансмиссионного масла",
+      "Сборка",
     ],
-    parts: ["Комплект сальников и уплотнений", "Масляный фильтр", "Трансмиссионное масло"],
+    parts: [
+      "Трансмиссионное масло (полный объём)",
+      "Сальник ГДТ, сальники приводов",
+      "Комплект тефлоновых уплотнений",
+      "Клапан масляного насоса",
+      "Масляный фильтр АКПП",
+    ],
   },
   {
     title: "Капитальный ремонт",
     description: "Полная переборка с заменой всех изношенных силовых элементов — когда профилактики уже недостаточно.",
     works: [
       "Полная разборка и дефектовка",
-      "Замена ремня/цепи и конусов",
+      "Ремонт гидротрансформатора",
+      "Замена толкающего ремня и конусов",
       "Замена или ремонт гидроблока",
-      "Замена подшипников и втулок",
-      "Замена масляного насоса",
-      "Сборка и обкатка на стенде",
+      "Замена фрикционных и стальных дисков",
+      "Замена подшипников, втулок и обрезиненных поршней",
+      "Замена масляного насоса, фильтра и трансмиссионного масла",
+      "Сборка и обкатка",
     ],
-    parts: ["Ремень/цепь вариатора", "Конусы", "Гидроблок", "Масляный насос", "Комплект подшипников"],
+    parts: [
+      "Толкающий ремень, конусы",
+      "Масляный насос, втулка первичного вала",
+      "Поршни пакетов сцепления (вперёд/назад)",
+      "Сальник ГДТ, сальники приводов",
+      "Комплект тефлоновых уплотнений",
+      "Масляный фильтр, трансмиссионное масло",
+    ],
   },
 ];
 
@@ -369,7 +442,7 @@ export const founder = {
 
 export const extraStats: StatItem[] = [
   { value: `${company.yearsOnMarket}+`, label: "лет практического опыта" },
-  { value: company.repairDays, label: "средний срок ремонта" },
-  { value: "24/7", label: "приём заявок и эвакуация" },
-  { value: `до ${company.warrantyYears}`, label: "года гарантии на ремонт" },
+  { value: `${company.gearboxesRepaired.toLocaleString("ru-RU")}+`, label: "отремонтированных вариаторов" },
+  { value: `${company.happyClients.toLocaleString("ru-RU")}+`, label: "довольных клиентов" },
+  { value: `${company.regionsServed}`, label: "регионов РФ среди клиентов" },
 ];
