@@ -1,0 +1,138 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: theme("colors.ink.950");
+  color: theme("colors.ink.deep");
+}
+
+/* Простая типографика для юридических страниц (политика, согласие) */
+.legal-content h2 {
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: theme("colors.ink.deep");
+}
+
+.legal-content p {
+  margin-bottom: 0.75rem;
+  line-height: 1.7;
+}
+
+.legal-content ul {
+  margin-bottom: 0.75rem;
+  padding-left: 1.25rem;
+  list-style-type: disc;
+}
+
+.legal-content li {
+  margin-bottom: 0.25rem;
+  line-height: 1.6;
+}
+
+/* === 3D / глубина: переиспользуемые утилиты дизайн-системы === */
+
+/* Тонкая инженерная сетка-фон — трендовый приём (Vercel/Linear) для ощущения "техничности" */
+.bg-grid {
+  background-image:
+    linear-gradient(to right, rgba(11, 20, 36, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(11, 20, 36, 0.06) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 100%);
+}
+
+/* Стеклянная панель (glassmorphism) поверх светлого фона */
+.glass {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.72));
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(15, 23, 42, 0.07);
+}
+
+/* Тёмный "бэнд" — подвал и cookie-баннер намеренно остаются тёмными
+   для контраста и якоря на светлой странице. */
+.glass-dark {
+  background: linear-gradient(180deg, rgba(11, 20, 36, 0.97), rgba(11, 20, 36, 0.99));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Блик по курсору внутри TiltCard — координаты задаёт компонент через CSS-переменные */
+.tilt-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    320px circle at var(--glare-x, 50%) var(--glare-y, 50%),
+    rgba(11, 190, 219, 0.18),
+    transparent 65%
+  );
+  opacity: 0;
+  transition: opacity 0.2s ease-out;
+  pointer-events: none;
+}
+
+.tilt-card:hover::before {
+  opacity: 1;
+}
+
+/* Градиентный текст для акцентных заголовков и цифр — оба стопа достаточно
+   тёмные, чтобы сохранять контраст на светлом фоне */
+.text-gradient-accent {
+  background: linear-gradient(135deg, #00477a 0%, #0bbedb 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.text-gradient-electric {
+  background: linear-gradient(135deg, #0bbedb 0%, #00477a 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Объёмная кнопка: приподнимается при наведении, "вжимается" при клике */
+.btn-3d {
+  transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
+}
+
+.btn-3d:hover {
+  transform: translateY(-2px);
+}
+
+.btn-3d:active {
+  transform: translateY(0px) scale(0.98);
+}
+
+/* Живой логотип — мягкое покачивание + бирюзовое свечение по кругу.
+   Достаточно медленно и слабо, чтобы не отвлекать в закреплённой шапке. */
+@keyframes logo-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes logo-glow {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 0px rgba(11, 190, 219, 0));
+  }
+  50% {
+    filter: drop-shadow(0 0 7px rgba(11, 190, 219, 0.6));
+  }
+}
+
+.animated-logo {
+  animation: logo-float 3.4s ease-in-out infinite, logo-glow 3.4s ease-in-out infinite;
+}
