@@ -16,24 +16,28 @@ import { ReviewsSection } from "@/components/home/ReviewsSection";
 import { FAQSection } from "@/components/home/FAQSection";
 import { FinalCTA } from "@/components/home/FinalCTA";
 
+// Порядок секций повторяет структуру навигации реального сайта компании
+// (Главная → Отзывы → Варианты ремонта → Этапы ремонта → Симптомы →
+// О компании → Контакты) — отзывы и блок "о компании" специально не в
+// конце, как обычно на лендингах, а там же, где на исходном сайте.
 export default function HomePage() {
   return (
     <>
       <Hero />
+      <ReviewsSection />
       <TrustBlock />
-      <PriceQuiz />
-      <AIPrediagnosis />
-      <ServicesGrid />
       <RepairVariants />
       <GearboxPricing />
       <HowWeWork />
       <SymptomsGrid />
+      <PriceQuiz />
+      <ServicesGrid />
       <BrandsGrid />
       <Advantages />
       <StatsBar />
       <CasesGrid />
       <FounderTrust />
-      <ReviewsSection />
+      <AIPrediagnosis />
       <FAQSection />
       <FinalCTA />
     </>

@@ -310,6 +310,43 @@
     </div>
   </section>
 
+  <!-- ================= REVIEWS ================= -->
+  <section id="reviews">
+    <div class="wrap">
+      <h2>Отзывы клиентов</h2>
+      <p class="center" style="margin-top:8px;"><span style="display:inline-block;background:var(--panel);color:var(--muted);font-size:12px;padding:4px 12px;border-radius:99px;">Примеры формата — настоящие отзывы читайте по ссылке ниже</span></p>
+      <div class="grid g3" style="margin-top:32px;">
+        <div class="tilt card" style="padding:20px;">
+          <div class="stars">★★★★★</div>
+          <p class="muted" style="font-size:14px;margin-top:10px;">Машина дёргалась при разгоне, боялся, что вариатор под замену целиком. В итоге обошлось заменой ремня и масла — сделали за два дня, цена не менялась с той, что назвали после диагностики.</p>
+          <div style="display:flex;align-items:center;gap:10px;margin-top:14px;">
+            <span class="avatar" style="background:linear-gradient(135deg,var(--accent),var(--electric));">А</span>
+            <div><p style="font-weight:600;font-size:14px;">Алексей М.</p><p class="muted" style="font-size:12px;">Nissan Qashqai</p></div>
+          </div>
+        </div>
+        <div class="tilt card" style="padding:20px;">
+          <div class="stars">★★★★★</div>
+          <p class="muted" style="font-size:14px;margin-top:10px;">Гудела коробка на трассе. Диагностику сделали бесплатно в тот же день, объяснили причину на пальцах. Забрала машину на следующий день — тихо, как раньше.</p>
+          <div style="display:flex;align-items:center;gap:10px;margin-top:14px;">
+            <span class="avatar" style="background:linear-gradient(135deg,var(--electric),var(--violet));">И</span>
+            <div><p style="font-weight:600;font-size:14px;">Ирина С.</p><p class="muted" style="font-size:12px;">Infiniti QX60</p></div>
+          </div>
+        </div>
+        <div class="tilt card" style="padding:20px;">
+          <div class="stars">★★★★<span class="off">★</span></div>
+          <p class="muted" style="font-size:14px;margin-top:10px;">Коробка встала в аварийный режим по дороге на дачу. Приехал эвакуатор от сервиса, переборка заняла 4 дня. Дороговато вышло, но с гарантией на 3 года — спокойнее.</p>
+          <div style="display:flex;align-items:center;gap:10px;margin-top:14px;">
+            <span class="avatar" style="background:linear-gradient(135deg,var(--violet),var(--accent));">Д</span>
+            <div><p style="font-weight:600;font-size:14px;">Дмитрий К.</p><p class="muted" style="font-size:12px;">Mitsubishi Outlander</p></div>
+          </div>
+        </div>
+      </div>
+      <p class="center" style="margin-top:24px;">
+        <a href="https://yandex.ru/maps/org/akpp_tekhnologiya_remonta/49877891929/" target="_blank" rel="noopener" style="color:var(--electric);font-size:14px;">Читать отзывы на Яндекс Картах →</a>
+      </p>
+    </div>
+  </section>
+
   <!-- ================= TRUST BLOCK ================= -->
   <section style="padding-top:0;padding-bottom:24px;">
     <div class="wrap">
@@ -344,79 +381,6 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/></svg>
             <span>Гарантийный талон</span>
           </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ================= PRICE QUIZ ================= -->
-  <section class="sec-alt" style="overflow:hidden;">
-    <div class="orbs">
-      <div class="orb" style="left:-6%;top:33%;width:280px;height:280px;background:rgba(11,190,219,.25);"></div>
-      <div class="orb" style="right:-6%;bottom:0;width:320px;height:320px;background:rgba(0,71,122,.25);"></div>
-    </div>
-    <div class="wrap-sm">
-      <h2>Узнайте стоимость ремонта за 30 секунд</h2>
-      <p class="center muted" style="margin-top:8px;">Ответьте на 3 простых вопроса — покажем ориентировочную цену и дадим скидку 5% за заявку с сайта.</p>
-      <div class="quiz-steps" id="quizSteps">
-        <i class="on"></i><i></i><i></i><i></i>
-      </div>
-      <div class="glass card-lg quiz-box" id="quizBox"></div>
-    </div>
-  </section>
-
-  <!-- ================= AI PRE-DIAGNOSIS (упрощённая заглушка) ================= -->
-  <section>
-    <div class="wrap-sm glass card-lg" style="padding:32px;text-align:center;">
-      <h2 style="font-size:22px;">Опишите проблему — предварительно оценим ремонт</h2>
-      <p class="muted" style="margin-top:8px;font-size:14px;">
-        Расскажите, что происходит с автомобилем, — мастер посмотрит описание и перезвонит с
-        предварительной оценкой перед записью на диагностику.
-      </p>
-      <!--
-        На сайте Next.js здесь работает раздел "ИИ-предварительная диагностика",
-        который обращается к серверному эндпоинту /api/prediagnosis. В статичном
-        HTML-блоке Тильды такого сервера нет, поэтому ниже — просто текстовое поле,
-        которое подставляется в комментарий обычной формы заявки ниже по странице.
-      -->
-      <textarea id="prediagText" rows="3" placeholder="Например: гудит на скорости, дёргается при разгоне..."
-        style="width:100%;margin-top:16px;padding:14px 16px;border-radius:12px;border:1px solid var(--border);background:var(--panel);font-size:14px;"></textarea>
-      <button type="button" class="btn btn-primary" style="margin-top:16px;width:100%;"
-        onclick="document.getElementById('finalComment').value=document.getElementById('prediagText').value; document.getElementById('lead-form').scrollIntoView({behavior:'smooth'}); document.getElementById('finalName').focus();">
-        Отправить описание и записаться
-      </button>
-    </div>
-  </section>
-
-  <!-- ================= SERVICES ================= -->
-  <section id="services" class="sec-alt">
-    <div class="wrap">
-      <h2>Услуги и <span class="grad-accent">цены</span></h2>
-      <p class="center muted" style="margin-top:8px;">Финальная стоимость определяется после бесплатной диагностики и согласуется с вами до начала работ.</p>
-      <div class="grid g4" style="margin-top:32px;">
-        <div class="tilt card" style="padding:24px;">
-          <div class="step-badge" style="background:var(--accent);">1</div>
-          <p style="font-weight:700;margin-top:14px;">Замена масла в вариаторе</p>
-          <p class="price-tag grad-accent" style="margin-top:6px;">от 14 000 ₽</p>
-          <p class="muted" style="font-size:13px;margin-top:8px;">Полная замена масла методом аппаратной прокачки с заменой фильтра.</p>
-        </div>
-        <div class="tilt card" style="padding:24px;">
-          <div class="step-badge" style="background:var(--accent);">2</div>
-          <p style="font-weight:700;margin-top:14px;">Ремонт вариатора (CVT)</p>
-          <p class="price-tag grad-accent" style="margin-top:6px;">от 20 000 ₽</p>
-          <p class="muted" style="font-size:13px;margin-top:8px;">Ремонт вариатора любой сложности: от замены ремня и конусов до полной переборки.</p>
-        </div>
-        <div class="tilt card" style="padding:24px;">
-          <div class="step-badge" style="background:var(--accent);">3</div>
-          <p style="font-weight:700;margin-top:14px;">Ремонт АКПП</p>
-          <p class="price-tag grad-accent" style="margin-top:6px;">от 25 000 ₽</p>
-          <p class="muted" style="font-size:13px;margin-top:8px;">Диагностика и ремонт классических автоматических коробок передач.</p>
-        </div>
-        <div class="tilt card" style="padding:24px;">
-          <div class="step-badge" style="background:var(--accent);">4</div>
-          <p style="font-weight:700;margin-top:14px;">Диагностика коробки передач</p>
-          <p class="price-tag grad-accent" style="margin-top:6px;">бесплатно</p>
-          <p class="muted" style="font-size:13px;margin-top:8px;">Компьютерная и механическая диагностика с выдачей точной сметы на ремонт.</p>
         </div>
       </div>
     </div>
@@ -518,6 +482,56 @@
         <div class="tilt card" style="padding:20px;display:flex;gap:14px;">
           <div style="width:44px;height:44px;border-radius:12px;flex-shrink:0;" class="ph-electric"><div class="ph-visual" style="min-height:0;padding:0;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px;"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div></div>
           <div><p style="font-weight:700;">Пробуксовки при наборе скорости</p><p class="muted" style="font-size:13px;margin-top:4px;">Пробуксовка ремня относительно конусов на разгоне — требует максимальных вложений.</p><p class="grad-accent" style="font-weight:700;margin-top:6px;">от 120 000 до 150 000 ₽</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PRICE QUIZ ================= -->
+  <section class="sec-alt" style="overflow:hidden;">
+    <div class="orbs">
+      <div class="orb" style="left:-6%;top:33%;width:280px;height:280px;background:rgba(11,190,219,.25);"></div>
+      <div class="orb" style="right:-6%;bottom:0;width:320px;height:320px;background:rgba(0,71,122,.25);"></div>
+    </div>
+    <div class="wrap-sm">
+      <h2>Узнайте стоимость ремонта за 30 секунд</h2>
+      <p class="center muted" style="margin-top:8px;">Ответьте на 3 простых вопроса — покажем ориентировочную цену и дадим скидку 5% за заявку с сайта.</p>
+      <div class="quiz-steps" id="quizSteps">
+        <i class="on"></i><i></i><i></i><i></i>
+      </div>
+      <div class="glass card-lg quiz-box" id="quizBox"></div>
+    </div>
+  </section>
+
+  <!-- ================= SERVICES ================= -->
+  <section id="services" class="sec-alt">
+    <div class="wrap">
+      <h2>Услуги и <span class="grad-accent">цены</span></h2>
+      <p class="center muted" style="margin-top:8px;">Финальная стоимость определяется после бесплатной диагностики и согласуется с вами до начала работ.</p>
+      <div class="grid g4" style="margin-top:32px;">
+        <div class="tilt card" style="padding:24px;">
+          <div class="step-badge" style="background:var(--accent);">1</div>
+          <p style="font-weight:700;margin-top:14px;">Замена масла в вариаторе</p>
+          <p class="price-tag grad-accent" style="margin-top:6px;">от 14 000 ₽</p>
+          <p class="muted" style="font-size:13px;margin-top:8px;">Полная замена масла методом аппаратной прокачки с заменой фильтра.</p>
+        </div>
+        <div class="tilt card" style="padding:24px;">
+          <div class="step-badge" style="background:var(--accent);">2</div>
+          <p style="font-weight:700;margin-top:14px;">Ремонт вариатора (CVT)</p>
+          <p class="price-tag grad-accent" style="margin-top:6px;">от 20 000 ₽</p>
+          <p class="muted" style="font-size:13px;margin-top:8px;">Ремонт вариатора любой сложности: от замены ремня и конусов до полной переборки.</p>
+        </div>
+        <div class="tilt card" style="padding:24px;">
+          <div class="step-badge" style="background:var(--accent);">3</div>
+          <p style="font-weight:700;margin-top:14px;">Ремонт АКПП</p>
+          <p class="price-tag grad-accent" style="margin-top:6px;">от 25 000 ₽</p>
+          <p class="muted" style="font-size:13px;margin-top:8px;">Диагностика и ремонт классических автоматических коробок передач.</p>
+        </div>
+        <div class="tilt card" style="padding:24px;">
+          <div class="step-badge" style="background:var(--accent);">4</div>
+          <p style="font-weight:700;margin-top:14px;">Диагностика коробки передач</p>
+          <p class="price-tag grad-accent" style="margin-top:6px;">бесплатно</p>
+          <p class="muted" style="font-size:13px;margin-top:8px;">Компьютерная и механическая диагностика с выдачей точной сметы на ремонт.</p>
         </div>
       </div>
     </div>
@@ -646,40 +660,26 @@
     <style>@media(min-width:640px){.cia section .wrap-md{grid-template-columns:220px 1fr!important;text-align:left;}.cia section .wrap-md .center{text-align:left;}}</style>
   </section>
 
-  <!-- ================= REVIEWS ================= -->
-  <section id="reviews">
-    <div class="wrap">
-      <h2>Отзывы клиентов</h2>
-      <p class="center" style="margin-top:8px;"><span style="display:inline-block;background:var(--panel);color:var(--muted);font-size:12px;padding:4px 12px;border-radius:99px;">Примеры формата — настоящие отзывы читайте по ссылке ниже</span></p>
-      <div class="grid g3" style="margin-top:32px;">
-        <div class="tilt card" style="padding:20px;">
-          <div class="stars">★★★★★</div>
-          <p class="muted" style="font-size:14px;margin-top:10px;">Машина дёргалась при разгоне, боялся, что вариатор под замену целиком. В итоге обошлось заменой ремня и масла — сделали за два дня, цена не менялась с той, что назвали после диагностики.</p>
-          <div style="display:flex;align-items:center;gap:10px;margin-top:14px;">
-            <span class="avatar" style="background:linear-gradient(135deg,var(--accent),var(--electric));">А</span>
-            <div><p style="font-weight:600;font-size:14px;">Алексей М.</p><p class="muted" style="font-size:12px;">Nissan Qashqai</p></div>
-          </div>
-        </div>
-        <div class="tilt card" style="padding:20px;">
-          <div class="stars">★★★★★</div>
-          <p class="muted" style="font-size:14px;margin-top:10px;">Гудела коробка на трассе. Диагностику сделали бесплатно в тот же день, объяснили причину на пальцах. Забрала машину на следующий день — тихо, как раньше.</p>
-          <div style="display:flex;align-items:center;gap:10px;margin-top:14px;">
-            <span class="avatar" style="background:linear-gradient(135deg,var(--electric),var(--violet));">И</span>
-            <div><p style="font-weight:600;font-size:14px;">Ирина С.</p><p class="muted" style="font-size:12px;">Infiniti QX60</p></div>
-          </div>
-        </div>
-        <div class="tilt card" style="padding:20px;">
-          <div class="stars">★★★★<span class="off">★</span></div>
-          <p class="muted" style="font-size:14px;margin-top:10px;">Коробка встала в аварийный режим по дороге на дачу. Приехал эвакуатор от сервиса, переборка заняла 4 дня. Дороговато вышло, но с гарантией на 3 года — спокойнее.</p>
-          <div style="display:flex;align-items:center;gap:10px;margin-top:14px;">
-            <span class="avatar" style="background:linear-gradient(135deg,var(--violet),var(--accent));">Д</span>
-            <div><p style="font-weight:600;font-size:14px;">Дмитрий К.</p><p class="muted" style="font-size:12px;">Mitsubishi Outlander</p></div>
-          </div>
-        </div>
-      </div>
-      <p class="center" style="margin-top:24px;">
-        <a href="https://yandex.ru/maps/org/akpp_tekhnologiya_remonta/49877891929/" target="_blank" rel="noopener" style="color:var(--electric);font-size:14px;">Читать отзывы на Яндекс Картах →</a>
+  <!-- ================= AI PRE-DIAGNOSIS (упрощённая заглушка) ================= -->
+  <section>
+    <div class="wrap-sm glass card-lg" style="padding:32px;text-align:center;">
+      <h2 style="font-size:22px;">Опишите проблему — предварительно оценим ремонт</h2>
+      <p class="muted" style="margin-top:8px;font-size:14px;">
+        Расскажите, что происходит с автомобилем, — мастер посмотрит описание и перезвонит с
+        предварительной оценкой перед записью на диагностику.
       </p>
+      <!--
+        На сайте Next.js здесь работает раздел "ИИ-предварительная диагностика",
+        который обращается к серверному эндпоинту /api/prediagnosis. В статичном
+        HTML-блоке Тильды такого сервера нет, поэтому ниже — просто текстовое поле,
+        которое подставляется в комментарий обычной формы заявки ниже по странице.
+      -->
+      <textarea id="prediagText" rows="3" placeholder="Например: гудит на скорости, дёргается при разгоне..."
+        style="width:100%;margin-top:16px;padding:14px 16px;border-radius:12px;border:1px solid var(--border);background:var(--panel);font-size:14px;"></textarea>
+      <button type="button" class="btn btn-primary" style="margin-top:16px;width:100%;"
+        onclick="document.getElementById('finalComment').value=document.getElementById('prediagText').value; document.getElementById('lead-form').scrollIntoView({behavior:'smooth'}); document.getElementById('finalName').focus();">
+        Отправить описание и записаться
+      </button>
     </div>
   </section>
 
