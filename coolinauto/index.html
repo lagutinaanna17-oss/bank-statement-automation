@@ -18,8 +18,9 @@
 <meta property="og:locale" content="ru_RU">
 <meta property="og:url" content="https://coolinauto.ru/">
 
-<!-- Favicon (заглушка — заменить на реальную иконку бренда) -->
-<link rel="icon" href="data:,">
+<!-- Фавикон: упрощённый вариант кольцевого знака логотипа. Заменить на
+     полноценную иконку (ico/png), когда появится файл логотипа. -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='8' fill='%23123a5e'/%3E%3Cpath d='M4 20A16 16 0 0 1 36 20' fill='none' stroke='%2322b8db' stroke-width='3.5' stroke-linecap='round'/%3E%3Cpath d='M4 20A16 16 0 0 0 36 20' fill='none' stroke='%237fa9c4' stroke-width='3.5' stroke-linecap='round'/%3E%3C/svg%3E">
 
 <!-- Шрифты: Manrope (заголовки) + Inter (текст), с системным фолбэком -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -137,8 +138,18 @@
 <header class="header" id="header">
   <div class="container header__inner">
     <a href="#hero" class="logo" aria-label="COOLiNAUTO — на главную">
-      <span class="logo__mark">COOLi<span class="logo__accent">NAUTO</span></span>
-      <span class="logo__sub">АКПП Технология ремонта</span>
+      <svg class="logo__ring" width="34" height="34" viewBox="0 0 40 40" aria-hidden="true" focusable="false">
+        <path d="M3 20A17 17 0 0 1 37 20" fill="none" stroke="#22b8db" stroke-width="2" stroke-linecap="round"/>
+        <path d="M7 20A13 13 0 0 1 33 20" fill="none" stroke="#22b8db" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+        <path d="M11 20A9 9 0 0 1 29 20" fill="none" stroke="#22b8db" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+        <path d="M3 20A17 17 0 0 0 37 20" fill="none" stroke="#123a5e" stroke-width="2" stroke-linecap="round"/>
+        <path d="M7 20A13 13 0 0 0 33 20" fill="none" stroke="#123a5e" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+        <path d="M11 20A9 9 0 0 0 29 20" fill="none" stroke="#123a5e" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+      </svg>
+      <span class="logo__text">
+        <span class="logo__mark">COOL<span class="logo__accent">iN</span>AUTO</span>
+        <span class="logo__sub">АКПП Технология ремонта</span>
+      </span>
     </a>
 
     <nav class="city-switch" aria-label="Выбор города">
@@ -596,7 +607,17 @@
 <footer class="footer">
   <div class="container footer__grid">
     <div>
-      <span class="logo__mark logo__mark--footer">COOLi<span class="logo__accent">NAUTO</span></span>
+      <div class="logo logo--footer">
+        <svg class="logo__ring" width="40" height="40" viewBox="0 0 40 40" aria-hidden="true" focusable="false">
+          <path d="M3 20A17 17 0 0 1 37 20" fill="none" stroke="#22b8db" stroke-width="2" stroke-linecap="round"/>
+          <path d="M7 20A13 13 0 0 1 33 20" fill="none" stroke="#22b8db" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+          <path d="M11 20A9 9 0 0 1 29 20" fill="none" stroke="#22b8db" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+          <path d="M3 20A17 17 0 0 0 37 20" fill="none" stroke="#7fa9c4" stroke-width="2" stroke-linecap="round"/>
+          <path d="M7 20A13 13 0 0 0 33 20" fill="none" stroke="#7fa9c4" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+          <path d="M11 20A9 9 0 0 0 29 20" fill="none" stroke="#7fa9c4" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+        </svg>
+        <span class="logo__mark logo__mark--footer">COOL<span class="logo__accent">iN</span>AUTO</span>
+      </div>
       <p>АКПП Технология ремонта</p>
       <p class="footer__requisites">
         ИП Кулин Антон Валерьевич<br>

@@ -1,22 +1,24 @@
 /* =========================================================================
    COOLiNAUTO — стили. Классика + минимализм.
-   Палитра ниже подобрана временно (логотип не был предоставлен):
-   тёмный графитово-синий как основной, белый/светло-серый фон, один
-   акцент для CTA. Как только появится файл логотипа — замените значения
-   переменных --color-primary / --color-accent на цвета из него.
+   Палитра взята из реального логотипа: тёмно-синий (COOL/AUTO, нижние
+   дуги) как основной цвет, белый/светло-голубой нейтральный фон, яркий
+   бирюзовый (дуги сверху, буквы «iN») — единственный акцент для CTA.
+   --color-accent-dark — более тёмный оттенок бирюзового: используется
+   там, где нужен текст на светлом фоне (у чистого --color-accent
+   недостаточно контраста с белым для мелкого/некрупного текста).
    ========================================================================= */
 
 :root {
-  /* --- Палитра (заменить на цвета логотипа) --- */
-  --color-primary: #1b2a41;      /* основной — графитово-синий */
-  --color-primary-dark: #101b2c;
+  /* --- Палитра (из логотипа COOLiNAUTO) --- */
+  --color-primary: #123a5e;      /* основной — тёмно-синий из логотипа */
+  --color-primary-dark: #0a2740;
   --color-bg: #ffffff;           /* нейтральный фон */
-  --color-bg-alt: #f5f6f8;       /* альтернативный фон секций */
-  --color-accent: #c8752c;       /* акцент для кнопок/CTA — тёплая охра */
-  --color-accent-dark: #a9601f;
-  --color-text: #1c1f26;
-  --color-text-muted: #5b6472;
-  --color-border: #e3e6ea;
+  --color-bg-alt: #f2f7fa;       /* альтернативный фон секций — холодный, в тон логотипу */
+  --color-accent: #22b8db;       /* акцент — бирюзовый из логотипа (дуги, «iN») */
+  --color-accent-dark: #1590ac;  /* затемнённый акцент — для текста на светлом фоне */
+  --color-text: #16232f;
+  --color-text-muted: #55636f;
+  --color-border: #dce4ea;
   --color-success-bg: #eef2ee;
 
   /* --- Типографика --- */
@@ -98,9 +100,11 @@ section { padding: var(--space-6) 0; opacity: 1; }
   white-space: nowrap;
 }
 .btn:active { transform: translateY(1px); }
-.btn-primary { background: var(--color-accent); color: #fff; }
-.btn-primary:hover { background: var(--color-accent-dark); }
-.btn-primary:disabled { background: #d8ccc0; cursor: not-allowed; }
+/* Текст кнопки — тёмно-синий, а не белый: у бирюзового акцента недостаточно
+   контраста с белым текстом (WCAG AA), а с тёмно-синим — с запасом. */
+.btn-primary { background: var(--color-accent); color: var(--color-primary); }
+.btn-primary:hover { background: #4fcbe6; }
+.btn-primary:disabled { background: var(--color-border); color: var(--color-text-muted); cursor: not-allowed; }
 .btn-outline { background: transparent; color: var(--color-primary); border-color: var(--color-border); }
 .btn-outline:hover { border-color: var(--color-primary); }
 .btn-ghost { background: transparent; color: var(--color-text-muted); }
@@ -123,11 +127,14 @@ section { padding: var(--space-6) 0; opacity: 1; }
   padding-top: var(--space-2);
   padding-bottom: var(--space-2);
 }
-.logo { display: flex; flex-direction: column; line-height: 1.1; margin-right: auto; }
+.logo { display: flex; align-items: center; gap: 10px; margin-right: auto; }
+.logo--footer { margin-right: 0; margin-bottom: var(--space-1); }
+.logo__ring { flex: none; }
+.logo__text { display: flex; flex-direction: column; line-height: 1.1; }
 .logo__mark { font-family: var(--font-heading); font-weight: 800; font-size: 1.3rem; color: var(--color-primary); letter-spacing: 0.02em; }
 .logo__accent { color: var(--color-accent); }
 .logo__sub { font-size: 0.68rem; color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 0.08em; }
-.logo__mark--footer { font-size: 1.4rem; }
+.logo__mark--footer { font-size: 1.4rem; color: #fff; }
 
 .city-switch { display: flex; gap: 4px; background: var(--color-bg-alt); border-radius: var(--radius-sm); padding: 4px; }
 .city-switch__btn {
@@ -187,7 +194,7 @@ section { padding: var(--space-6) 0; opacity: 1; }
 .quiz__step legend { font-weight: 700; font-family: var(--font-heading); margin-bottom: var(--space-3); padding: 0; color: var(--color-primary); }
 .quiz__options { display: grid; gap: 10px; margin-bottom: var(--space-3); }
 .quiz__option { display: flex; align-items: center; gap: 10px; border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: 12px 14px; cursor: pointer; }
-.quiz__option:has(input:checked) { border-color: var(--color-accent); background: #fbf3ea; }
+.quiz__option:has(input:checked) { border-color: var(--color-accent-dark); background: #eaf8fc; }
 .quiz__option input { accent-color: var(--color-accent); }
 .quiz__nav { display: flex; justify-content: space-between; gap: var(--space-2); margin-top: var(--space-2); }
 .quiz__note { color: var(--color-text-muted); font-size: 0.9rem; }
@@ -226,7 +233,7 @@ section { padding: var(--space-6) 0; opacity: 1; }
 }
 .service-card:hover { box-shadow: var(--shadow-soft); transform: translateY(-2px); }
 .service-card h3 { font-size: 1.05rem; color: var(--color-primary); }
-.service-card__price { font-family: var(--font-heading); font-weight: 800; font-size: 1.3rem; color: var(--color-accent); margin: 6px 0; }
+.service-card__price { font-family: var(--font-heading); font-weight: 800; font-size: 1.3rem; color: var(--color-accent-dark); margin: 6px 0; }
 .service-card__note { font-size: 0.85rem; color: var(--color-text-muted); margin: 0; }
 
 /* --- Модели коробок --- */
@@ -258,7 +265,7 @@ section { padding: var(--space-6) 0; opacity: 1; }
 .process__step p { color: var(--color-text-muted); margin: 0; }
 
 /* --- Кейсы / Отзывы --- */
-.badge-demo { display: inline-block; background: #fbecdd; color: var(--color-accent-dark); font-size: 0.75rem; font-weight: 700; padding: 3px 10px; border-radius: 20px; margin-right: 8px; text-transform: uppercase; letter-spacing: 0.03em; }
+.badge-demo { display: inline-block; background: #eaf8fc; color: var(--color-primary); font-size: 0.75rem; font-weight: 700; padding: 3px 10px; border-radius: 20px; margin-right: 8px; text-transform: uppercase; letter-spacing: 0.03em; }
 .case-card, .review-card { border: 1px solid var(--color-border); border-radius: var(--radius); padding: var(--space-3); background: #fff; }
 .case-card figure { margin: 0 0 var(--space-2); }
 .case-card figure figcaption { font-size: 0.78rem; color: var(--color-text-muted); margin-top: 6px; }
@@ -275,7 +282,7 @@ section { padding: var(--space-6) 0; opacity: 1; }
   width: 100%; text-align: left; background: none; border: none; padding: var(--space-2) 4px;
   display: flex; justify-content: space-between; align-items: center; font-size: 1rem; font-weight: 600; color: var(--color-primary);
 }
-.accordion__trigger::after { content: '+'; font-size: 1.4rem; color: var(--color-accent); font-weight: 400; }
+.accordion__trigger::after { content: '+'; font-size: 1.4rem; color: var(--color-accent-dark); font-weight: 700; }
 .accordion__trigger[aria-expanded="true"]::after { content: '–'; }
 .accordion__panel { padding: 0 4px var(--space-2); color: var(--color-text-muted); }
 
