@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+  <rect width="800" height="600" fill="#e7e9ee"/>
+  <g fill="none" stroke="#9aa3af" stroke-width="3">
+    <rect x="260" y="220" width="280" height="180" rx="8"/>
+    <circle cx="400" cy="310" r="46"/>
+    <path d="M330 220l16-28h108l16 28"/>
+  </g>
+  <text x="400" y="450" font-family="Arial, sans-serif" font-size="26" fill="#6b7280" text-anchor="middle">ФОТО — заменить</text>
+</svg>
