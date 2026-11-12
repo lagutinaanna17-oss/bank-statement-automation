@@ -1,0 +1,1240 @@
+<title>Учись на пятёрки</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Golos+Text:wght@400;500;700&family=Nunito:wght@600;800&family=Unbounded:wght@500;700&display=swap">
+<style>
+/* Layout: школьная тетрадь в клетку. Одна колонка-лист, расписание уроков строками, оценки красной ручкой. Страница намеренно всегда светлая. */
+:root{
+  --paper:#f9fbff; --sheet:#ffffff; --grid:#dbe5f7; --line:#c3d0ea;
+  --ink:#1b2759; --ink-soft:#56628c; --pen:#d2283b; --ok:#16794a; --ok-bg:#e3f5ea; --bad-bg:#fde8ea;
+  --blue:#2a5fe0; --on-blue:#ffffff; --blue-deep:#1b3fa3; color-scheme:light;
+  --c1:#ff6b6b; --c2:#ffb020; --c3:#2fbf71; --c4:#2d9cff; --c5:#9b5de5; --c6:#ff5fa2;
+  --f-display:"Unbounded","Trebuchet MS",sans-serif;
+  --f-body:"Golos Text","Segoe UI",Roboto,Arial,sans-serif;
+  --f-hand:"Caveat","Comic Sans MS",cursive;
+}
+
+*{box-sizing:border-box}
+body{
+  background:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:24px 24px;
+  color:var(--ink); font-family:var(--f-body); font-size:17px; line-height:1.5;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));
+  padding-right:max(16px, env(safe-area-inset-right, 0px));
+  padding-block:20px 48px;
+}
+.wrap{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+
+/* шапка */
+.top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--f-display);font-weight:700;font-size:22px}
+.five{font-family:var(--f-hand);color:var(--pen);font-size:38px;line-height:1;width:46px;height:46px;
+  display:grid;place-items:center;border:3px solid var(--pen);border-radius:50%;transform:rotate(-8deg)}
+.tabs,.levels{display:flex;flex-wrap:wrap;gap:6px}
+.tab,.lvl{background:var(--sheet);border:2px solid var(--line);border-radius:999px;padding:8px 16px;font-weight:500;min-height:44px}
+.tab[aria-current="page"],.lvl[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.levelbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.levelbar span{color:var(--ink-soft);font-size:15px}
+
+/* лист */
+.sheet{background:var(--sheet);border:2px solid var(--ink);border-radius:6px;padding:24px;display:flex;flex-direction:column;gap:16px;min-width:0}
+h1{font-family:var(--f-display);font-size:clamp(22px,5vw,30px);line-height:1.2;margin:0;text-wrap:balance}
+h2{font-family:var(--f-display);font-size:18px;margin:0;text-wrap:balance}
+p{margin:0;max-width:62ch}
+.muted{color:var(--ink-soft);font-size:15px}
+
+/* расписание */
+.schedule{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.schedule li{border-top:2px solid var(--line)}
+.schedule li:first-child{border-top:0}
+.row{width:100%;background:none;border:0;display:grid;grid-template-columns:28px 52px 1fr auto;gap:12px;align-items:center;padding:14px 4px;text-align:left}
+.row:hover .title{text-decoration:underline}
+.num{font-family:var(--f-display);font-size:14px;color:var(--ink-soft)}
+.glyph{font-family:var(--f-display);font-weight:700;font-size:16px;color:var(--blue);text-align:center}
+.subj{font-size:14px;color:var(--ink-soft)}
+.title{font-weight:700;display:block}
+.mark{font-family:var(--f-hand);color:var(--pen);font-size:40px;line-height:1;min-width:28px;text-align:center}
+.mark.none{font-family:var(--f-body);font-size:14px;color:var(--ink-soft)}
+
+/* урок */
+.theory{border-left:3px solid var(--pen);padding-left:14px;display:flex;flex-direction:column;gap:8px}
+.step{font-family:var(--f-display);font-size:13px;color:var(--ink-soft);letter-spacing:.04em;text-transform:uppercase}
+.q{font-size:20px;font-weight:700;max-width:40ch}
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:10px}
+.opt{background:var(--paper);border:2px solid var(--line);border-radius:6px;padding:12px 14px;text-align:left;min-height:52px;font-weight:500}
+.opt:not(:disabled):hover{border-color:var(--ink)}
+.opt.right{background:var(--ok-bg);border-color:var(--ok)}
+.opt.wrong{background:var(--bad-bg);border-color:var(--pen)}
+.opt:disabled{cursor:default}
+.note{padding:12px 14px;border-radius:6px;background:var(--ok-bg)}
+.note.miss{background:var(--bad-bg)}
+.btn{background:var(--blue);color:var(--on-blue);border:0;border-radius:6px;padding:12px 20px;font-weight:700;min-height:48px}
+.btn.ghost{background:none;color:var(--ink);border:2px solid var(--ink)}
+.btn.danger{background:none;color:var(--pen);border:2px solid var(--pen)}
+.actions{display:flex;flex-wrap:wrap;gap:10px}
+.result{display:flex;flex-wrap:wrap;align-items:center;gap:20px}
+.bigmark{font-family:var(--f-hand);color:var(--pen);font-size:120px;line-height:.8;transform:rotate(-6deg)}
+
+/* тренажёр */
+.task{font-family:var(--f-display);font-size:clamp(26px,7vw,40px);font-variant-numeric:tabular-nums}
+.answer{display:flex;flex-wrap:wrap;gap:10px}
+.answer input{font:inherit;font-size:22px;width:150px;padding:10px 12px;border:2px solid var(--ink);border-radius:6px;background:var(--paper);color:var(--ink)}
+.dots{display:flex;gap:6px;flex-wrap:wrap}
+.dot{width:16px;height:16px;border-radius:50%;border:2px solid var(--line)}
+.dot.y{background:var(--ok);border-color:var(--ok)} .dot.n{background:var(--pen);border-color:var(--pen)}
+
+/* учитель */
+.chat{display:flex;flex-direction:column;gap:12px}
+.msg{max-width:88%;padding:12px 14px;border-radius:6px;white-space:pre-wrap;overflow-wrap:anywhere;min-width:0}
+.msg.t{background:var(--paper);border:2px solid var(--line);align-self:flex-start}
+.msg.me{background:var(--ink);color:var(--paper);align-self:flex-end}
+.msg .who{display:block;font-size:13px;font-weight:700;color:var(--blue);margin-bottom:2px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{background:var(--sheet);border:2px solid var(--line);border-radius:999px;padding:8px 14px;min-height:44px;font-size:15px;text-align:left}
+.chip[aria-pressed="true"]{border-color:var(--blue);color:var(--blue);font-weight:700}
+.chip:not(:disabled):hover{border-color:var(--ink)}
+.ask{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end}
+.ask textarea{flex:1 1 220px;min-width:0;font:inherit;padding:10px 12px;border:2px solid var(--ink);border-radius:6px;background:var(--paper);color:var(--ink);resize:vertical;min-height:52px}
+.btn:disabled{opacity:.5;cursor:default}
+
+.listen{font-size:14px;min-height:40px;padding:6px 14px}
+.msg .listen{display:block;margin-top:8px}
+.voicebar{position:sticky;bottom:calc(12px + env(safe-area-inset-bottom, 0px));align-self:center;display:flex;align-items:center;gap:12px;
+  background:var(--ink);color:var(--paper);border-radius:999px;padding:8px 8px 8px 18px;font-weight:500}
+.voicebar button{background:var(--paper);color:var(--ink);border:0;border-radius:999px;padding:8px 16px;min-height:40px;font-weight:700}
+.check{display:flex;align-items:center;gap:8px;font-size:15px}
+.check input{width:20px;height:20px}
+details summary{cursor:pointer;font-weight:700;color:var(--blue);padding:6px 0}
+details .theory{margin-top:8px}
+
+/* логика */
+.eqs{display:flex;flex-direction:column;gap:8px}
+.eq{font-family:var(--f-display);font-size:clamp(20px,6vw,30px);font-variant-numeric:tabular-nums;border-bottom:3px solid var(--ink);padding-bottom:6px;align-self:flex-start}
+.clues{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:6px}
+.clues li.broken{color:var(--pen);font-weight:700}
+.houses{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px}
+.house{border:2px solid var(--ink);border-radius:6px;padding:10px;display:flex;flex-direction:column;gap:6px;background:var(--paper)}
+.house label{font-family:var(--f-display);font-size:13px;color:var(--ink-soft)}
+.house select{font:inherit;padding:8px;border:2px solid var(--line);border-radius:6px;background:var(--sheet);color:var(--ink);min-height:44px;width:100%}
+.sgrid{display:grid;grid-template-columns:repeat(4,minmax(0,60px));gap:4px;align-self:flex-start}
+.cell{aspect-ratio:1;border:2px solid var(--line);border-radius:4px;background:var(--sheet);font-family:var(--f-display);font-size:22px;padding:0}
+.cell:nth-child(4n+2){margin-right:8px}
+.cell:nth-child(n+5):nth-child(-n+8){margin-bottom:8px}
+.cell.given{background:var(--grid);border-color:var(--ink);cursor:default}
+.cell.bad{background:var(--bad-bg);border-color:var(--pen)}
+.count{font-size:14px;color:var(--ink-soft);white-space:nowrap}
+
+/* темы */
+.lvl{min-width:44px;padding:8px 12px;text-align:center}
+.tgrid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.tcard{width:100%;height:100%;min-height:120px;display:flex;flex-direction:column;gap:6px;align-items:flex-start;text-align:left;padding:12px;border:2px solid var(--ink);border-radius:6px;background:var(--sheet);overflow-wrap:anywhere}
+.tcard .tnum{font-family:var(--f-display);font-size:12px;color:var(--ink-soft)}
+.tcard .tname{font-weight:700;flex:1}
+.tcard .tpts{font-size:14px;color:var(--blue);font-weight:500}
+.tcard.done{background:var(--ok-bg);border-color:var(--ok)} .tcard.done .tpts{color:var(--ok)}
+.tcard.locked{background:var(--grid);border-color:var(--line);border-style:dashed;cursor:default} .tcard.locked .tname,.tcard.locked .tpts{color:var(--ink-soft)}
+.tcard:disabled{cursor:default}
+.tcard.open:not(:disabled):hover{background:var(--paper)}
+.bigmark{min-width:1.2em;text-align:center}
+
+/* абакус */
+.abacus{display:flex;gap:14px;align-self:flex-start;padding:14px 16px 8px;border:4px solid var(--ink);border-radius:8px;background:var(--paper);max-width:100%}
+.rod{display:flex;flex-direction:column;align-items:center;gap:4px;background:linear-gradient(var(--line),var(--line)) center/4px 100% no-repeat}
+.up,.low{display:flex;flex-direction:column;align-items:center;gap:3px}
+.beam{width:calc(100% + 14px);height:6px;background:var(--ink);border-radius:3px}
+.bead{width:58px;height:26px;border-radius:13px;border:2px solid var(--ink);background:var(--sheet);padding:0}
+.bead.on{background:var(--pen);border-color:var(--pen)}
+.bead:disabled{cursor:default}
+.gap{display:block;width:58px;height:26px}
+.rname{font-size:12px;color:var(--ink-soft);background:var(--paper);padding:4px 2px 0}
+.flashnum{font-size:clamp(48px,16vw,88px);text-align:center;align-self:stretch}
+.row:disabled{cursor:default;opacity:.55}
+@media (max-width:420px){ .bead,.gap{width:46px} .abacus{gap:10px;padding:12px 12px 6px} }
+@media (prefers-reduced-motion:no-preference){ .tcard.flip{animation:flip .7s ease-out} @keyframes flip{from{transform:perspective(600px) rotateY(180deg);opacity:.3}} }
+
+/* 1–4 класс: красочное оформление. С 5 класса остаётся строгая тетрадь. */
+:root.kid{
+  --paper:#e9f6ff; --sheet:#ffffff; --grid:#d9eefc; --line:#a8d3f0;
+  --ink:#2b2a6b; --ink-soft:#5a5990; --pen:#ff3d68; --ok:#12804a; --ok-bg:#d9f7e3; --bad-bg:#ffe1e7;
+  --blue:#6a3de8; --on-blue:#ffffff; --blue-deep:#4a23b5;
+  --f-body:"Nunito","Golos Text","Segoe UI",Arial,sans-serif;
+}
+.kid body{font-size:18px;font-weight:600;
+  background-image:radial-gradient(var(--c2) 4px,transparent 5px),radial-gradient(var(--c6) 4px,transparent 5px),radial-gradient(var(--c3) 4px,transparent 5px),radial-gradient(var(--c4) 3px,transparent 4px);
+  background-size:120px 120px,170px 170px,140px 140px,100px 100px;background-position:10px 20px,60px 90px,100px 40px,30px 70px}
+.kid .brand{color:var(--c5)}
+.kid .five{background:var(--sheet);box-shadow:0 4px 0 var(--pen)}
+.kid .sheet{border-width:3px;border-radius:24px;box-shadow:8px 8px 0 var(--c2)}
+.kid h1{color:var(--blue)}
+.kid .tab,.kid .lvl{border-width:3px;font-weight:800;box-shadow:0 3px 0 var(--line)}
+.kid .tab:nth-child(1){background:color-mix(in srgb,var(--c1) 28%,white);border-color:var(--c1)}
+.kid .tab:nth-child(2){background:color-mix(in srgb,var(--c4) 28%,white);border-color:var(--c4)}
+.kid .tab:nth-child(3){background:color-mix(in srgb,var(--c3) 28%,white);border-color:var(--c3)}
+.kid .tab:nth-child(4){background:color-mix(in srgb,var(--c5) 28%,white);border-color:var(--c5)}
+.kid .tab:nth-child(5){background:color-mix(in srgb,var(--c2) 32%,white);border-color:var(--c2)}
+.kid .tab:nth-child(6){background:color-mix(in srgb,var(--c6) 28%,white);border-color:var(--c6)}
+.kid .lvl{background:color-mix(in srgb,var(--c2) 30%,white);border-color:var(--c2)}
+.kid .tab[aria-current="page"],.kid .lvl[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff;box-shadow:0 3px 0 var(--c2)}
+.kid .btn{border-radius:16px;font-weight:800;box-shadow:0 5px 0 var(--blue-deep)}
+.kid .btn.ghost{background:var(--sheet);box-shadow:0 5px 0 var(--line);border-width:3px}
+.kid .btn.danger{box-shadow:0 5px 0 var(--bad-bg)}
+.kid .btn:not(:disabled):active{transform:translateY(3px);box-shadow:0 2px 0 var(--blue-deep)}
+.kid .chip{border-width:3px;font-weight:800}
+.kid .chip[aria-pressed="true"]{background:color-mix(in srgb,var(--c5) 22%,white);border-color:var(--c5);color:var(--ink)}
+.kid .opt{border-width:3px;border-radius:16px;font-weight:800;background:var(--sheet)}
+.kid .opt:nth-child(4n+1){border-color:var(--c4)} .kid .opt:nth-child(4n+2){border-color:var(--c2)}
+.kid .opt:nth-child(4n+3){border-color:var(--c3)} .kid .opt:nth-child(4n+4){border-color:var(--c6)}
+.kid .opt.right{background:var(--ok-bg);border-color:var(--ok)} .kid .opt.wrong{background:var(--bad-bg);border-color:var(--pen)}
+.kid .tcard{border-width:3px;border-radius:18px}
+.kid .tcard.open:nth-child(1n){border-color:var(--c4);background:color-mix(in srgb,var(--c4) 14%,white)}
+.kid li:nth-child(3n+2) .tcard.open{border-color:var(--c5);background:color-mix(in srgb,var(--c5) 14%,white)}
+.kid li:nth-child(3n+3) .tcard.open{border-color:var(--c2);background:color-mix(in srgb,var(--c2) 18%,white)}
+.kid .tcard .tpts{color:var(--ink)}
+.kid .theory{border-left-width:5px;border-color:var(--c2)}
+.kid .note{border-radius:14px}
+.kid .msg{border-radius:18px}
+.kid .msg.t{background:color-mix(in srgb,var(--c2) 18%,white);border-color:var(--c2)}
+.kid .msg.me{background:var(--blue)}
+.kid .abacus{border-color:var(--c5);border-radius:18px;background:color-mix(in srgb,var(--c2) 14%,white)}
+.kid .bead{border-color:var(--c5)} .kid .bead.on{background:var(--c1);border-color:var(--pen)}
+.kid .beam{background:var(--c5)}
+.kid .cell{border-radius:10px} .kid .house{border-radius:16px;border-color:var(--c4)}
+.kid .voicebar{background:var(--blue)}
+/* сова-учитель */
+.hello{display:flex;gap:12px;align-items:flex-end}
+.hello .msg{max-width:100%}
+.owl{width:72px;height:auto;flex:none}
+.owl .body{fill:var(--c5)} .owl .belly{fill:color-mix(in srgb,var(--c2) 45%,white)} .owl .eye{fill:#fff;stroke:var(--ink);stroke-width:2}
+.owl .pupil{fill:var(--ink)} .owl .beak{fill:var(--c2)} .owl .cap{fill:var(--ink)} .owl .tassel{fill:none;stroke:var(--c2);stroke-width:3;stroke-linecap:round}
+:root:not(.kid) .owl{display:none}
+.voiceset{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:15px}
+.voiceset select{font:inherit;padding:6px 8px;border:2px solid var(--line);border-radius:6px;background:var(--sheet);color:var(--ink);min-height:40px}
+
+.pictitle{font-weight:700;margin-top:10px}
+.absteps{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:6px}
+.abpic{margin:0;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:14px;font-weight:700}
+.abacus.mini{gap:6px;padding:6px 8px;border-width:3px;border-radius:6px}
+.mini .bead,.mini .gap{display:block;width:26px;height:12px;border-radius:6px}
+.mini .up,.mini .low{gap:2px}
+.mini .beam{height:4px;width:calc(100% + 6px)}
+.arrow{font-family:var(--f-display);font-size:20px;color:var(--ink-soft)}
+
+.accform{display:flex;flex-direction:column;gap:8px;max-width:420px}
+.accform input[type=email],.accform input[type=password]{font:inherit;padding:10px 12px;border:2px solid var(--ink);border-radius:6px;background:var(--paper);color:var(--ink);min-height:48px}
+.sheet a{color:var(--blue)}
+
+/* дневник */
+.tablebox{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+th,td{border:2px solid var(--line);padding:8px 10px;text-align:center}
+th{font-size:14px;color:var(--ink-soft);font-weight:500}
+td:first-child,th:first-child{text-align:left}
+td .mark{font-size:32px}
+@media (prefers-reduced-motion:no-preference){ .bigmark{animation:stamp .35s ease-out} @keyframes stamp{from{transform:rotate(-6deg) scale(1.6);opacity:.2}} }
+@media (max-width:480px){ .sheet{padding:16px} .row{grid-template-columns:20px 40px 1fr auto;gap:8px} }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand"><span class="five" aria-hidden="true">5</span>Учись на пятёрки</div>
+    <nav class="tabs" aria-label="Разделы">
+      <button class="tab" id="tab-teacher" data-view="teacher">Учитель</button>
+      <button class="tab" id="tab-topics" data-view="topics">Темы</button>
+      <button class="tab" id="tab-abacus" data-view="abacus">Абакус</button>
+      <button class="tab" id="tab-logic" data-view="logic">Логика</button>
+      <button class="tab" id="tab-trainer" data-view="trainer">Счёт</button>
+      <button class="tab" id="tab-diary" data-view="diary">Дневник</button>
+      <button class="tab" id="tab-account" data-view="account" hidden>Кабинет</button>
+    </nav>
+  </header>
+  <div class="levelbar">
+    <span>Класс</span>
+    <div class="levels" role="group" aria-label="Класс">
+      <button class="lvl" id="grade-1" data-grade="1">1</button>
+      <button class="lvl" id="grade-2" data-grade="2">2</button>
+      <button class="lvl" id="grade-3" data-grade="3">3</button>
+      <button class="lvl" id="grade-4" data-grade="4">4</button>
+      <button class="lvl" id="grade-5" data-grade="5">5</button>
+      <button class="lvl" id="grade-6" data-grade="6">6</button>
+      <button class="lvl" id="grade-7" data-grade="7">7</button>
+      <button class="lvl" id="grade-8" data-grade="8">8</button>
+      <button class="lvl" id="grade-9" data-grade="9">9</button>
+      <button class="lvl" id="grade-10" data-grade="10">10</button>
+      <button class="lvl" id="grade-11" data-grade="11">11</button>
+    </div>
+  </div>
+  <main id="app"></main>
+  <div class="voicebar" id="voicebar" hidden><span>Читаю вслух…</span><button id="vstop">Остановить</button></div>
+</div>
+
+<script>
+const P = "учебник Л. Г. Петерсон", MR = "учебник М. И. Моро, УМК «Школа России»", KN = "учебник В. П. Канакиной и В. Г. Горецкого, УМК «Школа России»", SR = "УМК «Школа России»", ST = "общая школьная программа";
+const C = (id, name, prog, topics) => ({id, name, prog, topics:topics.split("|")});
+const CURR = {
+1:[C("math","Математика",P,"Свойства предметов: цвет, форма, размер, материал|Группы предметов и их сравнение: больше, меньше, столько же|Сложение и вычитание групп предметов|Выше — ниже, раньше — позже, порядок|Числа и цифры от 1 до 6|Точки и линии, отрезок, ломаная, многоугольник|Числа 7, 8, 9 и состав чисел|Число 0|Числовой отрезок|Части и целое, связь сложения и вычитания|Задача: условие и вопрос, схемы к задачам|Задачи на разностное сравнение: больше на…, меньше на…|Уравнения, решаемые через часть и целое|Величины и мерки: длина, масса (килограмм), объём (литр)|Число 10 и его состав|Счёт десятками, двузначные числа|Сложение и вычитание двузначных чисел|Сложение и вычитание с переходом через десяток|Составные задачи в 2–4 действия"),
+ C("mathm","Математика",MR,"Сравнение предметов и групп предметов|Пространственные и временные представления|Числа от 1 до 5|Числа от 6 до 9, состав чисел|Число 0. Число 10|Сравнение чисел: больше, меньше, равно|Точка, линии, отрезок, ломаная, многоугольник|Сантиметр, измерение отрезков|Сложение и вычитание: прибавить и вычесть 1, 2|Задача: условие, вопрос, решение|Сложение и вычитание: прибавить и вычесть 3, 4|Переместительное свойство сложения|Связь сложения и вычитания, состав чисел в пределах 10|Килограмм и литр|Числа от 11 до 20, десяток, дециметр|Сложение с переходом через десяток|Вычитание с переходом через десяток"),
+ C("rus","Русский язык",KN,"Обучение грамоте: звуки и буквы, слоги|Наша речь|Текст, предложение, диалог|Слова — названия предметов, признаков и действий|Вежливые слова, однозначные и многозначные слова|Слово и слог, перенос слов|Ударение|Звуки и буквы, русский алфавит|Гласные звуки, ударные и безударные|Согласные звуки, твёрдые и мягкие|Мягкий знак как показатель мягкости|Звонкие и глухие согласные|Шипящие согласные: жи–ши, ча–ща, чу–щу, чк, чн|Заглавная буква в словах"),
+ C("read","Литературное чтение",SR,"Жили-были буквы|Сказки, загадки, небылицы|Апрель, апрель! Звенит капель|И в шутку и всерьёз|Я и мои друзья|О братьях наших меньших"),
+ C("world","Окружающий мир",SR,"Что такое Родина|Что у нас над головой и под ногами|Части растений|Кто такие насекомые, рыбы, птицы и звери|Откуда в дом приходят вода и электричество|Откуда берутся снег и лёд|Как живут растения и животные|Дни недели и времена года|Где живут белые медведи и слоны|Почему Солнце светит днём, а звёзды ночью|Почему идёт дождь и дует ветер|Правила безопасности и здоровья")],
+2:[C("math","Математика",P,"Цепочки и закономерности|Точка, прямая, луч, отрезок. Параллельные и пересекающиеся прямые|Сложение и вычитание двузначных чисел в столбик|Сотня, счёт сотнями. Трёхзначные числа|Сложение и вычитание трёхзначных чисел|Операции и обратные операции|Программы действий и алгоритмы|Длина ломаной, периметр|Скобки, порядок действий, свойства сложения|Угол: прямой, острый, тупой. Окружность и круг|Умножение и таблица умножения|Деление, связь умножения и деления|Площадь прямоугольника: S = a · b|Увеличение и уменьшение в несколько раз, кратное сравнение|Свойства умножения, умножение и деление с 0 и 1|Внетабличное умножение и деление|Деление с остатком|Объём прямоугольного параллелепипеда|Счёт сотнями. Тысяча"),
+ C("mathm","Математика",MR,"Числа от 1 до 100: счёт десятками, двузначные числа|Разряды, сумма разрядных слагаемых|Миллиметр и метр|Рубль и копейка|Обратные задачи|Час и минута|Длина ломаной, периметр|Числовые выражения, порядок действий, скобки|Свойства сложения|Устные приёмы сложения и вычитания в пределах 100|Буквенные выражения|Уравнения|Письменное сложение и вычитание в столбик|Углы: прямой, острый, тупой. Прямоугольник и квадрат|Умножение: смысл действия, переместительное свойство|Деление: смысл действия|Связь умножения и деления|Таблица умножения и деления на 2 и на 3"),
+ C("rus","Русский язык",KN,"Наша речь: виды речи, диалог и монолог|Текст: тема, главная мысль, части текста|Предложение, члены предложения|Слово и его значение, синонимы и антонимы|Однокоренные слова|Слог, ударение, перенос слова|Звуки и буквы, алфавит|Безударный гласный звук в корне слова|Согласный звук [й] и буква «и краткое»|Слова с удвоенными согласными|Твёрдые и мягкие согласные, мягкий знак|Буквосочетания с шипящими звуками|Парные по глухости-звонкости согласные|Разделительный мягкий знак|Имя существительное: одушевлённые и неодушевлённые, собственные и нарицательные, число|Глагол, текст-повествование|Имя прилагательное, текст-описание|Местоимение, текст-рассуждение|Предлоги"),
+ C("read","Литературное чтение",SR,"Самое великое чудо на свете|Устное народное творчество|Люблю природу русскую. Осень|Русские писатели: Пушкин, Крылов, Толстой|О братьях наших меньших|Люблю природу русскую. Зима|Писатели — детям|Я и мои друзья|Люблю природу русскую. Весна|И в шутку и всерьёз|Литература зарубежных стран"),
+ C("world","Окружающий мир",SR,"Родная страна, город и село|Живая и неживая природа, явления природы|Погода, звёздное небо|Воздух и вода|Растения и животные, Красная книга|Жизнь города и села: экономика, транспорт, профессии|Строение тела и здоровье|Безопасность дома, на дороге и на воде|Семья и общение|Горизонт, стороны света, компас|Формы земной поверхности и водоёмы|Россия на карте, материки"),
+ C("eng","Английский язык",ST,"Знакомство и приветствия|Алфавит и звуки|Числа от 1 до 10|Цвета|Моя семья|Животные|Игрушки и школьные вещи|Глагол to be|Глагол have got|Что я умею: can")],
+3:[C("math","Математика",P,"Множество и его элементы, пустое множество|Подмножество, диаграммы Эйлера — Венна|Пересечение и объединение множеств|Многозначные числа: классы и разряды|Сложение и вычитание многозначных чисел|Умножение и деление на 10, 100, 1000|Единицы длины и массы|Умножение многозначного числа на однозначное|Деление многозначного числа на однозначное|Симметрия и преобразование фигур|Единицы времени, календарь|Переменная, выражения с переменной|Высказывания, равенства и неравенства|Уравнение и его корень, составные уравнения|Формулы: путь, стоимость, работа|Задачи на движение, работу и стоимость|Формула деления с остатком|Умножение на двузначное и трёхзначное число"),
+ C("mathm","Математика",MR,"Сложение и вычитание в пределах 100: повторение|Уравнения с неизвестным слагаемым, уменьшаемым, вычитаемым|Таблица умножения и деления с числами 2 и 3|Цена, количество, стоимость|Порядок действий|Таблица умножения с числами 4, 5, 6, 7|Задачи на увеличение и уменьшение в несколько раз|Площадь и её единицы, площадь прямоугольника|Таблица умножения с числами 8 и 9|Умножение на 1 и на 0, деление нуля|Доли|Окружность и круг|Единицы времени|Внетабличное умножение и деление|Деление с остатком|Числа от 1 до 1000: нумерация|Сложение и вычитание в пределах 1000|Умножение и деление в пределах 1000, письменные приёмы"),
+ C("rus","Русский язык",KN,"Язык и речь|Текст и предложение, виды предложений|Обращение, состав предложения|Простое и сложное предложения, словосочетание|Лексическое значение слова, омонимы, фразеологизмы|Части речи, имя числительное|Однокоренные слова, звуки и буквы|Состав слова: корень, окончание, приставка, суффикс, основа|Безударные гласные в корне|Парные согласные в корне|Удвоенные и непроизносимые согласные|Правописание суффиксов и приставок, приставки и предлоги|Разделительный твёрдый знак|Имя существительное: число, род, падеж|Имя прилагательное: род, число, падеж|Местоимение: лицо, число, род|Глагол: формы, число, времена|Род глаголов в прошедшем времени, НЕ с глаголами"),
+ C("read","Литературное чтение",SR,"Самое великое чудо на свете|Устное народное творчество|Поэтическая тетрадь: Тютчев, Фет|Великие русские писатели|Литературные сказки|Были-небылицы|Люби живое|Собирай по ягодке — наберёшь кузовок|По страницам детских журналов|Зарубежная литература"),
+ C("world","Окружающий мир",SR,"Природа, человек, общество|Экология|Тела, вещества, частицы|Воздух и вода, круговорот воды|Почва|Разнообразие растений, размножение и развитие|Разнообразие животных, цепи питания|Грибы|Организм человека и органы чувств|Питание, дыхание и кровообращение|Наша безопасность|Экономика: полезные ископаемые, деньги, бюджет|Золотое кольцо России и наши соседи"),
+ C("eng","Английский язык",ST,"Школа и школьные предметы|Семья|Еда и напитки|Игрушки|Животные и их описание|Дом и комнаты|Распорядок дня, время|Present Simple|Present Continuous|Числа до 100")],
+4:[C("math","Математика",P,"Неравенство и множество его решений|Строгие, нестрогие и двойные неравенства|Оценка и прикидка суммы, разности, произведения, частного|Деление на двузначное и трёхзначное число|Площадь фигур, площадь прямоугольного треугольника|Доли, сравнение долей|Проценты|Дроби, сравнение дробей|Часть от числа, число по его части, какую часть одно число составляет от другого|Сложение и вычитание дробей с одинаковыми знаменателями|Правильные и неправильные дроби, смешанные числа|Шкалы, числовой и координатный луч|Движение по координатному лучу, скорость сближения и удаления|Задачи на встречное движение, вдогонку и с отставанием|Углы и их измерение, транспортир|Круговые, столбчатые и линейные диаграммы|Координатный угол, графики движения"),
+ C("mathm","Математика",MR,"Числа от 1 до 1000: повторение|Порядок действий в выражениях|Числа больше 1000: классы и разряды|Чтение, запись и сравнение многозначных чисел|Увеличение и уменьшение числа в 10, 100, 1000 раз|Единицы длины и площади|Единицы массы: грамм, килограмм, центнер, тонна|Единицы времени: от секунды до века|Сложение и вычитание многозначных чисел|Умножение и деление на однозначное число|Скорость, время, расстояние|Умножение и деление на числа, оканчивающиеся нулями|Умножение на двузначное и трёхзначное число|Деление на двузначное и трёхзначное число|Итоговое повторение"),
+ C("rus","Русский язык",KN,"Повторение: текст, предложение, обращение|Главные и второстепенные члены, словосочетание|Однородные члены предложения|Простые и сложные предложения|Лексическое значение слова|Состав слова, правописание гласных и согласных|Разделительные Ъ и Ь|Части речи, наречие|Изменение существительных по падежам|Три склонения имён существительных|Безударные падежные окончания существительных|Склонение прилагательных мужского и среднего рода|Склонение прилагательных женского рода|Склонение прилагательных во множественном числе|Личные местоимения, изменение по падежам|Неопределённая форма глагола|Спряжение глаголов, I и II спряжение|Безударные личные окончания глаголов|Возвратные глаголы, -тся и -ться|Глаголы в прошедшем времени"),
+ C("read","Литературное чтение",SR,"Летописи, былины, жития|Чудесный мир классики|Поэтическая тетрадь|Литературные сказки|Делу время — потехе час|Страна детства|Природа и мы|Родина|Страна Фантазия|Зарубежная литература"),
+ C("world","Окружающий мир",SR,"Планеты Солнечной системы, звёздное небо|Глобус и географическая карта|Равнины и горы России|Моря, озёра и реки России|Природные зоны: Арктика и тундра|Природные зоны: леса, степи, пустыни|Родной край: поверхность, водоёмы, полезные ископаемые|Страницы всемирной истории|Древняя Русь|От Куликовской битвы до Петра Великого|Отечественная война 1812 года|Великая Отечественная война|Современная Россия: Конституция и символы"),
+ C("eng","Английский язык",ST,"Семья и друзья|Профессии|Еда, some и any|Животные, степени сравнения|Распорядок дня, Present Simple и Present Continuous|Past Simple: was и were|Past Simple: правильные глаголы|Past Simple: неправильные глаголы|Будущее: be going to и will|Страны и путешествия")],
+5:[C("math","Математика",P,"Математический язык и модели|Метод проб и ошибок, метод перебора|Делители и кратные|Простые и составные числа|Признаки делимости|Разложение на простые множители|НОД и НОК|Степень числа|Обыкновенные дроби, основное свойство дроби|Сравнение дробей|Сложение и вычитание дробей|Смешанные числа|Умножение и деление дробей|Задачи на дроби и совместную работу|Десятичные дроби: запись, сравнение, округление|Действия с десятичными дробями"),
+ C("rus","Русский язык",ST,"Фонетика и орфоэпия|Лексика: значение слова, синонимы, антонимы|Морфемика: состав слова|Чередование гласных в корне|Буквы О и Ё после шипящих, Ы и И после Ц|Синтаксис: словосочетание и предложение|Главные и второстепенные члены предложения|Однородные члены, обращение, прямая речь|Имя существительное|Имя прилагательное|Глагол"),
+ C("lit","Литература",ST,"Мифы и фольклор, сказки|Басни И. А. Крылова|А. С. Пушкин: стихи и сказки|М. Ю. Лермонтов «Бородино»|Н. В. Гоголь «Ночь перед Рождеством»|И. С. Тургенев «Муму»|Л. Н. Толстой «Кавказский пленник»|Стихи о родной природе|Рассказы А. П. Чехова|Зарубежная литература: Андерсен, Дефо, Твен"),
+ C("eng","Английский язык",ST,"Школа и расписание|Present Simple и Present Continuous|Семья и внешность|Дом и город|Еда, исчисляемые и неисчисляемые|Past Simple|Степени сравнения прилагательных|Будущее время|Модальные глаголы can, must|Путешествия и каникулы"),
+ C("hist","История",ST,"Первобытные люди|Древний Египет|Междуречье, Финикия, Персия|Древняя Индия и Китай|Древняя Греция: полисы, Афины и Спарта|Греко-персидские войны|Александр Македонский|Древний Рим: республика|Римская империя|Падение Западной Римской империи"),
+ C("bio","Биология",ST,"Биология — наука о живом|Методы изучения природы, микроскоп|Клетка — основа жизни|Признаки живых организмов|Царства живой природы|Бактерии|Грибы|Растения|Животные|Среды обитания организмов"),
+ C("geo","География",ST,"Как люди открывали Землю|Земля во Вселенной|План местности, масштаб|Географическая карта, координаты|Литосфера: строение Земли, горные породы|Землетрясения и вулканы|Рельеф: горы и равнины")],
+6:[C("math","Математика",P,"Высказывания и их отрицание|Переменная, логическое следование|Совместные действия с обыкновенными и десятичными дробями|Проценты: три типа задач|Простой и сложный процентный рост|Среднее арифметическое|Отношения и пропорции|Прямая и обратная пропорциональность|Масштаб|Отрицательные числа, модуль|Сравнение рациональных чисел|Сложение и вычитание рациональных чисел|Умножение и деление рациональных чисел|Раскрытие скобок, подобные слагаемые|Решение уравнений|Координатная плоскость и графики"),
+ C("rus","Русский язык",ST,"Лексика и фразеология|Словообразование|Корни с чередованием: -кос-/-кас-, -гор-/-гар-|Приставки пре- и при-|Имя существительное|Имя прилагательное, Н и НН|Имя числительное|Местоимение|Глагол: наклонения|Переходные и непереходные глаголы"),
+ C("lit","Литература",ST,"Былины и древнерусская литература|А. С. Пушкин «Дубровский»|М. Ю. Лермонтов: лирика|И. С. Тургенев «Бежин луг»|Н. С. Лесков «Левша»|А. П. Чехов: рассказы|Стихи русских поэтов о природе|В. П. Астафьев, В. Г. Распутин|Мифы Древней Греции|Зарубежная литература"),
+ C("eng","Английский язык",ST,"Present Perfect|Past Simple и Past Continuous|Хобби и свободное время|Еда и покупки|Город и транспорт|Модальные глаголы|Будущее время|Праздники и традиции"),
+ C("hist","История",ST,"Раннее Средневековье: франки, Византия|Арабы и ислам|Феодалы и крестьяне|Средневековый город|Католическая церковь, Крестовые походы|Столетняя война|Восточные славяне|Образование Древнерусского государства|Крещение Руси, Ярослав Мудрый|Раздробленность Руси|Монгольское нашествие, Александр Невский|Куликовская битва, объединение вокруг Москвы"),
+ C("bio","Биология",ST,"Клеточное строение растений|Ткани растений|Корень|Побег, стебель, лист|Фотосинтез и дыхание растений|Цветок, плод, семя|Размножение растений|Классификация растений"),
+ C("geo","География",ST,"Гидросфера: океаны и моря|Реки и озёра|Атмосфера: температура, давление, ветер|Погода и климат|Биосфера|Природные зоны Земли|Население Земли"),
+ C("soc","Обществознание",ST,"Человек и его потребности|Деятельность и общение|Семья|Учёба и труд|Малые группы, отношения со сверстниками|Добро и мораль|Наша Родина — Россия")],
+7:[C("alg","Алгебра",ST,"Числовые и буквенные выражения|Линейные уравнения|Задачи на составление уравнений|Степень с натуральным показателем|Одночлены и многочлены|Формулы сокращённого умножения|Разложение на множители|Линейная функция и её график|Системы линейных уравнений"),
+ C("geom","Геометрия",ST,"Точки, прямые, отрезки, углы|Смежные и вертикальные углы|Признаки равенства треугольников|Равнобедренный треугольник|Параллельные прямые|Сумма углов треугольника|Прямоугольный треугольник|Окружность, построения циркулем и линейкой"),
+ C("rus","Русский язык",ST,"Причастие|Причастный оборот|Н и НН в причастиях|Деепричастие и деепричастный оборот|Наречие|Предлог|Союз|Частица, НЕ и НИ"),
+ C("lit","Литература",ST,"А. С. Пушкин «Станционный смотритель»|М. Ю. Лермонтов «Песня про купца Калашникова»|Н. В. Гоголь «Тарас Бульба»|И. С. Тургенев: рассказы и стихотворения в прозе|Н. А. Некрасов|М. Е. Салтыков-Щедрин: сказки|Л. Н. Толстой «Детство»|А. П. Чехов «Хамелеон»|Литература XX века о войне"),
+ C("eng","Английский язык",ST,"Present Perfect и Past Simple|Passive Voice|Условные предложения 0 и I типа|Модальные глаголы|Степени сравнения|Школа, спорт и здоровье|Путешествия и страны"),
+ C("phys","Физика",ST,"Физические величины и измерения|Строение вещества, молекулы|Механическое движение, скорость|Масса и плотность|Сила, сила тяжести, вес|Сила упругости и сила трения|Давление твёрдых тел, жидкостей и газов|Архимедова сила, плавание тел|Работа, мощность, энергия|Простые механизмы, рычаг"),
+ C("hist","История",ST,"Великие географические открытия|Реформация|Иван Грозный|Смутное время|Первые Романовы|Церковный раскол, народные движения XVII века"),
+ C("bio","Биология",ST,"Простейшие|Кишечнополостные и черви|Моллюски|Членистоногие|Рыбы|Земноводные и пресмыкающиеся|Птицы|Млекопитающие"),
+ C("geo","География",ST,"Материки и океаны|Литосферные плиты и рельеф|Климатические пояса|Африка|Австралия и Антарктида|Южная Америка|Северная Америка|Евразия"),
+ C("soc","Обществознание",ST,"Социальные нормы|Права и обязанности граждан|Закон и правопорядок|Экономика: производство и обмен|Деньги и семейный бюджет|Человек и природа"),
+ C("inf","Информатика",ST,"Информация и её свойства|Кодирование информации, единицы измерения|Устройство компьютера|Файлы и папки|Обработка текста|Обработка графики|Мультимедиа и презентации")],
+8:[C("alg","Алгебра",ST,"Рациональные дроби|Квадратные корни|Квадратные уравнения, дискриминант|Теорема Виета|Дробно-рациональные уравнения|Неравенства|Степень с целым показателем|Функции y = k/x и y = √x"),
+ C("geom","Геометрия",ST,"Четырёхугольники: параллелограмм, трапеция|Прямоугольник, ромб, квадрат|Площади фигур|Теорема Пифагора|Подобные треугольники|Синус, косинус, тангенс острого угла|Окружность: касательная, вписанные углы"),
+ C("rus","Русский язык",ST,"Словосочетание|Двусоставные предложения, подлежащее и сказуемое|Второстепенные члены|Односоставные предложения|Однородные члены|Обособленные члены|Обращения, вводные слова|Прямая и косвенная речь"),
+ C("lit","Литература",ST,"А. С. Пушкин «Капитанская дочка»|М. Ю. Лермонтов «Мцыри»|Н. В. Гоголь «Ревизор»|И. С. Тургенев «Ася»|Л. Н. Толстой «После бала»|А. П. Чехов: рассказы|А. Т. Твардовский «Василий Тёркин»|У. Шекспир «Ромео и Джульетта»"),
+ C("eng","Английский язык",ST,"Времена группы Perfect|Passive Voice|Косвенная речь|Условные предложения II типа|Инфинитив и герундий|СМИ и технологии|Окружающая среда"),
+ C("phys","Физика",ST,"Тепловые явления, внутренняя энергия|Количество теплоты, удельная теплоёмкость|Плавление, испарение, кипение|Электрический заряд, электрическое поле|Сила тока, напряжение, сопротивление|Закон Ома|Последовательное и параллельное соединение|Работа и мощность тока|Магнитные явления|Световые явления: отражение, преломление, линзы"),
+ C("chem","Химия",ST,"Вещества и их свойства|Атомы и молекулы, химические формулы|Валентность|Химические реакции и уравнения|Кислород и водород|Вода, растворы|Оксиды, основания, кислоты, соли|Периодическая система Менделеева|Строение атома|Химическая связь"),
+ C("hist","История",ST,"Эпоха Петра I|Дворцовые перевороты|Екатерина II|Восстание Пугачёва|Эпоха Просвещения|Великая французская революция"),
+ C("bio","Биология",ST,"Организм человека: клетки и ткани|Опорно-двигательная система|Кровь и кровообращение|Дыхание|Пищеварение|Нервная система|Органы чувств|Эндокринная система"),
+ C("geo","География",ST,"Географическое положение России|Рельеф и полезные ископаемые России|Климат России|Реки и озёра России|Природные зоны России|Население России"),
+ C("soc","Обществознание",ST,"Личность и общество|Сфера духовной культуры|Социальная структура общества|Экономика: спрос и предложение|Рынок и предпринимательство|Роль государства в экономике"),
+ C("inf","Информатика",ST,"Системы счисления|Логика: высказывания и операции|Алгоритмы и исполнители|Линейные алгоритмы|Ветвления|Циклы|Начала программирования")],
+9:[C("alg","Алгебра",ST,"Квадратичная функция|Квадратные неравенства|Уравнения и системы уравнений|Арифметическая прогрессия|Геометрическая прогрессия|Элементы комбинаторики|Вероятность и статистика"),
+ C("geom","Геометрия",ST,"Векторы|Метод координат|Теоремы синусов и косинусов|Правильные многоугольники|Длина окружности и площадь круга|Движения: симметрия, поворот, перенос"),
+ C("rus","Русский язык",ST,"Сложносочинённые предложения|Сложноподчинённые предложения|Виды придаточных|Бессоюзные сложные предложения|Сложные предложения с разными видами связи|Подготовка к ОГЭ: изложение и сочинение"),
+ C("lit","Литература",ST,"«Слово о полку Игореве»|А. С. Грибоедов «Горе от ума»|А. С. Пушкин «Евгений Онегин»|М. Ю. Лермонтов «Герой нашего времени»|Н. В. Гоголь «Мёртвые души»|Литература XX века: Булгаков, Шолохов, Солженицын"),
+ C("eng","Английский язык",ST,"Обзор времён|Условные предложения|Passive Voice|Косвенная речь|Модальные глаголы|Профессии и будущее"),
+ C("phys","Физика",ST,"Равномерное и равноускоренное движение|Законы Ньютона|Закон всемирного тяготения|Импульс, закон сохранения импульса|Механические колебания и волны, звук|Электромагнитное поле|Строение атома и ядра, радиоактивность"),
+ C("chem","Химия",ST,"Электролитическая диссоциация|Окислительно-восстановительные реакции|Галогены|Сера и её соединения|Азот и фосфор|Углерод и кремний|Металлы|Первые сведения об органических веществах"),
+ C("hist","История",ST,"Россия при Александре I, война 1812 года|Декабристы, Николай I|Отмена крепостного права, реформы Александра II|Александр III|Россия в начале XX века, революция 1905 года"),
+ C("bio","Биология",ST,"Клетка: строение и функции|Деление клетки|Основы генетики, законы Менделя|Эволюция, естественный отбор|Экосистемы|Биосфера"),
+ C("geo","География",ST,"Хозяйство России: отрасли|Топливно-энергетический комплекс|Центральная Россия|Северо-Запад и Европейский Север|Поволжье и Урал|Сибирь и Дальний Восток"),
+ C("soc","Обществознание",ST,"Политика и власть|Государство, формы правления|Конституция РФ|Права человека|Отрасли права|Гражданское общество"),
+ C("inf","Информатика",ST,"Моделирование|Массивы|Алгоритмы обработки данных|Электронные таблицы|Базы данных|Компьютерные сети и Интернет")],
+10:[C("alg","Алгебра и начала анализа",ST,"Действительные числа|Степени и корни|Показательная функция, уравнения и неравенства|Логарифмы|Логарифмические уравнения и неравенства|Тригонометрические функции|Тригонометрические формулы|Тригонометрические уравнения"),
+ C("geom","Геометрия",ST,"Аксиомы стереометрии|Параллельность прямых и плоскостей|Перпендикулярность прямых и плоскостей|Двугранный угол|Многогранники: призма и пирамида"),
+ C("rus","Русский язык",ST,"Лексика и фразеология|Орфоэпия и нормы|Морфемика и словообразование|Орфография: трудные случаи|Морфология: части речи|Культура речи"),
+ C("lit","Литература",ST,"А. Н. Островский «Гроза»|И. А. Гончаров «Обломов»|И. С. Тургенев «Отцы и дети»|Ф. М. Достоевский «Преступление и наказание»|Л. Н. Толстой «Война и мир»|А. П. Чехов «Вишнёвый сад»|Поэзия Тютчева, Фета, Некрасова"),
+ C("eng","Английский язык",ST,"Времена: обзор|Модальные глаголы|Условные предложения|Словообразование|Письмо и эссе"),
+ C("phys","Физика",ST,"Кинематика|Динамика|Законы сохранения в механике|Молекулярно-кинетическая теория|Газовые законы|Термодинамика|Электростатика|Постоянный ток"),
+ C("chem","Химия",ST,"Теория строения органических веществ|Алканы|Алкены и алкины|Арены|Спирты и фенолы|Альдегиды и карбоновые кислоты|Жиры, углеводы, белки"),
+ C("bio","Биология",ST,"Химический состав клетки|Строение клетки|Обмен веществ, фотосинтез|Митоз и мейоз|Генетика|Изменчивость и селекция"),
+ C("hist","История",ST,"Первая мировая война|Революции 1917 года|Гражданская война|СССР в 1920–1930-е годы|Вторая мировая и Великая Отечественная война"),
+ C("soc","Обществознание",ST,"Общество и человек|Познание|Духовная культура|Правовое регулирование|Экономика"),
+ C("inf","Информатика",ST,"Информация и информационные процессы|Системы счисления и кодирование|Алгебра логики|Программирование: алгоритмы и структуры данных")],
+11:[C("alg","Алгебра и начала анализа",ST,"Производная|Применение производной|Первообразная и интеграл|Уравнения и неравенства: методы решения|Комбинаторика и вероятность|Подготовка к ЕГЭ"),
+ C("geom","Геометрия",ST,"Векторы и координаты в пространстве|Цилиндр, конус, шар|Объёмы тел|Площади поверхностей"),
+ C("rus","Русский язык",ST,"Синтаксис простого предложения|Синтаксис сложного предложения|Пунктуация: трудные случаи|Стили речи|Подготовка к ЕГЭ: сочинение"),
+ C("lit","Литература",ST,"И. А. Бунин, А. И. Куприн|Серебряный век: Блок, Ахматова, Маяковский, Есенин|М. Горький «На дне»|М. А. Булгаков «Мастер и Маргарита»|М. А. Шолохов «Тихий Дон»|Литература о Великой Отечественной войне|А. И. Солженицын"),
+ C("eng","Английский язык",ST,"Грамматика: повторение|Косвенная речь и согласование времён|Словообразование|Подготовка к ЕГЭ"),
+ C("phys","Физика",ST,"Магнитное поле|Электромагнитная индукция|Колебания и волны|Оптика|Квантовая физика|Атомная и ядерная физика"),
+ C("chem","Химия",ST,"Строение атома и периодический закон|Химическая связь|Скорость реакции, химическое равновесие|Растворы, гидролиз|Электролиз|Металлы и неметаллы"),
+ C("bio","Биология",ST,"Эволюционное учение|Происхождение жизни|Происхождение человека|Экология|Биосфера и человек"),
+ C("hist","История",ST,"СССР в 1945–1953 годах|Оттепель|Эпоха Брежнева|Перестройка и распад СССР|Россия в 1990-е и 2000-е годы"),
+ C("soc","Обществознание",ST,"Экономика|Социальные отношения|Политика|Право"),
+ C("inf","Информатика",ST,"Информационное моделирование|Базы данных|Алгоритмы и программирование|Сети и информационная безопасность")]
+};
+
+/* ---------- состояние ---------- */
+const KEY = "pyaterka-v2";
+let store = {grade:3, subj:"", topics:{}, trainer:{}, logic:{}, abacus:{open:0, pts:{}}};
+try { const s = JSON.parse(localStorage.getItem(KEY)); if (s && typeof s === "object") store = Object.assign(store, s); } catch(e){}
+if (!CURR[store.grade]) store.grade = 3;
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(store)); } catch(e){} if (window.SITE) SITE.push(store); }
+const LV = () => store.grade <= 4 ? "a" : store.grade <= 6 ? "b" : "c";   // сложность игр и счёта
+const subjects = () => CURR[store.grade].filter(s => s.id === "math" ? store.mathProg !== "m" : s.id === "mathm" ? store.mathProg === "m" : true);
+const PASS = 40, PER_Q = 10, QN = 5;   // 5 вопросов по 10 баллов, тема сдана с 40
+
+let view = "teacher";
+let topic = null;    // открытая тема: {subj, i, phase, data, qi, right, picked, order, err}
+let drill = null;
+let confirmReset = false;
+let flipKey = "";    // тема, которая только что открылась
+const app = document.getElementById("app");
+const $ = (s, r=document) => r.querySelector(s);
+const rnd = (a,b) => a + Math.floor(Math.random()*(b-a+1));
+const shuffle = a => { a = a.slice(); for (let i=a.length-1;i>0;i--){ const j=rnd(0,i); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+let sayList = [];
+const listenBtn = (text, lang) => voiceMode ? `<button class="chip listen" type="button" data-say="${sayList.push({text,lang})-1}">Слушать</button>` : "";
+
+function render(){
+  sayList = [];
+  document.documentElement.classList.toggle("kid", store.grade <= 4);
+  document.querySelectorAll(".tab").forEach(t => t.dataset.view===view ? t.setAttribute("aria-current","page") : t.removeAttribute("aria-current"));
+  document.querySelectorAll(".lvl").forEach(b => b.setAttribute("aria-pressed", String(+b.dataset.grade===store.grade)));
+  if (view==="teacher") renderTeacher();
+  else if (view==="topics") topic ? renderTopic() : renderTopics();
+  else if (view==="logic") renderLogic();
+  else if (view==="abacus") renderAbacus();
+  else if (view==="trainer") renderTrainer();
+  else if (view==="account" && window.SITE) renderAccount();
+  else renderDiary();
+  app.querySelectorAll("[data-say]").forEach(b => b.onclick = () => { const s = sayList[+b.dataset.say]; if (s) speakText(s.text, s.lang); });
+}
+
+/* ---------- темы по программе ---------- */
+const tkey = (subj, i) => `${store.grade}-${subj}-${i}`;
+const curSubj = () => subjects().find(s => s.id === store.subj) || subjects()[0];
+function renderTopics(){
+  const S = curSubj(), pts = i => store.topics[tkey(S.id, i)] || 0;
+  const isOpen = i => i === 0 || pts(i-1) >= PASS;
+  const done = S.topics.filter((_, i) => pts(i) >= PASS).length;
+  const ai = typeof sampleFn === "function" && !aiOff;
+  app.innerHTML = `<section class="sheet">
+    <h1>Темы ${store.grade} класса</h1>
+    <div class="chips" role="group" aria-label="Предмет">${subjects().map(s=>`<button class="chip" data-subj="${s.id}" aria-pressed="${s.id===S.id}">${s.name}</button>`).join("")}</div>
+    ${store.grade <= 4 && (S.id === "math" || S.id === "mathm") ? `<div class="chips" role="group" aria-label="Учебник математики"><span class="muted">Учебник:</span>
+      <button class="chip" data-mp="p" aria-pressed="${store.mathProg !== "m"}">Петерсон</button><button class="chip" data-mp="m" aria-pressed="${store.mathProg === "m"}">Моро</button></div>` : ""}
+    <p class="muted">${S.name}, ${S.prog}. Пройдено тем: ${done} из ${S.topics.length}. ${window.SITE ? "В каждой теме" : "Урок по теме ведёт ИИ-учитель:"} объяснение и ${QN} вопросов по ${PER_Q} баллов. Набери ${PASS} баллов — и откроется следующая тема.</p>
+    ${ai ? "" : `<p class="note miss">${sampleFn===undefined ? "Подключаю учителя…" : "Уроки по темам ведёт ИИ-учитель. Сейчас он недоступен: открой страницу в Claude под аккаунтом и разреши доступ."}</p>`}
+    <ol class="tgrid">${S.topics.map((t,i)=>{ const p = pts(i), open = isOpen(i);
+      return `<li><button class="tcard ${p>=PASS?"done":open?"open":"locked"} ${flipKey===tkey(S.id,i)?"flip":""}" data-t="${i}" ${open && ai ? "" : "disabled"}>
+        <span class="tnum">Тема ${i+1}</span>
+        <span class="tname">${open ? esc(t) : "Закрыто"}</span>
+        <span class="tpts">${p ? p+" из "+QN*PER_Q+" баллов" : open ? "Начать" : "Сначала пройди тему "+i}</span></button></li>`; }).join("")}</ol>
+  </section>`;
+  flipKey = "";
+  app.querySelectorAll("[data-subj]").forEach(b => b.onclick = () => { store.subj = b.dataset.subj; save(); render(); });
+  app.querySelectorAll("[data-t]").forEach(b => b.onclick = () => startTopic(S.id, +b.dataset.t));
+  app.querySelectorAll("[data-mp]").forEach(b => b.onclick = () => { store.mathProg = b.dataset.mp; store.subj = b.dataset.mp === "m" ? "mathm" : "math"; save(); render(); });
+}
+
+let topicCtl = null;
+function lessonPrompt(S, name){
+  return `Ты — школьный учитель в России. Составь короткий урок для ученика ${store.grade} класса.
+Предмет: ${S.name}. Программа: ${S.prog}. Тема: «${name}».
+Требования:
+- Пиши по-русски (на уроке английского — задания с английскими словами, пояснения по-русски). Уровень строго под ${store.grade} класс${store.grade<=2?": короткие простые предложения, маленькие числа":""}.
+- Объяснение: 3–4 коротких абзаца простыми словами, с примером.
+- Ровно ${QN} вопросов с выбором ответа, от простого к более трудному. У каждого 4 разных варианта и ровно один верный.
+- Перепроверь каждый ответ: вычисления пересчитай, факты и правила сверь. Не включай вопрос, если не уверен в ответе.
+- Вопрос должен быть понятен без картинок и без учебника. Не ссылайся на страницы и номера заданий, не выдумывай цитаты из произведений.
+- В "why" коротко объясни, почему верный ответ верен.
+- Обычный текст без разметки.
+Ответь только JSON такого вида:
+{"explain":["абзац","абзац","абзац"],"questions":[{"q":"вопрос","options":["а","б","в","г"],"correct":0,"why":"объяснение"}]}`;
+}
+function validLesson(d){
+  if (!d || !Array.isArray(d.explain) || !Array.isArray(d.questions)) return null;
+  const explain = d.explain.filter(x => typeof x === "string" && x.trim()).slice(0, 6);
+  const questions = d.questions.filter(q => q && typeof q.q === "string" && Array.isArray(q.options) && q.options.length === 4
+    && q.options.every(o => typeof o === "string" || typeof o === "number") && new Set(q.options.map(String)).size === 4
+    && Number.isInteger(q.correct) && q.correct >= 0 && q.correct < 4).slice(0, QN)
+    .map(q => ({q:q.q, options:q.options.map(String), correct:q.correct, why:typeof q.why === "string" ? q.why : ""}));
+  return explain.length && questions.length === QN ? {explain, questions} : null;
+}
+function startTopic(subjId, i){
+  if (typeof sampleFn !== "function" || aiOff) return;
+  const S = CURR[store.grade].find(s => s.id === subjId), mine = topic = {subj:subjId, i, phase:"load", qi:0, right:0, picked:null, order:null};
+  if (topicCtl) topicCtl.abort();
+  topicCtl = new AbortController();
+  render();
+  sampleFn.json(lessonPrompt(S, S.topics[i]), {cache:false, signal:topicCtl.signal, meta:{grade:store.grade, subj:subjId, i}}).then(d => {
+    if (topic !== mine) return;
+    const ok = validLesson(d);
+    if (ok) { mine.data = ok; mine.phase = "explain"; } else { mine.phase = "error"; mine.err = "Учитель составил урок с ошибкой в оформлении. Нажми «Попробовать ещё раз»."; }
+    render();
+  }, e => {
+    if (topic !== mine) return;
+    const code = e && e.code;
+    if (code === "cancelled") { topic = null; render(); return; }
+    if (HIDE.includes(code)) aiOff = true;
+    mine.code = code;
+    mine.phase = "error"; mine.err = code === "invalid_json" ? "Учитель составил урок с ошибкой в оформлении. Нажми «Попробовать ещё раз»." : (ERR[code] || "Связь с учителем прервалась. Попробуй ещё раз.");
+    render();
+  });
+}
+function renderTopic(){
+  const S = CURR[store.grade].find(s => s.id === topic.subj), name = S.topics[topic.i], lang = S.id === "eng" ? undefined : "ru";
+  const head = step => `<span class="step">${S.name} · тема ${topic.i+1} · ${step}</span>`;
+  const back = `<button class="btn ghost" id="tback">К списку тем</button>`;
+  if (topic.phase === "load") {
+    app.innerHTML = `<section class="sheet">${head("подготовка")}<h1>${esc(name)}</h1>
+      <p>Учитель готовит урок… Обычно это занимает до минуты.</p><div class="actions"><button class="btn ghost" id="tstop">Отменить</button></div></section>`;
+    $("#tstop").onclick = () => { if (topicCtl) topicCtl.abort(); topic = null; render(); };
+    return;
+  }
+  if (topic.phase === "error") {
+    app.innerHTML = `<section class="sheet">${head("ошибка")}<h1>${esc(name)}</h1><p class="note miss">${topic.err}</p>
+      <div class="actions">${["need_login","need_pay"].includes(topic.code) ? `<button class="btn" id="tacc">Открыть кабинет</button>` : aiOff ? "" : `<button class="btn" id="tretry">Попробовать ещё раз</button>`}${back}</div></section>`;
+    const r = $("#tretry"); if (r) r.onclick = () => startTopic(topic.subj, topic.i);
+    const ta = $("#tacc"); if (ta) ta.onclick = () => { topic = null; view = "account"; render(); };
+    $("#tback").onclick = () => { topic = null; render(); };
+    return;
+  }
+  const D = topic.data;
+  if (topic.phase === "explain") {
+    app.innerHTML = `<section class="sheet">${head("объяснение")}<h1>${esc(name)}</h1>
+      <div class="theory">${D.explain.map(t=>`<p>${esc(t)}</p>`).join("")}</div>
+      <p class="muted">Урок составил ИИ-учитель. Он может ошибаться — важное сверяй с учебником.</p>
+      <div class="actions">${listenBtn(name+".\n"+D.explain.join("\n"), lang)}<button class="btn" id="tgo">К вопросам</button>${back}</div></section>`;
+    $("#tgo").onclick = () => { topic.phase = "q"; render(); };
+    $("#tback").onclick = () => { topic = null; render(); };
+    return;
+  }
+  if (topic.phase === "done") {
+    const pts = topic.right * PER_Q, key = tkey(S.id, topic.i), was = store.topics[key] || 0, passed = pts >= PASS;
+    if (pts > was) { store.topics[key] = pts; save(); }
+    const hasNext = topic.i + 1 < S.topics.length;
+    if (passed && was < PASS && hasNext) flipKey = tkey(S.id, topic.i + 1);
+    app.innerHTML = `<section class="sheet">${head("итог")}
+      <div class="result"><span class="bigmark" aria-hidden="true">${pts}</span>
+        <div><h1>${pts} из ${QN*PER_Q} баллов</h1><p>${passed ? (hasNext ? "Тема пройдена! Следующая тема открыта." : "Тема пройдена! Это была последняя тема по предмету.") : `Чтобы открыть следующую тему, нужно ${PASS} баллов. Перечитай объяснение и попробуй ещё раз — вопросы будут новые.`}</p></div></div>
+      <div class="actions">${passed && hasNext ? `<button class="btn" id="tnext">К списку тем</button>` : ""}<button class="btn ${passed?"ghost":""}" id="tagain">Пройти тему заново</button>${passed && hasNext ? "" : back}</div></section>`;
+    const n = $("#tnext"); if (n) n.onclick = () => { topic = null; render(); };
+    $("#tagain").onclick = () => { flipKey = ""; startTopic(topic.subj, topic.i); };
+    const b = $("#tback"); if (b) b.onclick = () => { topic = null; render(); };
+    return;
+  }
+  const Q = D.questions[topic.qi];
+  if (!topic.order) { topic.order = shuffle([0,1,2,3]); topic.picked = null; }
+  const p = topic.picked, canAsk = typeof sampleFn === "function" && !aiOff;
+  app.innerHTML = `<section class="sheet">${head(`вопрос ${topic.qi+1} из ${QN}`)}
+    <p class="q">${esc(Q.q)}</p>
+    ${p === null ? `<div class="actions">${listenBtn(Q.q+"\nВарианты ответа: "+topic.order.map(k=>Q.options[k]).join("; ")+".", lang)}</div>` : ""}
+    <div class="opts">${topic.order.map(k=>`<button class="opt ${p!==null && k===Q.correct ? "right" : p===k ? "wrong" : ""}" data-k="${k}" ${p!==null?"disabled":""}>${esc(Q.options[k])}</button>`).join("")}</div>
+    ${p !== null ? `<p class="note ${p===Q.correct?"":"miss"}"><b>${p===Q.correct?"Верно, +"+PER_Q+" баллов.":"Не совсем."}</b> ${esc(Q.why)}</p>
+    <div class="actions"><button class="btn" id="tnextq">${topic.qi+1===QN?"Узнать баллы":"Дальше"}</button>
+      ${canAsk ? `<button class="btn ghost" id="task" ${busy?"disabled":""}>Спросить учителя</button>` : ""}</div>` : ""}
+    <details><summary>Показать объяснение темы</summary><div class="theory">${D.explain.map(t=>`<p>${esc(t)}</p>`).join("")}</div></details>
+  </section>`;
+  app.querySelectorAll(".opt").forEach(b => b.onclick = () => { topic.picked = +b.dataset.k; if (topic.picked === Q.correct) topic.right++; render(); const n = $("#tnextq"); if (n) n.focus(); });
+  const nq = $("#tnextq"); if (nq) nq.onclick = () => { topic.qi++; topic.order = null; if (topic.qi >= QN) topic.phase = "done"; render(); };
+  const ask = $("#task"); if (ask) ask.onclick = () => { teacherSubj = S.id; view = "teacher";
+    send(`Объясни мне подробнее это задание по теме «${name}», я хочу понять.\nЗадание: ${Q.q}\nМой ответ: ${Q.options[p]}\nОтвет, который считается правильным: ${Q.options[Q.correct]}`); };
+}
+
+/* ---------- тренажёр счёта ---------- */
+function makeTask(level){
+  if (level==="a"){
+    if (store.grade===1){ const a=rnd(1,10), b=rnd(1,10); return rnd(0,1) ? {text:`${a} + ${b}`, ans:a+b} : {text:`${a+b} − ${b}`, ans:a}; }
+    const t = rnd(1, store.grade===2 ? 2 : 3);
+    if (t===1){ const a=rnd(11,60), b=rnd(5,39); return {text:`${a} + ${b}`, ans:a+b}; }
+    if (t===2){ const a=rnd(30,99), b=rnd(5,29); return {text:`${a} − ${b}`, ans:a-b}; }
+    const a=rnd(2,9), b=rnd(2,9); return {text:`${a} × ${b}`, ans:a*b};
+  }
+  if (level==="b"){
+    const t = rnd(1,3);
+    if (t===1){ const a=rnd(11,25), b=rnd(2,9); return {text:`${a} × ${b}`, ans:a*b}; }
+    if (t===2){ const b=rnd(2,12), r=rnd(2,12); return {text:`${b*r} : ${b}`, ans:r}; }
+    const p=[10,20,25,50][rnd(0,3)], n=20*rnd(1,10); return {text:`${p} % от ${n}`, ans:p*n/100};
+  }
+  const t = rnd(1,3);
+  if (t===1){ const a=rnd(11,20); return {text:`${a}²`, ans:a*a}; }
+  if (t===2){ const a=rnd(3,30), b=rnd(a+1,a+40); return {text:`${a} − ${b}`, ans:a-b}; }
+  const a=rnd(2,9), x=rnd(-9,9), b=rnd(1,20); return {text:`${a}x + ${b} = ${a*x+b},  x = ?`, ans:x};
+}
+const ROUND = 10;
+function renderTrainer(){
+  const best = store.trainer[LV()];
+  if (!drill){
+    app.innerHTML = `<section class="sheet">
+      <h1>Быстрый счёт</h1>
+      <p>Десять примеров подряд для ${store.grade} класса. Примеры каждый раз новые. Считай в уме и вводи ответ.</p>
+      <p class="muted">${best!==undefined ? `Лучший результат: ${best} из ${ROUND}.` : "Ты ещё не проходил этот уровень."}</p>
+      <div class="actions"><button class="btn" id="start">Начать</button></div>
+    </section>`;
+    $("#start").onclick = () => { drill = {level:LV(), log:[], task:makeTask(LV()), last:null}; render(); };
+    return;
+  }
+  const dots = Array.from({length:ROUND},(_,i)=>`<span class="dot ${drill.log[i]===true?"y":drill.log[i]===false?"n":""}"></span>`).join("");
+  if (drill.log.length >= ROUND){
+    const right = drill.log.filter(Boolean).length;
+    if (best===undefined || right>best){ store.trainer[drill.level] = right; save(); }
+    app.innerHTML = `<section class="sheet">
+      <span class="step">Быстрый счёт · итог</span>
+      <h1>${right} из ${ROUND} верно</h1>
+      <div class="dots" aria-hidden="true">${dots}</div>
+      ${drill.last ? `<p class="note ${drill.last.ok?"":"miss"}">${drill.last.msg}</p>` : ""}
+      <div class="actions"><button class="btn" id="start">Ещё раунд</button></div>
+    </section>`;
+    $("#start").onclick = () => { drill = {level:LV(), log:[], task:makeTask(LV()), last:null}; render(); };
+    return;
+  }
+  app.innerHTML = `<section class="sheet">
+    <span class="step">Быстрый счёт · пример ${drill.log.length+1} из ${ROUND}</span>
+    <div class="task">${drill.task.text}</div>
+    <form class="answer" id="f"><label for="ans" class="muted" style="width:100%">Твой ответ</label>
+      <input id="ans" inputmode="text" autocomplete="off" maxlength="6">
+      <button class="btn" type="submit">Проверить</button></form>
+    <div class="dots" aria-hidden="true">${dots}</div>
+    ${drill.last ? `<p class="note ${drill.last.ok?"":"miss"}">${drill.last.msg}</p>` : ""}
+  </section>`;
+  const inp = $("#ans"); inp.focus();
+  $("#f").onsubmit = e => {
+    e.preventDefault();
+    const raw = inp.value.trim().replace("−","-").replace(",",".");
+    if (raw==="" || isNaN(Number(raw))) { inp.focus(); return; }
+    const ok = Number(raw) === drill.task.ans;
+    const shown = String(drill.task.ans).replace("-","−");
+    drill.log.push(ok);
+    drill.last = {ok, msg: ok ? `Верно: ${drill.task.text.replace(",  x = ?","")} → ${shown}.` : `Не совсем. ${drill.task.text.replace(",  x = ?","")} → правильный ответ ${shown}.`};
+    drill.task = makeTask(drill.level);
+    render();
+  };
+}
+
+/* ---------- дневник ---------- */
+function renderDiary(){
+  const rows = subjects().map(s => { const pts = s.topics.map((_, i) => store.topics[tkey(s.id, i)] || 0);
+    return `<tr><td>${s.name}</td><td>${pts.filter(p => p >= PASS).length} из ${s.topics.length}</td><td>${pts.reduce((a, b) => a + b, 0)}</td></tr>`; }).join("");
+  const st = abStore(), abDone = AB.filter((a, i) => (st.pts[i] || 0) >= a.need).length;
+  const lg = GAMES.reduce((n, g) => n + ((store.logic || {})[LV()+"-"+g.id] || 0), 0), tr = store.trainer[LV()];
+  app.innerHTML = `<section class="sheet">
+    <h1>Дневник, ${store.grade} класс</h1>
+    <div class="tablebox"><table>
+      <thead><tr><th>Предмет</th><th>Тем пройдено</th><th>Баллы</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table></div>
+    <div class="tablebox"><table>
+      <thead><tr><th>Тренировки</th><th>Результат</th></tr></thead>
+      <tbody><tr><td>Абакус, ступеней пройдено</td><td>${abDone} из ${AB.length}</td></tr>
+      <tr><td>Логические игры, решено задач</td><td>${lg}</td></tr>
+      <tr><td>Быстрый счёт, лучший раунд</td><td>${tr !== undefined ? tr + " из " + ROUND : "—"}</td></tr></tbody>
+    </table></div>
+    <p class="muted">Результаты хранятся только в этом браузере на этом устройстве. На другом телефоне или компьютере дневник будет пустым.</p>
+    <div class="actions">${confirmReset
+      ? `<button class="btn danger" id="yes">Да, стереть все результаты</button><button class="btn ghost" id="no">Оставить</button>`
+      : `<button class="btn ghost" id="reset">Очистить дневник</button>`}</div>
+  </section>`;
+  if (confirmReset){
+    $("#yes").onclick = () => { store.topics = {}; store.trainer = {}; store.logic = {}; store.abacus = {open:0, pts:{}}; save(); confirmReset = false; render(); };
+    $("#no").onclick = () => { confirmReset = false; render(); };
+  } else $("#reset").onclick = () => { confirmReset = true; render(); };
+}
+
+/* ---------- логические игры (задачи создаются заново каждый раз) ---------- */
+const GAMES = [
+  {id:"seq",    glyph:"1·2·?", name:"Продолжи ряд",   desc:"Найди правило и следующее число"},
+  {id:"scale",  glyph:"▲=?",   name:"Весы",           desc:"Узнай, сколько весит фигура"},
+  {id:"odd",    glyph:"≠",     name:"Лишнее число",   desc:"Одно число не подходит к остальным"},
+  {id:"houses", glyph:"⌂⌂⌂",   name:"Кто где живёт",  desc:"Рассели жильцов по подсказкам"},
+  {id:"sudoku", glyph:"4×4",   name:"Судоку",         desc:"Заполни клетки цифрами от 1 до 4"}
+];
+let logic = null;   // {game, task, picked, sel, msg, solved, broken}
+const pick = (arr, n) => shuffle(arr).slice(0, n);
+function optionsFor(ans, spread){
+  const set = new Set([ans]); let guard = 0;
+  while (set.size < 4 && guard++ < 300) { const v = ans + rnd(1, spread) * (Math.random() < .5 ? -1 : 1); if (v > 0) set.add(v); }
+  return shuffle([...set]);
+}
+
+function genSeq(level){
+  let a = [], why = "";
+  const build = (n, f) => { a = []; for (let i = 0; i < n; i++) a.push(f(i, a)); };
+  const t = rnd(1, level === "a" ? 3 : 4);
+  if (level === "a") {
+    if (t === 1) { const s = rnd(1,20), d = rnd(2,9); build(6, i => s + i*d); why = `Каждый раз прибавляем ${d}.`; }
+    else if (t === 2) { const d = rnd(2,6), s = rnd(40,70); build(6, i => s - i*d); why = `Каждый раз вычитаем ${d}.`; }
+    else { const s = rnd(1,4); build(6, i => s * 2**i); why = "Каждое число вдвое больше предыдущего."; }
+  } else if (level === "b") {
+    if (t === 1) { const s = rnd(1,3); build(5, i => s * 3**i); why = "Каждое число втрое больше предыдущего."; }
+    else if (t === 2) { const s = rnd(1,9), x = rnd(1,4), y = rnd(5,9); build(6, (i, r) => i ? r[i-1] + (i % 2 ? x : y) : s); why = `Прибавляем по очереди ${x} и ${y}.`; }
+    else if (t === 3) { const s = rnd(1,9); build(6, (i, r) => i ? r[i-1] + i : s); why = "Прибавляем сначала 1, потом 2, потом 3 и так далее. Теперь нужно прибавить 5."; }
+    else { const s = rnd(1,4); build(6, i => (s+i)*(s+i)); why = `Это квадраты чисел подряд: ${s} × ${s}, ${s+1} × ${s+1} и так далее. Следующий — ${s+5} × ${s+5}.`; }
+  } else {
+    if (t === 1) { const x = rnd(1,5), y = rnd(1,5); build(7, (i, r) => i === 0 ? x : i === 1 ? y : r[i-1] + r[i-2]); why = "Каждое число — сумма двух предыдущих."; }
+    else if (t === 2) { const s = rnd(1,4); build(6, (i, r) => i ? r[i-1]*2 + 1 : s); why = "Каждое число: предыдущее умножаем на 2 и прибавляем 1."; }
+    else if (t === 3) { const s = rnd(3,6); build(7, (i, r) => i ? (i % 2 ? r[i-1]*2 : r[i-1] - 1) : s); why = "Действия чередуются: умножаем на 2, потом вычитаем 1."; }
+    else { const s = rnd(1,4); build(6, i => (s+i)*(s+i) + 1); why = `Это квадраты чисел подряд плюс 1. Следующее: ${s+5} × ${s+5} + 1.`; }
+  }
+  const ans = a.pop(), row = a.join(", ");
+  return {head:`<div class="task">${row}, ?</div>`, ask:"Какое число будет следующим?", opts:optionsFor(ans, 10), ans, why:`${why} Ответ: ${ans}.`,
+          say:`Продолжи ряд: ${row}. Какое число следующее?`, desc:`Продолжи числовой ряд: ${row}, ?`};
+}
+
+function genScale(level){
+  let lines, ask, ans, why;
+  if (level === "a") {
+    const t = rnd(2,9); let c = rnd(1,9); if (c === t) c = c % 9 + 1;
+    lines = [`▲ + ▲ = ${2*t} кг`, `▲ + ● = ${t+c} кг`]; ask = "●"; ans = c;
+    why = `▲ = ${2*t} : 2 = ${t} кг. Тогда ● = ${t+c} − ${t} = ${c} кг.`;
+  } else if (level === "b") {
+    const t = rnd(2,9), c = rnd(2,12), q = rnd(2,12);
+    lines = [`▲ + ▲ + ▲ = ${3*t} кг`, `▲ + ● = ${t+c} кг`, `● + ■ = ${c+q} кг`]; ask = "■"; ans = q;
+    why = `▲ = ${3*t} : 3 = ${t} кг. ● = ${t+c} − ${t} = ${c} кг. ■ = ${c+q} − ${c} = ${q} кг.`;
+  } else {
+    const x = rnd(2,15), y = rnd(2,15), z = rnd(2,15), sum = x+y+z;
+    lines = [`▲ + ● = ${x+y} кг`, `● + ■ = ${y+z} кг`, `▲ + ■ = ${x+z} кг`]; ask = "▲"; ans = x;
+    why = `Сложим все три равенства: каждая фигура встречается дважды, значит ▲ + ● + ■ = ${2*sum} : 2 = ${sum} кг. Вычтем второе равенство: ▲ = ${sum} − ${y+z} = ${x} кг.`;
+  }
+  const names = t => t.replace(/▲/g,"треугольник").replace(/●/g,"круг").replace(/■/g,"квадрат").replace(/=/g,"равно").replace(/\+/g,"плюс");
+  return {head:`<div class="eqs">${lines.map(l=>`<div class="eq">${l}</div>`).join("")}</div>`, ask:`Сколько килограммов весит ${ask}?`,
+          opts:optionsFor(ans, 6), ans, why, say:names(lines.join(". ") + `. Сколько весит ${ask}?`), desc:`Задача про весы. ${lines.join("; ")}. Сколько весит ${ask}?`};
+}
+
+function genOdd(level){
+  const range = (from, to, ok) => { const r = []; for (let i = from; i <= to; i++) if (ok(i)) r.push(i); return r; };
+  const COMP = {21:"3 × 7",27:"3 × 9",33:"3 × 11",39:"3 × 13",49:"7 × 7",51:"3 × 17",57:"3 × 19",63:"7 × 9",77:"7 × 11",87:"3 × 29",91:"7 × 13",93:"3 × 31"};
+  let good, bad, why; const t = rnd(1,3);
+  if (level === "a") {
+    if (t === 1) { good = pick(range(2,98,n=>n%2===0),4); bad = pick(range(3,99,n=>n%2===1),1)[0]; why = n => `Все числа чётные, а ${n} — нечётное.`; }
+    else if (t === 2) { good = pick(range(3,99,n=>n%2===1),4); bad = pick(range(2,98,n=>n%2===0),1)[0]; why = n => `Все числа нечётные, а ${n} — чётное.`; }
+    else { good = [...pick([15,25,35,45,55,65,75,85],2), ...pick([10,20,30,40,50,60,70,80,90],2)]; bad = pick(range(11,89,n=>n%5!==0),1)[0]; why = n => `Все числа делятся на 5 (оканчиваются на 0 или 5), а ${n} — нет.`; }
+  } else if (level === "b") {
+    if (t === 1) { good = [...pick([9,15,21,27,33,39,45,51],2), ...pick([6,12,18,24,30,36,42,48],2)]; bad = pick(range(10,50,n=>n%3!==0),1)[0]; why = n => `Все числа делятся на 3, а ${n} — нет.`; }
+    else if (t === 2) { good = pick(range(2,12,()=>true).map(n=>n*4),4); bad = pick([6,10,14,18,22,26,30,34,38,42],1)[0]; why = n => `Все числа делятся на 4, а ${n} — нет.`; }
+    else { good = [...pick([4,16,36,64,100],2), ...pick([9,25,49,81],2)]; bad = pick(range(10,90,n=>Math.sqrt(n)%1!==0),1)[0]; why = n => `Все числа — квадраты (например, ${good[0]} = ${Math.sqrt(good[0])} × ${Math.sqrt(good[0])}), а ${n} — нет.`; }
+  } else {
+    if (t === 1) { good = pick([11,13,17,19,23,29,31,37,41,43,47,53,59,61,67,71,73,79,83,89,97],4); bad = +pick(Object.keys(COMP),1)[0]; why = n => `Все числа простые, а ${n} = ${COMP[n]} — составное.`; }
+    else if (t === 2) { good = pick([4,8,16,32,64,128,256],4); bad = pick([6,12,20,24,48,96,100],1)[0]; why = n => `Все числа — степени двойки (2 × 2 × … × 2), а ${n} — нет.`; }
+    else { good = [...pick([21,35,49,63,77,91],2), ...pick([14,28,42,56,70,84,98],2)]; bad = pick(range(15,95,n=>n%7!==0),1)[0]; why = n => `Все числа делятся на 7, а ${n} — нет.`; }
+  }
+  const nums = shuffle([...good, bad]);
+  return {head:"", ask:"Какое число лишнее?", opts:nums, ans:bad, why:why(bad), say:`Какое число лишнее: ${nums.join(", ")}?`, desc:`Найди лишнее число: ${nums.join(", ")}.`};
+}
+
+function genHouses(level){
+  const all = [{n:"Аня",g:"Ани"},{n:"Боря",g:"Бори"},{n:"Вика",g:"Вики"},{n:"Гена",g:"Гены"}];
+  const N = level === "a" ? 3 : 4, people = all.slice(0, N), names = people.map(p => p.n);
+  const perms = []; (function go(rest, acc){ if (!rest.length) return perms.push(acc); rest.forEach((x, i) => go(rest.filter((_, j) => j !== i), [...acc, x])); })(names, []);
+  const sol = shuffle(names), P = n => sol.indexOf(n), cands = [];
+  people.forEach(X => { const p = P(X.n);
+    if (level === "a") cands.push({t:`${X.n} живёт в доме № ${p+1}.`, f:m => m.indexOf(X.n) === p});
+    for (let k = 0; k < N; k++) if (k !== p) cands.push({t:`${X.n} не живёт в доме № ${k+1}.`, f:m => m.indexOf(X.n) !== k});
+    if (p === 0 || p === N-1) cands.push({t:`${X.n} живёт в крайнем доме.`, f:m => { const i = m.indexOf(X.n); return i === 0 || i === N-1; }});
+    people.forEach(Y => { if (X === Y) return; const q = P(Y.n);
+      if (p < q) cands.push({t:`${X.n} живёт левее, чем ${Y.n}.`, f:m => m.indexOf(X.n) < m.indexOf(Y.n)});
+      if (p === q + 1 && level !== "c") cands.push({t:`${X.n} живёт сразу справа от ${Y.g}.`, f:m => m.indexOf(X.n) === m.indexOf(Y.n) + 1});
+      if (X.n < Y.n && Math.abs(p-q) === 1) cands.push({t:`${X.n} и ${Y.n} — соседи.`, f:m => Math.abs(m.indexOf(X.n) - m.indexOf(Y.n)) === 1});
+      if (X.n < Y.n && Math.abs(p-q) > 1) cands.push({t:`${X.n} и ${Y.n} — не соседи.`, f:m => Math.abs(m.indexOf(X.n) - m.indexOf(Y.n)) > 1});
+    });
+  });
+  const count = cl => perms.filter(m => cl.every(c => c.f(m))).length;
+  let clues = [];
+  for (const c of shuffle(cands)) { const now = count(clues); if (now === 1) break; if (count([...clues, c]) < now) clues.push(c); }
+  for (let i = clues.length - 1; i >= 0; i--) { const rest = clues.filter((_, j) => j !== i); if (count(rest) === 1) clues = rest; }
+  return {N, names, clues, sol, say:`Дома стоят в ряд, слева направо. ${clues.map(c=>c.t).join(" ")} Кто в каком доме живёт?`,
+          desc:`Задача «Кто где живёт». ${N} дома стоят в ряд слева направо, № 1 самый левый. Жильцы: ${names.join(", ")}. Подсказки: ${clues.map(c=>c.t).join(" ")}`};
+}
+
+function genSudoku(level){
+  let g = [[1,2,3,4],[3,4,1,2],[2,1,4,3],[4,3,2,1]];
+  const tr = m => m[0].map((_, c) => m.map(r => r[c]));
+  for (let k = 0; k < 2; k++) {
+    if (rnd(0,1)) [g[0], g[1]] = [g[1], g[0]];
+    if (rnd(0,1)) [g[2], g[3]] = [g[3], g[2]];
+    if (rnd(0,1)) g = [g[2], g[3], g[0], g[1]];
+    g = tr(g);
+  }
+  const d = shuffle([1,2,3,4]); g = g.map(r => r.map(v => d[v-1]));
+  const blanks = new Set(pick([...Array(16).keys()], level === "a" ? 6 : level === "b" ? 9 : 11));
+  const cells = g.flat().map((v, i) => blanks.has(i) ? 0 : v);
+  return {cells, given:cells.map(v => v !== 0),
+          desc:`Судоку 4×4 (в каждой строке, столбце и квадрате 2×2 цифры от 1 до 4 без повторов). Строки сверху вниз, 0 — пустая клетка: ${[0,1,2,3].map(r => cells.slice(r*4, r*4+4).join(" ")).join(" / ")}`};
+}
+function sudokuBad(cells){
+  const bad = new Set(), units = [];
+  for (let i = 0; i < 4; i++) { units.push([0,1,2,3].map(j => i*4+j)); units.push([0,1,2,3].map(j => j*4+i)); }
+  [0,2,8,10].forEach(o => units.push([o, o+1, o+4, o+5]));
+  units.forEach(u => u.forEach(x => u.forEach(y => { if (x !== y && cells[x] && cells[x] === cells[y]) bad.add(x); })));
+  return bad;
+}
+
+const GEN = {seq:genSeq, scale:genScale, odd:genOdd, houses:genHouses, sudoku:genSudoku};
+function newLogic(game){ const task = GEN[game](LV()); logic = {game, level:LV(), task, picked:null, sel:task.N ? Array(task.N).fill("") : null, msg:"", ok:false, solved:false, broken:[]}; }
+function logicWin(){ if (logic.solved) return; logic.solved = true; store.logic = store.logic || {}; const k = logic.level+"-"+logic.game; store.logic[k] = (store.logic[k]||0) + 1; save(); }
+
+function renderLogic(){
+  if (!logic) {
+    app.innerHTML = `<section class="sheet">
+      <h1>Логические игры</h1>
+      <p class="muted">Пять игр для ${store.grade} класса. Задачи каждый раз новые, поэтому решать можно сколько угодно.</p>
+      <ol class="schedule">${GAMES.map((g,i)=>`<li><button class="row" data-game="${g.id}">
+        <span class="num">${i+1}</span><span class="glyph" aria-hidden="true" style="font-size:12px">${g.glyph}</span>
+        <span><span class="title">${g.name}</span><span class="subj">${g.desc}</span></span>
+        <span class="count">решено: ${(store.logic||{})[LV()+"-"+g.id]||0}</span></button></li>`).join("")}</ol>
+    </section>`;
+    app.querySelectorAll("[data-game]").forEach(b => b.onclick = () => { newLogic(b.dataset.game); render(); });
+    return;
+  }
+  const g = GAMES.find(x => x.id === logic.game), t = logic.task;
+  const canAsk = typeof sampleFn === "function" && !aiOff;
+  const tail = done => `<div class="actions">
+      ${done ? `<button class="btn" id="lnext">Следующая задача</button>` : ""}
+      ${canAsk ? `<button class="btn ghost" id="lask" ${busy?"disabled":""}>${done ? "Спросить учителя" : "Подсказка от учителя"}</button>` : ""}
+      <button class="btn ghost" id="lback">К списку игр</button></div>`;
+  let body = "";
+  if (t.opts) {
+    const p = logic.picked;
+    body = `${t.head}<p class="q">${t.ask}</p>
+      ${p === null ? `<div class="actions">${listenBtn(t.say, "ru")}</div>` : ""}
+      <div class="opts">${t.opts.map(o=>`<button class="opt ${p!==null && o===t.ans ? "right" : p===o ? "wrong" : ""}" data-o="${o}" ${p!==null?"disabled":""}>${o}</button>`).join("")}</div>
+      ${p !== null ? `<p class="note ${p===t.ans?"":"miss"}"><b>${p===t.ans?"Верно.":"Не совсем."}</b> ${t.why}</p>` : ""}${tail(p !== null)}`;
+  } else if (logic.game === "houses") {
+    body = `<p>Дома стоят в ряд слева направо, № 1 — самый левый. В каждом доме живёт один человек.</p>
+      <ol class="clues">${t.clues.map((c,i)=>`<li class="${logic.broken.includes(i)?"broken":""}">${c.t}</li>`).join("")}</ol>
+      <div class="actions">${listenBtn(t.say, "ru")}</div>
+      <div class="houses">${logic.sel.map((v,i)=>`<div class="house"><label for="house-${i}">Дом № ${i+1}</label>
+        <select id="house-${i}" data-h="${i}" ${logic.solved?"disabled":""}><option value="">— кто? —</option>${t.names.map(n=>`<option ${v===n?"selected":""}>${n}</option>`).join("")}</select></div>`).join("")}</div>
+      ${logic.msg ? `<p class="note ${logic.solved?"":"miss"}">${logic.msg}</p>` : ""}
+      ${logic.solved ? "" : `<div class="actions"><button class="btn" id="lcheck">Проверить</button></div>`}${tail(logic.solved)}`;
+  } else {
+    const bad = logic.msg && !logic.solved ? sudokuBad(t.cells) : new Set();
+    body = `<p>В каждой строке, в каждом столбце и в каждом квадрате 2×2 цифры 1, 2, 3, 4 встречаются по одному разу. Нажимай на пустую клетку, чтобы менять цифру.</p>
+      <div class="sgrid">${t.cells.map((v,i)=>`<button class="cell ${t.given[i]?"given":""} ${bad.has(i)?"bad":""}" data-c="${i}" ${t.given[i]||logic.solved?"disabled":""} aria-label="клетка ${i+1}: ${v||"пусто"}">${v||""}</button>`).join("")}</div>
+      ${logic.msg ? `<p class="note ${logic.solved?"":"miss"}">${logic.msg}</p>` : ""}
+      ${logic.solved ? "" : `<div class="actions"><button class="btn" id="lcheck">Проверить</button></div>`}${tail(logic.solved)}`;
+  }
+  app.innerHTML = `<section class="sheet"><span class="step">Логика · ${g.name}</span>${body}</section>`;
+
+  app.querySelectorAll("[data-o]").forEach(b => b.onclick = () => { logic.picked = +b.dataset.o; if (logic.picked === t.ans) logicWin(); render(); });
+  app.querySelectorAll("[data-h]").forEach(sel => sel.onchange = () => { logic.sel[+sel.dataset.h] = sel.value; });
+  app.querySelectorAll("[data-c]").forEach(b => b.onclick = () => { const i = +b.dataset.c; t.cells[i] = (t.cells[i] + 1) % 5; logic.msg = ""; render(); const el = app.querySelector(`[data-c="${i}"]`); if (el) el.focus(); });
+  const ck = $("#lcheck"); if (ck) ck.onclick = () => {
+    if (logic.game === "houses") {
+      logic.broken = [];
+      if (logic.sel.includes("")) logic.msg = "Сначала выбери жильца для каждого дома.";
+      else if (new Set(logic.sel).size < t.N) logic.msg = "Один человек не может жить в двух домах сразу.";
+      else { logic.broken = t.clues.map((c,i) => c.f(logic.sel) ? -1 : i).filter(i => i >= 0);
+        if (logic.broken.length) logic.msg = "Пока не сходится. Подсказки, которые не выполняются, отмечены красным. Попробуй ещё.";
+        else { logic.msg = "Верно! Все подсказки выполняются."; logicWin(); } }
+    } else {
+      if (sudokuBad(t.cells).size) logic.msg = "Есть повторы — они отмечены красным. Исправь и проверь снова.";
+      else if (t.cells.includes(0)) logic.msg = "Заполни все пустые клетки.";
+      else { logic.msg = "Верно! Судоку решено."; logicWin(); }
+    }
+    render();
+  };
+  const nx = $("#lnext"); if (nx) nx.onclick = () => { newLogic(logic.game); render(); };
+  $("#lback").onclick = () => { logic = null; render(); };
+  const ask = $("#lask"); if (ask) ask.onclick = () => { teacherSubj = "log"; view = "teacher";
+    const done = t.opts ? logic.picked !== null : logic.solved;
+    send(done ? `Объясни мне подробно, как решается эта логическая задача.\n${t.desc}${t.opts ? `\nМой ответ: ${logic.picked}. Правильный ответ: ${t.ans}.` : ""}`
+              : `Помоги мне с логической задачей. Не называй ответ, дай только одну подсказку, с чего начать.\n${t.desc}`); };
+}
+
+/* ---------- абакус: ментальная арифметика ---------- */
+const AB = [
+  {name:"Знакомство со счётами", need:1, help:["Это абакус — счёты. На каждой спице пять косточек: одна сверху и четыре снизу. Между ними перекладина.","Косточка считается, только когда она придвинута к перекладине. Каждая нижняя косточка — это 1, верхняя — это 5.","Правая спица — единицы, левее — десятки, ещё левее — сотни. Нажимай на косточки и смотри, какое число получается. Набери число 7, чтобы пройти дальше."]},
+  {name:"Набери число", need:8, help:["Набери на счётах число из задания и нажми «Проверить». Сначала числа до 9, потом двузначные и трёхзначные."]},
+  {name:"Прочитай число", need:8, help:["Посмотри на счёты и запиши, какое число на них набрано. Нижняя косточка у перекладины — 1, верхняя — 5."]},
+  {name:"Простое сложение и вычитание", need:8, help:["Считай на счётах по порядку: набери первое число, потом прибавляй и убирай косточки. Здесь всё получается прямо: нужные косточки всегда свободны."]},
+  {name:"Помощь брата: счёт через 5", need:8, help:["Братья — числа, которые вместе дают 5: 1 и 4, 2 и 3.","Если нижних косточек не хватает, чтобы прибавить число, прибавь 5 и убери брата. Пример: 3 + 4. Четырёх свободных нижних нет, поэтому опусти верхнюю косточку (+5) и убери одну нижнюю (−1). Получится 7.","При вычитании наоборот: убери 5 и добавь брата. Пример: 6 − 4. Убери верхнюю косточку (−5) и добавь одну нижнюю (+1). Получится 2."]},
+  {name:"Помощь друга: счёт через 10", need:8, help:["Друзья — числа, которые вместе дают 10: 1 и 9, 2 и 8, 3 и 7, 4 и 6, 5 и 5.","Если на спице единиц не хватает места, добавь одну косточку на спице десятков (+10) и убери друга на единицах. Пример: 8 + 6. Добавь десяток и убери 4. Получится 14.","При вычитании наоборот: убери десяток и добавь друга. Пример: 14 − 6. Убери десяток (−10) и добавь 4. Получится 8."]},
+  {name:"Считаем в уме, без счётов", need:8, help:["Теперь счёты спрятаны. Числа будут появляться по одному. Представляй счёты в голове и двигай косточки мысленно, а в конце запиши ответ."]}
+];
+let ab = null, abTimer = null;
+const abStore = () => (store.abacus = store.abacus || {open:0, pts:{}}, store.abacus.pts = store.abacus.pts || {}, store.abacus);
+const canAdd = (x, d) => x + d <= 9 && (d < 5 ? x % 5 + d <= 4 : x < 5 && x % 5 + d - 5 <= 4);
+const canSub = (x, d) => x - d >= 0 && (d < 5 ? x % 5 >= d : x >= 5 && x % 5 >= d - 5);
+function chain(kind){
+  for (let guard = 0; guard < 500; guard++) {
+    let x = kind === "friend" ? rnd(3, 30) : rnd(1, 9), flag = kind === "direct"; const terms = [x], max = kind === "friend" ? 99 : 9;
+    for (let k = 0; k < 2; k++) {
+      const moves = [];
+      for (let d = 1; d <= 9; d++) {
+        if (kind === "direct") { if (canAdd(x, d)) moves.push(d); if (canSub(x, d)) moves.push(-d); }
+        else { if (x + d <= max) moves.push(d); if (x - d >= 0) moves.push(-d); }
+      }
+      if (!moves.length) break;
+      const m = moves[rnd(0, moves.length - 1)], u = x % 10, d = Math.abs(m);
+      if (kind === "brother" && !(m > 0 ? canAdd(x, d) : canSub(x, d))) flag = true;
+      if (kind === "friend" && Math.floor((x + m) / 10) !== Math.floor(x / 10)) flag = true;
+      x += m; terms.push(m);
+    }
+    if (flag && terms.length === 3) return {terms, ans:x, text:terms.map((t, i) => i ? (t > 0 ? "+ " : "− ") + Math.abs(t) : t).join(" ")};
+  }
+  return {terms:[2, 1, 1], ans:4, text:"2 + 1 + 1"};
+}
+function abTask(stage){
+  const pts = abStore().pts[stage] || 0;
+  if (stage === 0) return {n:7};
+  if (stage === 1 || stage === 2) return {n: pts < 3 ? rnd(1, 9) : pts < 6 ? rnd(10, 99) : rnd(100, 999)};
+  if (stage === 3) return chain("direct");
+  if (stage === 4) return chain("brother");
+  if (stage === 5) return chain("friend");
+  return chain(pts < 4 ? "direct" : "brother");
+}
+function abOpen(stage){
+  clearTimeout(abTimer);
+  const task = abTask(stage);
+  ab = {stage, task, rods: stage === 2 ? String(task.n).padStart(3, "0").split("").map(Number) : [0,0,0], msg:"", ok:false, flash: stage === 6 ? 0 : -1};
+  if (stage === 6) abFlash();
+}
+function abFlash(){
+  clearTimeout(abTimer);
+  abTimer = setTimeout(() => { if (!ab || ab.stage !== 6) return; ab.flash++; if (view === "abacus") render(); if (ab.flash < ab.task.terms.length) abFlash(); }, 1400);
+}
+function abWin(){
+  const st = abStore(), s = ab.stage;
+  st.pts[s] = (st.pts[s] || 0) + 1;
+  if (st.pts[s] >= AB[s].need && st.open === s && s + 1 < AB.length) st.open = s + 1;
+  save();
+}
+const abValue = rods => +rods.join("");
+/* картинки: маленькие счёты с подписью */
+function abPic(rods, cap){
+  return `<figure class="abpic" role="img" aria-label="${cap}: на счётах ${+rods.join("")}"><div class="abacus mini">${rods.map(d => { const u = d >= 5, c = d % 5, b = on => `<span class="bead ${on?"on":""}"></span>`, g = `<span class="gap"></span>`;
+    return `<div class="rod"><div class="up">${u ? g + b(true) : b(false) + g}</div><div class="beam"></div><div class="low">${b(true).repeat(c)}${g}${b(false).repeat(4 - c)}</div></div>`; }).join("")}</div><figcaption>${cap}</figcaption></figure>`;
+}
+const abSteps = (title, list, plain) => `<p class="pictitle">${title}</p><div class="absteps">${list.map(([r, cap]) => abPic(r, cap)).join(plain ? "" : `<span class="arrow" aria-hidden="true">→</span>`)}</div>`;
+const abDigits = () => `<p class="pictitle">Шпаргалка: цифры на одной спице</p><div class="absteps">${[0,1,2,3,4,5,6,7,8,9].map(d => abPic([d], String(d))).join("")}</div>`;
+const AB_PICS = [
+  () => abDigits() + abSteps("Число из нескольких спиц", [[[0,0,7], "7"], [[0,4,2], "42"], [[3,0,5], "305"]], true),
+  () => abDigits() + abSteps("Примеры", [[[0,1,6], "16"], [[2,5,8], "258"]], true),
+  () => abDigits(),
+  () => abSteps("Пример: 6 + 3", [[[6], "было 6"], [[9], "+3 → стало 9"]]) + abSteps("Пример: 8 − 5", [[[8], "было 8"], [[3], "−5 → стало 3"]]),
+  () => abSteps("Пример: 3 + 4", [[[3], "было 3"], [[8], "+5"], [[7], "−1 → стало 7"]]) + abSteps("Пример: 6 − 4", [[[6], "было 6"], [[1], "−5"], [[2], "+1 → стало 2"]]),
+  () => abSteps("Пример: 8 + 6", [[[0,8], "было 8"], [[1,8], "+10"], [[1,4], "−4 → стало 14"]]) + abSteps("Пример: 14 − 6", [[[1,4], "было 14"], [[0,4], "−10"], [[0,8], "+4 → стало 8"]]),
+  () => abSteps("Представляй счёты так. Пример: 2 + 5 − 1", [[[2], "2"], [[7], "+5"], [[6], "−1 → 6"]])
+];
+function abacusHtml(rods, live){
+  const names = ["сотни", "десятки", "единицы"];
+  return `<div class="abacus">${rods.map((d, r) => { const u = d >= 5, c = d % 5, dis = live ? "" : "disabled";
+    const bead = (on, id, label) => `<button class="bead ${on?"on":""}" data-b="${r}:${id}" ${dis} aria-label="${names[r]}: ${label}"></button>`;
+    return `<div class="rod"><div class="up">${u ? `<span class="gap"></span>${bead(true,"u","верхняя косточка, считается")}` : `${bead(false,"u","верхняя косточка")}<span class="gap"></span>`}</div>
+      <div class="beam"></div>
+      <div class="low">${[1,2,3,4].filter(k=>k<=c).map(k=>bead(true,k,"нижняя косточка "+k+", считается")).join("")}<span class="gap"></span>${[1,2,3,4].filter(k=>k>c).map(k=>bead(false,k,"нижняя косточка "+k)).join("")}</div>
+      <div class="rname">${names[r]}</div></div>`; }).join("")}</div>`;
+}
+function renderAbacus(){
+  const st = abStore();
+  if (!ab) {
+    app.innerHTML = `<section class="sheet">
+      <h1>Абакус: счёт в уме</h1>
+      <p class="muted">Сначала учимся считать на счётах, потом переходим к примерам в уме. Следующая ступень открывается, когда наберёшь нужное число баллов. За каждый верный ответ — 1 балл.</p>
+      <ol class="schedule">${AB.map((a,i)=>{ const p = Math.min(st.pts[i]||0, a.need), open = i <= st.open;
+        return `<li><button class="row" data-ab="${i}" ${open?"":"disabled"}>
+          <span class="num">${i+1}</span><span class="glyph" aria-hidden="true" style="font-size:12px">${p>=a.need?"✓":open?"→":"×"}</span>
+          <span><span class="title">${open ? a.name : "Закрыто"}</span><span class="subj">${open ? "" : "Сначала пройди ступень "+i}</span></span>
+          <span class="count">${p} из ${a.need}</span></button></li>`; }).join("")}</ol>
+    </section>`;
+    app.querySelectorAll("[data-ab]").forEach(b => b.onclick = () => { abOpen(+b.dataset.ab); render(); });
+    return;
+  }
+  const s = ab.stage, A = AB[s], t = ab.task, pts = Math.min(st.pts[s]||0, A.need), passed = (st.pts[s]||0) >= A.need;
+  const live = !ab.ok && (s === 0 || s === 1 || (s >= 3 && s <= 5));
+  let mid = "";
+  if (s === 0) mid = `${abacusHtml(ab.rods, live)}<p class="task">Сейчас на счётах: ${abValue(ab.rods)}</p>`;
+  else if (s === 1) mid = `<p class="task">Набери: ${t.n}</p>${abacusHtml(ab.rods, live)}`;
+  else if (s === 2) mid = `${abacusHtml(ab.rods, false)}`;
+  else if (s <= 5) mid = `<p class="task">${t.text} = ?</p>${abacusHtml(ab.rods, live)}`;
+  else mid = ab.flash < t.terms.length
+    ? `<p class="task flashnum" aria-live="polite">${ab.flash === 0 ? t.terms[0] : (t.terms[ab.flash] > 0 ? "+" : "−") + Math.abs(t.terms[ab.flash])}</p><p class="muted">Число ${ab.flash+1} из ${t.terms.length}. Считай в уме.</p>`
+    : "";
+  const needInput = !ab.ok && (s === 2 || (s === 6 && ab.flash >= t.terms.length));
+  app.innerHTML = `<section class="sheet">
+    <span class="step">Абакус · ступень ${s+1} · баллы: ${pts} из ${A.need}</span>
+    <h1>${A.name}</h1>
+    <details ${pts === 0 ? "open" : ""}><summary>Как это делать</summary><div class="theory">${A.help.map(h=>`<p>${h}</p>`).join("")}</div>${AB_PICS[s]()}
+      <div class="actions" style="margin-top:8px">${listenBtn(A.help.join("\n"), "ru")}</div></details>
+    ${mid}
+    ${needInput ? `<form class="answer" id="abf"><label for="ab-ans" class="muted" style="width:100%">Твой ответ</label>
+      <input id="ab-ans" inputmode="numeric" autocomplete="off" maxlength="4"><button class="btn" type="submit">Проверить</button>
+      ${s === 6 ? `<button class="btn ghost" type="button" id="abagain">Показать числа ещё раз</button>` : ""}</form>` : ""}
+    ${ab.msg ? `<p class="note ${ab.ok && !ab.lost ?"":"miss"}">${ab.msg}</p>` : ""}
+    <div class="actions">
+      ${live ? `<button class="btn" id="abcheck">Проверить</button><button class="btn ghost" id="abreset">Сбросить счёты</button>` : ""}
+      ${ab.ok ? `<button class="btn" id="abnext">${passed && s + 1 < AB.length && s === 0 ? "К следующей ступени" : "Следующее задание"}</button>` : ""}
+      <button class="btn ghost" id="abback">К ступеням</button></div>
+    ${passed && s + 1 < AB.length ? `<p class="muted">Ступень пройдена, следующая открыта. Можно тренироваться дальше или перейти к ней.</p>` : ""}
+  </section>`;
+  app.querySelectorAll("[data-b]").forEach(b => b.onclick = () => { const [r, id] = b.dataset.b.split(":"), d = ab.rods[+r], u = d >= 5, c = d % 5;
+    ab.rods[+r] = id === "u" ? (u ? c : c + 5) : (u ? 5 : 0) + (c >= +id ? +id - 1 : +id); ab.msg = ""; render(); });
+  const finish = ok => { ab.ok = ok; if (ok) abWin(); render(); };
+  const ck = $("#abcheck"); if (ck) ck.onclick = () => { const v = abValue(ab.rods), want = s <= 1 ? t.n : t.ans;
+    if (v === want) { ab.msg = s === 0 ? "Верно, это 7: верхняя косточка (5) и две нижние (1 + 1)." : `Верно! Получилось ${want}.`; finish(true); }
+    else { ab.msg = `Сейчас на счётах ${v}. Это пока не то число — попробуй ещё.`; render(); } };
+  const rs = $("#abreset"); if (rs) rs.onclick = () => { ab.rods = [0,0,0]; ab.msg = ""; render(); };
+  const f = $("#abf"); if (f) { const inp = $("#ab-ans"); inp.focus(); f.onsubmit = e => { e.preventDefault(); const raw = inp.value.trim(); if (raw === "" || isNaN(+raw)) return;
+    const want = s === 2 ? t.n : t.ans;
+    if (+raw === want) { ab.msg = `Верно! ${s === 6 ? t.text + " = " + want : "Это " + want}.`; finish(true); }
+    else { ab.msg = s === 6 ? `Не совсем. ${t.text} = ${want}. Попробуй следующий пример.` : `Не совсем: на счётах ${want}. Верхняя косточка — 5, каждая нижняя — 1.`; ab.ok = true; ab.lost = true; render(); } }; }
+  const ag = $("#abagain"); if (ag) ag.onclick = () => { ab.flash = 0; render(); abFlash(); };
+  const nx = $("#abnext"); if (nx) nx.onclick = () => { if (s === 0 && passed) abOpen(1); else abOpen(s); render(); };
+  $("#abback").onclick = () => { clearTimeout(abTimer); ab = null; render(); };
+}
+
+/* ---------- ИИ-учитель ---------- */
+let sampleFn;            // undefined — подключается, null — недоступен, функция — готов
+let aiOff = false;       // зритель не разрешил или ИИ отключён для аккаунта
+let turns = [];          // переписка хранится только в памяти страницы
+let busy = false, streamText = "", ctl = null, teacherNote = "", draft = "", teacherSubj = "";
+const STARTERS = ["Дай мне задачу для моего класса и проверь ответ", "Устрой мини-контрольную из 3 вопросов", "Расскажи интересный факт и спроси меня о нём"];
+const ERR = {
+  rate_limited:"Слишком много вопросов подряд или закончился лимит аккаунта Claude. Попробуй позже.",
+  session_expired:"Нужно заново войти в аккаунт Claude.",
+  refused:"На этот вопрос учитель ответить не может. Спроси по-другому.",
+  empty_completion:"Учитель ничего не ответил. Попробуй спросить проще.",
+  prompt_too_large:"Сообщение слишком длинное. Напиши короче.",
+  need_login:"Это доступно после входа. Открой вкладку «Кабинет» и войди вместе с родителями.",
+  need_pay:"Это доступно по подписке. Оформить её можно во вкладке «Кабинет».",
+  no_lesson:"Урок по этой теме ещё готовится. Загляни позже.",
+  no_topic:"Такой темы нет."
+};
+if (window.SITE) ERR.rate_limited = "На сегодня вопросы учителю закончились. Приходи завтра!";
+const HIDE = ["not_granted","sampling_disabled","not_declared","capability_disabled","capability_removed"];
+
+function rules(){
+  const subj = teacherSubj==="log" ? {name:"Логика", prog:""} : subjects().find(s => s.id===teacherSubj);
+  return `Ты — добрый и терпеливый школьный учитель на детской обучающей платформе «Учись на пятёрки». Твой ученик учится в ${store.grade} классе российской школы. ${subj ? "Сейчас предмет: "+subj.name+(subj.prog ? " ("+subj.prog+")" : "")+"." : "Предмет ученик выбирает сам."}
+Правила:
+- Отвечай по-русски (английские слова используй, когда учим английский).
+- Пиши коротко: не больше 6–8 предложений, простыми словами под возраст ученика. Объясняй на примерах из жизни.
+- Не выдавай сразу готовый ответ на задачу ученика: подсказывай по шагам и дай решить самому. Если ученик прислал своё решение — проверь его и объясни ошибку.
+- В конце задай один короткий вопрос или задание для проверки понимания.
+- Говори тепло и ласково, как любимый учитель: обращайся на «ты», хвали за старание, не ругай за ошибки.
+- ${turns.length <= 1 ? "Это начало разговора: первой фразой поздоровайся словами «Привет, дорогой мой ученик!»." : "Вы уже поздоровались, повторно не здоровайся."}
+- Если не уверен в факте, честно скажи об этом. Ничего не выдумывай.
+- Темы, не подходящие ребёнку или не связанные с учёбой, не обсуждай: мягко верни разговор к уроку.
+- Пиши обычным текстом без разметки: без звёздочек, решёток и таблиц. Формулы — обычными символами.`;
+}
+
+async function send(text){
+  text = String(text||"").trim();
+  if (!text || busy || typeof sampleFn!=="function" || aiOff) { render(); return; }
+  turns.push({role:"user", content:text});
+  busy = true; streamText = ""; teacherNote = ""; draft = "";
+  ctl = new AbortController();
+  render();
+  try {
+    const res = await sampleFn([{role:"user", content:rules()}, ...turns.slice(-20)], {
+      cache:false, signal:ctl.signal, meta:{grade:store.grade, subj:teacherSubj},
+      onText: ({text}) => { streamText = text; const el = $("#live"); if (el) el.textContent = text; }
+    });
+    turns.push({role:"assistant", content:res.text});
+    if (voiceMode && store.autoSpeak!==false) speakText(res.text);
+    if (res.truncated) teacherNote = "Ответ оборвался. Попроси учителя продолжить.";
+  } catch(e) {
+    const code = e && e.code;
+    if (e && e.text) turns.push({role:"assistant", content:e.text});
+    if (HIDE.includes(code)) { aiOff = true; }
+    else if (code !== "cancelled") teacherNote = ERR[code] || "Связь с учителем прервалась. Отправь вопрос ещё раз.";
+  } finally { busy = false; streamText = ""; render(); }
+}
+
+function renderTeacher(){
+  const ready = typeof sampleFn==="function" && !aiOff;
+  const status = aiOff ? "ИИ-учитель выключен: доступ к Claude для этой страницы не разрешён. Уроки, счёт и дневник работают без него."
+    : sampleFn===null ? "ИИ-учитель работает, когда страница открыта в Claude под аккаунтом. Сейчас он недоступен, но уроки, счёт и дневник работают."
+    : sampleFn===undefined ? "Подключаю учителя…" : "";
+  app.innerHTML = `<section class="sheet">
+    <h1>ИИ-учитель</h1>
+    <p class="muted">Спроси что угодно по учёбе: учитель объяснит, даст задание и проверит ответ. Отвечает искусственный интеллект Claude — он может ошибаться, важное сверяй с учебником.</p>
+    <div class="chips" role="group" aria-label="Предмет">
+      <button class="chip" data-s="" aria-pressed="${teacherSubj===""}">Любой предмет</button>
+      ${subjects().map(s=>`<button class="chip" data-s="${s.id}" aria-pressed="${teacherSubj===s.id}">${s.name}</button>`).join("")}
+    </div>
+    <div class="chat" id="chat" aria-live="polite">
+      <div class="hello"><svg class="owl" viewBox="0 0 80 96" aria-hidden="true"><path class="cap" d="M40 2 8 14l32 12 32-12z"/><path class="tassel" d="M66 16v14"/><ellipse class="body" cx="40" cy="58" rx="30" ry="34"/><ellipse class="belly" cx="40" cy="68" rx="17" ry="20"/><circle class="eye" cx="28" cy="46" r="11"/><circle class="eye" cx="52" cy="46" r="11"/><circle class="pupil" cx="30" cy="47" r="5"/><circle class="pupil" cx="50" cy="47" r="5"/><path class="beak" d="M34 56h12l-6 9z"/></svg>
+      <div class="msg t"><span class="who">Учитель</span>${GREET} Я твой учитель. Выбери предмет и напиши или скажи, что хочешь узнать, — или нажми одну из кнопок ниже.</div></div>
+    </div>
+    ${ready && !turns.length ? `<div class="chips">${STARTERS.map((t,i)=>`<button class="chip" data-start="${i}">${t}</button>`).join("")}</div>` : ""}
+    ${status ? `<p class="note miss">${status}</p>` : ""}
+    ${teacherNote ? `<p class="note miss">${teacherNote}</p>` : ""}
+    ${voiceMode ? `<label class="check"><input type="checkbox" id="autospeak" ${store.autoSpeak!==false?"checked":""}> Читать ответы учителя вслух</label>
+    <div class="voiceset">
+      ${voiceMode==="claude" ? `<label for="voice-sel">Голос</label><select id="voice-sel">${VOICES.map((v,i)=>`<option value="${v}" ${curVoice()===v?"selected":""}>Голос ${i+1}</option>`).join("")}</select>` : ""}
+      <label for="rate-sel">Темп</label><select id="rate-sel">${[[0.8,"Медленно"],[0.9,"Спокойно"],[1,"Обычно"],[1.15,"Быстро"]].map(([r,n])=>`<option value="${r}" ${curRate()===r?"selected":""}>${n}</option>`).join("")}</select>
+      <button class="chip listen" type="button" id="voice-try">Послушать голос</button>
+    </div>` : ""}
+    <p class="muted" id="partial">${micState!=="idle" ? "Слушаю тебя… Когда закончишь, нажми «Готово»." : ""}</p>
+    <form class="ask" id="askf">
+      <label for="ask-input" class="muted" style="width:100%">Твой вопрос учителю</label>
+      <textarea id="ask-input" rows="2" maxlength="2000" placeholder="Например: почему небо голубое?" ${ready?"":"disabled"}></textarea>
+      ${dict && ready ? `<button class="btn ghost" type="button" id="mic">${micState==="idle"?"Говорить":"Готово"}</button>` : ""}
+      ${busy ? `<button class="btn ghost" type="button" id="stop">Стоп</button>` : `<button class="btn" type="submit" ${ready?"":"disabled"}>Спросить</button>`}
+    </form>
+    ${turns.length && !busy ? `<div class="actions"><button class="btn ghost" id="newchat">Начать новый разговор</button></div>` : ""}
+  </section>`;
+  const chat = $("#chat");
+  const bubble = (cls, who, text, id) => { const d = document.createElement("div"); d.className = "msg "+cls;
+    if (who) { const w = document.createElement("span"); w.className = "who"; w.textContent = who; d.append(w); }
+    const b = document.createElement("span"); b.textContent = text; if (id) b.id = id; d.append(b);
+    if (voiceMode && cls==="t" && !id) { const l = document.createElement("button"); l.type = "button"; l.className = "chip listen"; l.textContent = "Слушать"; l.onclick = () => speakText(text); d.append(l); }
+    chat.append(d); return d; };
+  turns.forEach(t => bubble(t.role==="user"?"me":"t", t.role==="user"?"":"Учитель", t.content));
+  let last = chat.lastElementChild;
+  if (busy) last = bubble("t", "Учитель", streamText || "Учитель думает…", "live");
+  if (turns.length) last.scrollIntoView({block:"nearest"});
+  const inp = $("#ask-input"); inp.value = draft; inp.oninput = () => { draft = inp.value; };
+  inp.onkeydown = e => { if (e.key==="Enter" && !e.shiftKey) { e.preventDefault(); send(inp.value); } };
+  $("#askf").onsubmit = e => { e.preventDefault(); send(inp.value); };
+  app.querySelectorAll("[data-s]").forEach(b => b.onclick = () => { teacherSubj = b.dataset.s; render(); });
+  app.querySelectorAll("[data-start]").forEach(b => b.onclick = () => send(STARTERS[+b.dataset.start]));
+  const vs = $("#voice-sel"); if (vs) vs.onchange = () => { store.voice = vs.value; save(); };
+  const rs = $("#rate-sel"); if (rs) rs.onchange = () => { store.rate = +rs.value; save(); };
+  const vt = $("#voice-try"); if (vt) vt.onclick = () => { greeted = true; speakText(GREET + " Я твой учитель. Давай учиться вместе!", "ru"); };
+  const au = $("#autospeak"); if (au) au.onchange = () => { store.autoSpeak = au.checked; save(); };
+  const mic = $("#mic"); if (mic) mic.onclick = toggleMic;
+  const st = $("#stop"); if (st) st.onclick = () => ctl && ctl.abort();
+  const nc = $("#newchat"); if (nc) nc.onclick = () => { turns = []; teacherNote = ""; render(); };
+}
+
+/* ---------- голос: чтение вслух и диктовка ---------- */
+const GREET = "Привет, дорогой мой ученик!";
+const VOICES = ["buttery", "airy", "glassy", "rounded"];
+const curVoice = () => VOICES.includes(store.voice) ? store.voice : "buttery";
+const curRate = () => [0.8, 0.9, 1, 1.15].includes(store.rate) ? store.rate : (store.grade <= 4 ? 0.9 : 1);
+let greeted = false;
+/* учитель здоровается вслух при первом нажатии на странице (раньше браузер звук не разрешает) */
+document.addEventListener("click", e => {
+  if (greeted || !voiceMode || store.autoSpeak === false || view !== "teacher") return;
+  greeted = true;
+  if (!(e.target.closest && e.target.closest(".listen, #vstop, #mic, .tab, .lvl"))) speakText(GREET, "ru");
+}, true);
+let tts = null, voiceMode = null, speaking = false;   // voiceMode: "claude" | "browser" | null
+let dict = null, micState = "idle", micRu = true;
+function updateVoicebar(){ $("#voicebar").hidden = !speaking; }
+function chunks(text){
+  const out = []; let cur = "";
+  String(text).split(/\n+/).map(t => t.trim()).filter(Boolean).forEach(par => {
+    while (par.length > 1500) { const cut = par.lastIndexOf(" ", 1500); const at = cut > 500 ? cut : 1500; if (cur) { out.push(cur); cur = ""; } out.push(par.slice(0, at)); par = par.slice(at).trim(); }
+    if ((cur + "\n" + par).length > 1500) { out.push(cur); cur = par; } else cur = cur ? cur + "\n" + par : par;
+  });
+  if (cur) out.push(cur);
+  return out.slice(0, 40);
+}
+function speakText(text, lang){
+  const parts = chunks(text); if (!parts.length || !voiceMode) return;
+  if (voiceMode === "claude") {
+    tts.speak(parts.map(t => lang ? {text:t, language:lang} : {text:t}), {voice:curVoice(), rate:curRate()}).catch(e => {
+      const code = e && e.code;
+      if (code === "not_granted" || code === "unavailable") { voiceMode = null; speaking = false; updateVoicebar(); refresh(); }
+    });
+  } else {
+    try {
+      const ss = window.speechSynthesis; ss.cancel(); speaking = true; updateVoicebar();
+      parts.forEach((t, i) => { const u = new SpeechSynthesisUtterance(t); u.lang = "ru-RU"; u.rate = curRate(); u.pitch = 1.1;
+        const rv = ss.getVoices().find(v => /^ru/i.test(v.lang)); if (rv) u.voice = rv;
+        if (i === parts.length-1) u.onend = u.onerror = () => { speaking = false; updateVoicebar(); };
+        ss.speak(u); });
+    } catch(e) { speaking = false; updateVoicebar(); }
+  }
+}
+function stopVoice(){
+  if (voiceMode === "claude") tts.stop().catch(() => {});
+  else { try { window.speechSynthesis.cancel(); } catch(e){} speaking = false; updateVoicebar(); }
+}
+$("#vstop").onclick = stopVoice;
+
+function toggleMic(){
+  if (!dict) return;
+  if (micState !== "idle") { dict.stop().catch(() => {}); return; }
+  if (speaking) stopVoice();
+  dict.start(micRu ? {language:"ru"} : undefined).catch(e => {
+    const code = e && e.code;
+    if (code === "unavailable") { if (micRu) { micRu = false; teacherNote = "Не получилось включить диктовку на русском. Нажми «Говорить» ещё раз."; } else dict = null; }
+    else if (code === "not_granted") dict = null;
+    else if (code !== "stopped" && code !== "dismissed") teacherNote = "Микрофон не сработал. Попробуй ещё раз или напечатай вопрос.";
+    refresh();
+  });
+}
+/* перерисовка, которая не сбивает ввод ответа в тренажёре */
+function refresh(){ if (!(view==="trainer" && drill)) render(); }
+
+const useCap = n => (window.claude && window.claude.use ? window.claude.use(n).catch(() => null) : Promise.resolve(null));
+useCap("sample").then(f => { sampleFn = f || null; refresh(); });
+useCap("tts").then(t => {
+  if (t) { tts = t; voiceMode = "claude"; t.onState(({state}) => { speaking = state !== "idle"; updateVoicebar(); }); }
+  else if ("speechSynthesis" in window && typeof SpeechSynthesisUtterance === "function") voiceMode = "browser";
+  refresh();
+});
+useCap("dictation").then(d => {
+  if (!d) return;
+  dict = d;
+  d.onFinal(({text}) => { draft = draft ? draft + text : text.replace(/^\s+/, ""); const i = $("#ask-input"); if (i) i.value = draft; });
+  d.onPartial(({text}) => { const el = $("#partial"); if (el && micState !== "idle") el.textContent = text ? "Слышу: " + text : "Слушаю тебя… Когда закончишь, нажми «Готово»."; });
+  d.onState(({state}) => { micState = state; refresh(); });
+  refresh();
+});
+
+/* ---------- кабинет: вход и подписка (только на своём домене) ---------- */
+let accMsg = "", accOk = false, accEmail = "", accBusy = false;
+const ACC_ERR = {bad_email:"Проверьте адрес почты.", bad_password:"Пароль должен быть от 8 символов.", need_consent:"Отметьте согласие с офертой и политикой.",
+  email_taken:"Такой аккаунт уже есть. Нажмите «Войти».", bad_login:"Неверная почта или пароль.", rate_limited:"Слишком много попыток. Попробуйте через 15 минут.",
+  pay_not_configured:"Оплата пока не подключена.", pay_failed:"Не получилось создать платёж. Попробуйте позже."};
+function renderAccount(){
+  const me = SITE.me, u = me && me.user, prices = (me && me.prices) || {};
+  const day = ts => new Date(ts * 1000).toLocaleDateString("ru-RU");
+  const note = accMsg ? `<p class="note ${accOk?"":"miss"}">${accMsg}</p>` : "";
+  const legal = `<p class="muted"><a href="/oferta" target="_blank" rel="noopener">Оферта</a> · <a href="/privacy" target="_blank" rel="noopener">Политика обработки персональных данных</a></p>`;
+  if (!u) {
+    app.innerHTML = `<section class="sheet">
+      <h1>Кабинет</h1>
+      <p class="muted">Раздел для родителей. Первая тема каждого предмета, абакус, логика и счёт открыты без входа. Остальные темы и ИИ-учитель — по подписке.</p>
+      <form class="accform" id="accf">
+        <label for="acc-email">Почта родителя</label><input id="acc-email" type="email" autocomplete="email" required>
+        <label for="acc-pass">Пароль, от 8 символов</label><input id="acc-pass" type="password" autocomplete="current-password" minlength="8" required>
+        <label class="check"><input type="checkbox" id="acc-consent"> Я родитель или законный представитель, принимаю оферту и согласен на обработку персональных данных</label>
+        ${note}
+        <div class="actions"><button class="btn" type="submit" data-act="login" ${accBusy?"disabled":""}>Войти</button>
+          <button class="btn ghost" type="submit" data-act="register" ${accBusy?"disabled":""}>Создать аккаунт</button></div>
+      </form>${legal}</section>`;
+    const em = $("#acc-email"); em.value = accEmail; em.oninput = () => { accEmail = em.value; };
+    $("#accf").onsubmit = e => { e.preventDefault(); const act = (e.submitter && e.submitter.dataset.act) || "login";
+      accBusy = true; accMsg = ""; const body = {email:em.value, password:$("#acc-pass").value, consent:$("#acc-consent").checked}; render();
+      SITE.api("/api/" + act, body).then(() => SITE.refresh()).then(m => { accBusy = false; accOk = true; accMsg = "Вы вошли.";
+        if (m && m.progress) { store = Object.assign(store, m.progress); try { localStorage.setItem(KEY, JSON.stringify(store)); } catch(e){} } else save(); render(); },
+        err => { accBusy = false; accOk = false; accMsg = ACC_ERR[err.code] || "Не получилось. Попробуйте ещё раз."; render(); }); };
+    return;
+  }
+  const plans = me.plans || {};
+  app.innerHTML = `<section class="sheet">
+    <h1>Кабинет</h1>
+    <p>Вы вошли как <b>${esc(u.email)}</b>.</p>
+    <div class="tablebox"><table><thead><tr><th>Подписка</th><th>Статус</th><th>Цена за ${Object.values(prices)[0] ? Object.values(prices)[0].days : 30} дней</th></tr></thead>
+      <tbody>${Object.entries(prices).map(([k, p]) => `<tr><td>${p.title}</td><td>${plans[k] ? "действует до " + day(plans[k]) : "не оформлена"}</td><td>${p.price} ₽</td></tr>`).join("")}</tbody></table></div>
+    ${note}
+    <div class="actions">${Object.entries(prices).map(([k, p]) => `<button class="btn" data-plan="${k}" ${accBusy?"disabled":""}>${plans[k] ? "Продлить" : "Оплатить"} ${p.title} — ${p.price} ₽</button>`).join("")}
+      <button class="btn ghost" id="acc-out">Выйти</button></div>
+    <p class="muted">Подписка не продлевается сама: деньги списываются только когда вы нажимаете кнопку оплаты. ИИ-учителю можно задать до ${me.teacher_limit || 20} вопросов в день.</p>${legal}
+  </section>`;
+  app.querySelectorAll("[data-plan]").forEach(b => b.onclick = () => { accBusy = true; accMsg = ""; render();
+    SITE.api("/api/pay", {plan:b.dataset.plan}).then(d => { location.href = d.url; },
+      err => { accBusy = false; accOk = false; accMsg = ACC_ERR[err.code] || "Не получилось. Попробуйте ещё раз."; render(); }); });
+  $("#acc-out").onclick = () => SITE.api("/api/logout", {}).catch(() => {}).then(() => SITE.refresh()).then(() => { accMsg = ""; render(); });
+}
+if (window.SITE) {
+  $("#tab-account").hidden = false;
+  SITE.ready.then(m => {
+    if (m && m.progress) { store = Object.assign(store, m.progress); if (!CURR[store.grade]) store.grade = 3; }
+    if (new URLSearchParams(location.search).has("paid")) { view = "account"; accOk = true; accMsg = "Спасибо! Если оплата прошла, подписка появится в таблице в течение минуты. Обновите страницу, если её ещё нет."; history.replaceState(null, "", location.pathname); }
+    refresh();
+  });
+}
+
+/* ---------- навигация ---------- */
+function leave(){ if (topicCtl) topicCtl.abort(); clearTimeout(abTimer); topic = null; drill = null; logic = null; ab = null; }
+document.querySelectorAll(".tab").forEach(t => t.onclick = () => { if (view===t.dataset.view) leave(); if (view==="abacus" && t.dataset.view!=="abacus") { clearTimeout(abTimer); ab = null; } view = t.dataset.view; confirmReset = false; render(); });
+document.querySelectorAll(".lvl").forEach(b => b.onclick = () => { store.grade = +b.dataset.grade; save(); leave(); teacherSubj = ""; render(); });
+render();
+</script>
+

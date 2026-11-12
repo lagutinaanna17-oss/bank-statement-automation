@@ -1,0 +1,14 @@
+# /etc/systemd/system/uchis.service
+[Unit]
+Description=Uchis na pyaterki
+After=network.target
+
+[Service]
+User=uchis
+WorkingDirectory=/opt/uchis/server
+EnvironmentFile=/etc/uchis.env
+ExecStart=/opt/uchis/venv/bin/uvicorn app:app --host 127.0.0.1 --port 8000 --workers 2
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
