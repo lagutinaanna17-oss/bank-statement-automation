@@ -7,7 +7,7 @@
   --paper:#f9fbff; --sheet:#ffffff; --grid:#dbe5f7; --line:#c3d0ea;
   --ink:#1b2759; --ink-soft:#56628c; --pen:#d2283b; --ok:#16794a; --ok-bg:#e3f5ea; --bad-bg:#fde8ea;
   --blue:#2a5fe0; --on-blue:#ffffff; --blue-deep:#1b3fa3; color-scheme:light;
-  --skin:#ffd8b0; --sand:#e9a23b; --c1:#ff6b6b; --c2:#ffb020; --c3:#2fbf71; --c4:#2d9cff; --c5:#9b5de5; --c6:#ff5fa2;
+  --skin:#ffd8b0; --board:#2c5a4c; --chalk:#f7f5e8; --sand:#e9a23b; --c1:#ff6b6b; --c2:#ffb020; --c3:#2fbf71; --c4:#2d9cff; --c5:#9b5de5; --c6:#ff5fa2;
   --f-display:"Unbounded","Trebuchet MS",sans-serif;
   --f-body:"Golos Text","Segoe UI",Roboto,Arial,sans-serif;
   --f-hand:"Caveat","Comic Sans MS",cursive;
@@ -202,13 +202,20 @@ details .theory{margin-top:8px}
 .kid .beam{background:var(--c5)}
 .kid .cell{border-radius:10px} .kid .house{border-radius:16px;border-color:var(--c4)}
 .kid .voicebar{background:var(--blue)}
-/* сова-учитель */
+/* учительница-аватар */
 .hello{display:flex;gap:12px;align-items:flex-end}
 .hello .msg{max-width:100%}
-.owl{width:72px;height:auto;flex:none}
-.owl .body{fill:var(--c5)} .owl .belly{fill:color-mix(in srgb,var(--c2) 45%,white)} .owl .eye{fill:#fff;stroke:var(--ink);stroke-width:2}
-.owl .pupil{fill:var(--ink)} .owl .beak{fill:var(--c2)} .owl .cap{fill:var(--ink)} .owl .tassel{fill:none;stroke:var(--c2);stroke-width:3;stroke-linecap:round}
-:root:not(.kid) .owl{display:none}
+.avatar{width:92px;height:auto;flex:none}
+.av-skin{fill:var(--skin)} .av-hair,.av-hairback,.av-bun{fill:#6b3f2a} .av-body{fill:var(--blue)} .av-collar{fill:#fff}
+.av-eyes{fill:var(--ink);transform-box:fill-box;transform-origin:center}
+.av-brow,.av-smile{fill:none;stroke:var(--ink);stroke-width:2.2;stroke-linecap:round} .av-brow{stroke:#6b3f2a}
+.av-glasses{fill:none;stroke:var(--ink);stroke-width:1.8} .av-cheek{fill:var(--pen);opacity:.25}
+.av-mouth{fill:#a8324a;opacity:0;transform-box:fill-box;transform-origin:center}
+.talking .av-mouth{opacity:1} .talking .av-smile{opacity:0}
+@media (prefers-reduced-motion:no-preference){
+  .av-eyes{animation:blink 4.5s infinite} @keyframes blink{0%,94%,100%{transform:scaleY(1)}97%{transform:scaleY(.1)}}
+  .talking .av-mouth{animation:talk .32s infinite alternate} @keyframes talk{from{transform:scaleY(.25)}to{transform:scaleY(1)}}
+}
 .voiceset{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:15px}
 .voiceset select{font:inherit;padding:6px 8px;border:2px solid var(--line);border-radius:6px;background:var(--sheet);color:var(--ink);min-height:40px}
 
@@ -227,12 +234,22 @@ details .theory{margin-top:8px}
 
 /* гимнастика */
 .hand{width:110px;height:auto;flex:none}
-.hand g{fill:var(--skin);stroke:var(--ink);stroke-width:2.5;stroke-linejoin:round}
-.hand .ringmark{fill:none;stroke:var(--pen);stroke-width:3}
+.hand .hbody{fill:var(--skin);stroke:var(--ink);stroke-width:2.5;stroke-linejoin:round;transform-box:fill-box;transform-origin:center;transition:transform .35s ease}
+.hand.left{transform:scaleX(-1)}
+.hand .fg{transform-box:fill-box;transform-origin:50% 100%;transition:transform .35s ease}
+.hand .th{transform-box:fill-box;transform-origin:100% 50%;transition:transform .35s ease}
+.hand .ringmark{fill:none;stroke:var(--pen);stroke-width:3;transition:transform .35s ease,opacity .2s}
+.player{border:3px solid var(--ink);border-radius:14px;overflow:hidden;background:var(--sheet);align-self:stretch;max-width:560px}
+.screen{position:relative;background:var(--board);min-height:250px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:16px 10px 12px}
+.screen .hand{width:min(130px,32vw)} .screen .hands{gap:20px}
+.subtitle{color:var(--chalk);font-weight:700;font-size:clamp(16px,4.4vw,22px);text-align:center;margin:0;max-width:none}
+.playbig{position:absolute;inset:0;margin:auto;width:84px;height:84px;border-radius:50%;border:0;background:var(--chalk);color:var(--board);font-size:34px;display:grid;place-items:center;padding-left:6px;box-shadow:0 4px 0 rgba(0,0,0,.25)}
+.pbar{height:8px;background:var(--line)} .pbar div{height:100%;background:var(--pen);transition:width .9s linear}
+.pctl{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 10px;font-variant-numeric:tabular-nums;font-weight:700}
+.pctl .btn{min-height:40px;padding:6px 14px;box-shadow:none}
+@media (prefers-reduced-motion:reduce){ .hand .hbody,.hand .fg,.hand .th,.hand .ringmark,.pbar div{transition:none} }
 .hands{display:flex;justify-content:center;gap:18px}
 .gymcap{font-weight:700;text-align:center;max-width:none}
-.gymlive{border:2px solid var(--line);border-radius:12px;background:var(--paper);padding:14px;align-self:stretch}
-.gymlive .hand{width:min(150px,38vw)}
 .gymsteps{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .gymfig{margin:0;font-size:13px} .gymfig .hand{width:58px} .gymfig .hands{gap:4px}
 .row .glyph .hand{width:40px}
@@ -425,6 +442,23 @@ const $ = (s, r=document) => r.querySelector(s);
 const rnd = (a,b) => a + Math.floor(Math.random()*(b-a+1));
 const shuffle = a => { a = a.slice(); for (let i=a.length-1;i>0;i--){ const j=rnd(0,i); [a[i],a[j]]=[a[j],a[i]]; } return a; };
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const TNAME = "Вера Андреевна";
+const AVATAR = `<svg class="avatar" viewBox="0 0 120 130" role="img" aria-label="Учительница ${TNAME}">
+  <path class="av-hairback" d="M22 62C18 26 38 8 60 8s42 18 38 54c-1 14-5 24-9 30H31c-4-6-8-16-9-30z"/>
+  <path class="av-body" d="M14 130c2-22 20-30 46-30s44 8 46 30z"/><path class="av-collar" d="M46 101l14 14 14-14-14-5z"/>
+  <rect class="av-skin" x="52" y="84" width="16" height="16" rx="6"/>
+  <ellipse class="av-skin" cx="60" cy="58" rx="27" ry="31"/>
+  <path class="av-hair" d="M33 54c0-24 12-36 27-36s28 12 27 36c-8-6-14-16-18-24-8 12-22 20-36 24z"/>
+  <circle class="av-bun" cx="60" cy="12" r="10"/>
+  <g class="av-eyes"><ellipse cx="49" cy="60" rx="3.6" ry="4.4"/><ellipse cx="71" cy="60" rx="3.6" ry="4.4"/></g>
+  <path class="av-brow" d="M43 52q6-4 12 0M65 52q6-4 12 0"/>
+  <g class="av-glasses"><circle cx="49" cy="60" r="9"/><circle cx="71" cy="60" r="9"/><path d="M58 60h4"/></g>
+  <circle class="av-cheek" cx="42" cy="70" r="5"/><circle class="av-cheek" cx="78" cy="70" r="5"/>
+  <path class="av-smile" d="M51 74q9 8 18 0"/><ellipse class="av-mouth" cx="60" cy="76" rx="7" ry="5"/></svg>`;
+const teacherSays = text => `<div class="hello">${AVATAR}<div class="msg t"><span class="who">${TNAME}</span>${text}</div></div>`;
+const BYE = "Пока, дорогой мой ученик! До новой встречи!";
+function sayHello(topicName){ if (voiceMode && store.autoSpeak !== false) { greeted = true; speakText(`${GREET} Сегодня у нас тема: ${topicName}.`, "ru"); } }
+function sayBye(good){ if (voiceMode && store.autoSpeak !== false) speakText(`${good ? "Ты молодец!" : "Ты старался, и это главное."} ${BYE}`, "ru"); }
 let sayList = [];
 const listenBtn = (text, lang) => voiceMode ? `<button class="chip listen" type="button" data-say="${sayList.push({text,lang})-1}">Слушать</button>` : "";
 
@@ -503,7 +537,8 @@ function startTopic(subjId, i){
   const S = CURR[store.grade].find(s => s.id === subjId), mine = topic = {subj:subjId, i, phase:"load", qi:0, right:0, picked:null, order:null};
   if (topicCtl) topicCtl.abort();
   topicCtl = new AbortController();
-  if (store.grade <= 4) { mine.warm = rnd(0, GYM.length - 1); mine.warmDone = false; gymRun(mine.warm, 30, () => { if (topic === mine && !mine.warmDone && view === "topics") render(); }); }
+  if (store.grade <= 4) { mine.warm = rnd(0, GYM.length - 1); mine.warmDone = false; gymRun(mine.warm, () => { if (topic === mine && !mine.warmDone && view === "topics") render(); }); }
+  sayHello(S.topics[i]);
   render();
   sampleFn.json(lessonPrompt(S, S.topics[i]), {cache:false, signal:topicCtl.signal, meta:{grade:store.grade, subj:subjId, i}}).then(d => {
     if (topic !== mine) return;
@@ -542,6 +577,7 @@ function renderTopic(){
   const D = topic.data;
   if (topic.phase === "explain") {
     app.innerHTML = `<section class="sheet">${head("объяснение")}<h1>${esc(name)}</h1>
+      ${teacherSays(`${GREET} Сегодня разберём тему «${esc(name)}». Прочитай объяснение${voiceMode ? " или нажми «Слушать»" : ""}, а потом ответь на вопросы.`)}
       <div class="theory">${D.explain.map(t=>`<p>${esc(t)}</p>`).join("")}</div>
       <p class="muted">Урок составил ИИ-учитель. Он может ошибаться — важное сверяй с учебником.</p>
       ${wbNote()}
@@ -557,6 +593,7 @@ function renderTopic(){
     const hasNext = topic.i + 1 < S.topics.length;
     if (passed && was < PASS && hasNext) flipKey = tkey(S.id, topic.i + 1);
     app.innerHTML = `<section class="sheet">${head("итог")}
+      ${teacherSays(`${passed ? "Ты молодец!" : "Ты старался, и это главное."} ${BYE}`)}
       <div class="result"><span class="bigmark" aria-hidden="true">${pts}</span>
         <div><h1>${pts} из ${QN*PER_Q} баллов</h1><p>${passed ? (hasNext ? "Тема пройдена! Следующая тема открыта." : "Тема пройдена! Это была последняя тема по предмету.") : `Чтобы открыть следующую тему, нужно ${PASS} баллов. Перечитай объяснение и попробуй ещё раз — вопросы будут новые.`}</p></div></div>
       <div class="actions">${passed && hasNext ? `<button class="btn" id="tnext">К списку тем</button>` : ""}<button class="btn ${passed?"ghost":""}" id="tagain">Пройти тему заново</button>${wbBtn()}${passed && hasNext ? "" : back}</div>${wbNote()}</section>`;
@@ -579,7 +616,7 @@ function renderTopic(){
     <details><summary>Показать объяснение темы</summary><div class="theory">${D.explain.map(t=>`<p>${esc(t)}</p>`).join("")}</div></details>
   </section>`;
   app.querySelectorAll(".opt").forEach(b => b.onclick = () => { topic.picked = +b.dataset.k; if (topic.picked === Q.correct) topic.right++; render(); const n = $("#tnextq"); if (n) n.focus(); });
-  const nq = $("#tnextq"); if (nq) nq.onclick = () => { topic.qi++; topic.order = null; if (topic.qi >= QN) topic.phase = "done"; render(); };
+  const nq = $("#tnextq"); if (nq) nq.onclick = () => { topic.qi++; topic.order = null; if (topic.qi >= QN) { topic.phase = "done"; sayBye(topic.right * PER_Q >= PASS); } render(); };
   const ask = $("#task"); if (ask) ask.onclick = () => { teacherSubj = S.id; view = "teacher";
     send(`Объясни мне подробнее это задание по теме «${name}», я хочу понять.\nЗадание: ${Q.q}\nМой ответ: ${Q.options[p]}\nОтвет, который считается правильным: ${Q.options[Q.correct]}`); };
 }
@@ -1085,22 +1122,31 @@ async function saveWorkbook(S, name, D){
 const wbBtn = () => `<button class="btn ghost" id="twb" type="button">Скачать рабочую тетрадь</button>`;
 const wbNote = () => topic.wbMsg ? `<p class="note">${topic.wbMsg}</p>` : "";
 
-/* ---------- пальчиковая гимнастика ---------- */
+/* ---------- пальчиковая гимнастика: видеоролики-анимации ---------- */
+const FINGER_X = [27, 39, 51, 63], FINGER_LEN = [34, 42, 38, 28];
+const HAND_POSES = {fist:[0,0,0,0,0], palm:[1,1,1,1,1], rabbit:[0,1,1,0,0], goat:[0,1,0,0,1], like:[2,0,0,0,0], pinky:[0,0,0,0,1]};
+function poseStyle(pose){   // как стоят пальцы в каждой позе; между позами они двигаются плавно
+  const ring = /^ring/.test(pose) ? +pose[4] : 0, edge = pose === "edge", f = ring || edge ? [1,1,1,1,1] : HAND_POSES[pose];
+  return {
+    fingers: [1,2,3,4].map(k => ring === k ? 0.6 : f[k] ? 1 : 0.26),
+    thumb: ring ? `rotate(${48 + ring * 7}deg)` : edge ? "rotate(70deg)" : f[0] === 2 ? "rotate(88deg)" : f[0] ? "rotate(32deg)" : "translate(21px,10px) scaleX(.82)",
+    ring: ring ? `translateX(${(ring - 1) * 12}px)` : "", ringOn: ring ? 1 : 0, edge
+  };
+}
 function hand(pose, left){
-  const FX = [27, 39, 51, 63], LEN = [34, 42, 38, 28];
-  const POSES = {fist:[0,0,0,0,0], palm:[1,1,1,1,1], rabbit:[0,1,1,0,0], goat:[0,1,0,0,1], like:[2,0,0,0,0], pinky:[0,0,0,0,1]};
-  let body;
-  if (pose === "edge") body = `<rect x="41" y="14" width="18" height="96" rx="9"/><path d="M41 70q-12 4-12 16" fill="none"/>`;
-  else {
-    const ring = /^ring/.test(pose) ? +pose[4] : 0, f = ring ? [1,1,1,1,1] : POSES[pose];
-    body = FX.map((x, k) => ring === k + 1 ? `<rect x="${x}" y="38" width="10" height="28" rx="5"/>`
-        : f[k + 1] ? `<rect x="${x}" y="${60 - LEN[k]}" width="10" height="${LEN[k] + 10}" rx="5"/>` : `<rect x="${x}" y="52" width="10" height="14" rx="5"/>`).join("")
-      + `<rect x="25" y="60" width="50" height="46" rx="14"/>`
-      + (ring ? `<rect x="14" y="52" width="11" height="34" rx="5.5" transform="rotate(${-18 - ring * 9} 22 84)"/><circle class="ringmark" cx="${FX[ring - 1] + 5}" cy="36" r="8"/>`
-        : f[0] === 2 ? `<rect x="13" y="36" width="12" height="40" rx="6"/>`
-        : f[0] ? `<rect x="4" y="68" width="28" height="11" rx="5.5" transform="rotate(-32 30 74)"/>` : `<rect x="29" y="76" width="24" height="11" rx="5.5"/>`);
-  }
-  return `<svg class="hand" viewBox="0 0 100 120" aria-hidden="true"${left ? ` style="transform:scaleX(-1)"` : ""}><g>${body}</g></svg>`;
+  const st = poseStyle(pose);
+  return `<svg class="hand${left ? " left" : ""}" viewBox="0 0 100 120" aria-hidden="true"><g class="hbody" style="transform:${st.edge ? "scaleX(.34)" : "none"}">
+    ${FINGER_X.map((x, k) => `<rect class="fg" x="${x}" y="${60 - FINGER_LEN[k]}" width="10" height="${FINGER_LEN[k] + 10}" rx="5" style="transform:scaleY(${st.fingers[k]})"/>`).join("")}
+    <rect x="25" y="60" width="50" height="46" rx="14"/>
+    <rect class="th" x="4" y="68" width="28" height="11" rx="5.5" style="transform:${st.thumb}"/>
+    <circle class="ringmark" cx="32" cy="38" r="8" style="transform:${st.ring || "none"};opacity:${st.ringOn}"/></g></svg>`;
+}
+function setHand(svg, pose){
+  const st = poseStyle(pose);
+  svg.querySelector(".hbody").style.transform = st.edge ? "scaleX(.34)" : "none";
+  svg.querySelectorAll(".fg").forEach((r, k) => { r.style.transform = `scaleY(${st.fingers[k]})`; });
+  svg.querySelector(".th").style.transform = st.thumb;
+  const ring = svg.querySelector(".ringmark"); if (st.ringOn) ring.style.transform = st.ring; ring.style.opacity = st.ringOn;
 }
 const GYM = [
   {name:"Кулак — ребро — ладонь", tempo:1300, how:["Положи руку на стол. По очереди показывай три положения: кулак, ребро ладони, раскрытая ладонь.", "Сначала правой рукой, потом левой, потом двумя руками вместе. Старайся не сбиваться с порядка."],
@@ -1119,64 +1165,85 @@ const GYM = [
    steps:[{l:"ring1", r:"rabbit", cap:"Левая — колечко, правая — зайчик"}, {l:"rabbit", r:"ring1", cap:"Левая — зайчик, правая — колечко"}]}
 ];
 let gym = null, gymTimer = null;
+const GYM_SECS = 30;
 const gymFrame = s => `<div class="hands">${s.l ? hand(s.l, true) : ""}${s.r ? hand(s.r, false) : ""}</div><p class="gymcap">${s.cap}</p>`;
-const gymPic = (ex, step) => gymFrame(ex.steps[step % ex.steps.length]);
 function gymStop(){ clearInterval(gymTimer); gymTimer = null; if (gym) gym.running = false; }
-function gymRun(exI, secs, onEnd){
+function gymSync(){   // обновляет ролик на экране без перерисовки всей страницы
+  if (!gym) return;
+  const ex = GYM[gym.ex], s = ex.steps[gym.step % ex.steps.length], box = $("#gymhands"); if (!box) return;
+  const hands = box.querySelectorAll(".hand"); let n = 0;
+  if (s.l) setHand(hands[n++], s.l); if (s.r) setHand(hands[n++], s.r);
+  $("#gymcap").textContent = s.cap;
+  $("#gymbar").style.width = Math.min(100, gym.done / GYM_SECS * 100) + "%";
+  $("#gymtime").textContent = mmss(Math.min(GYM_SECS, gym.done)) + " / " + mmss(GYM_SECS);
+}
+function gymRun(exI, onEnd){
   gymStop();
   const ex = GYM[exI], t0 = Date.now();
-  gym = {ex:exI, step:0, left:secs, running:true};
+  gym = {ex:exI, step:0, done:0, running:true, finished:false};
   gymTimer = setInterval(() => {
-    gym.step++; gym.left = Math.max(0, secs - Math.round((Date.now() - t0) / 1000));
-    const p = $("#gympic"); if (p) p.innerHTML = gymPic(ex, gym.step);
-    const tm = $("#gymtime"); if (tm) tm.textContent = gym.left;
-    if (gym.left <= 0) { gymStop(); if (onEnd) onEnd(); }
+    gym.step++; gym.done = (Date.now() - t0) / 1000;
+    if (gym.done >= GYM_SECS) { gym.done = GYM_SECS; gym.finished = true; gymSync(); gymStop(); if (onEnd) onEnd(); return; }
+    gymSync();
   }, ex.tempo);
+}
+function playerHtml(exI){
+  const ex = GYM[exI], mine = gym && gym.ex === exI, run = mine && gym.running, s = ex.steps[(mine ? gym.step : 0) % ex.steps.length], done = mine ? gym.done : 0;
+  return `<div class="player">
+    <div class="screen"><div id="gymhands">${`<div class="hands">${s.l ? hand(s.l, true) : ""}${s.r ? hand(s.r, false) : ""}</div>`}</div>
+      <p class="subtitle" id="gymcap">${s.cap}</p>
+      ${run ? "" : `<button class="playbig" id="gplay" aria-label="Смотреть ролик"><span aria-hidden="true">▶</span></button>`}</div>
+    <div class="pbar"><div id="gymbar" style="width:${done / GYM_SECS * 100}%"></div></div>
+    <div class="pctl"><button class="btn ghost" id="${run ? "gstop" : "gplay2"}">${run ? "❚❚ Стоп" : "▶ Смотреть"}</button><span id="gymtime">${mmss(done)} / ${mmss(GYM_SECS)}</span></div>
+  </div>`;
+}
+function bindPlayer(exI, onEnd, speak){
+  const start = () => { gymRun(exI, onEnd); if (speak && voiceMode && store.autoSpeak !== false) speakText(speak, "ru"); render(); };
+  ["#gplay", "#gplay2"].forEach(q => { const b = $(q); if (b) b.onclick = start; });
+  const st = $("#gstop"); if (st) st.onclick = () => { gymStop(); if (speaking) stopVoice(); render(); };
 }
 let gymOpen = null;
 function renderGym(){
   if (gymOpen === null) {
     app.innerHTML = `<section class="sheet">
-      <h1>Пальчиковая гимнастика</h1>
-      <p class="muted">Разминка для пальцев и внимания. Выбери упражнение, посмотри картинки и повторяй движения вместе с ними. Для 1–4 классов одна такая разминка идёт перед каждым уроком.</p>
+      <h1>Нейрогимнастика для пальчиков</h1>
+      ${teacherSays("Привет, дорогой мой ученик! Выбери ролик, смотри на руки и повторяй движения вместе со мной.")}
+      <p class="muted">Семь коротких роликов-анимаций по 30 секунд. Для 1–4 классов один такой ролик идёт перед каждым уроком.</p>
       <ol class="schedule">${GYM.map((g, i) => `<li><button class="row" data-gym="${i}">
         <span class="num">${i + 1}</span><span class="glyph" aria-hidden="true">${hand(g.steps[0].r || g.steps[0].l, false)}</span>
-        <span><span class="title">${g.name}</span><span class="subj">${g.steps.length} движения по кругу</span></span><span class="count">30 секунд</span></button></li>`).join("")}</ol>
+        <span><span class="title">${g.name}</span><span class="subj">${g.steps.length} движения по кругу</span></span><span class="count">▶ 0:30</span></button></li>`).join("")}</ol>
     </section>`;
     app.querySelectorAll("[data-gym]").forEach(b => b.onclick = () => { gymOpen = +b.dataset.gym; gym = null; render(); });
     return;
   }
-  const ex = GYM[gymOpen], run = gym && gym.running && gym.ex === gymOpen;
+  const ex = GYM[gymOpen], fin = gym && gym.ex === gymOpen && gym.finished;
   app.innerHTML = `<section class="sheet">
-    <span class="step">Гимнастика · упражнение ${gymOpen + 1} из ${GYM.length}</span>
+    <span class="step">Гимнастика · ролик ${gymOpen + 1} из ${GYM.length}</span>
     <h1>${ex.name}</h1>
+    ${playerHtml(gymOpen)}
+    ${fin ? teacherSays("Молодец! Разминка выполнена. Пока, дорогой мой ученик!") : ""}
     <div class="theory">${ex.how.map(h => `<p>${h}</p>`).join("")}</div>
-    <div class="actions">${listenBtn(ex.name + ".\n" + ex.how.join("\n"), "ru")}</div>
     <p class="pictitle">Все движения по порядку</p>
     <div class="gymsteps">${ex.steps.map(s => `<figure class="gymfig">${gymFrame(s)}</figure>`).join(`<span class="arrow" aria-hidden="true">→</span>`)}</div>
-    <p class="pictitle">Повторяй вместе с картинкой</p>
-    <div class="gymlive" id="gympic">${gymPic(ex, run ? gym.step : 0)}</div>
-    ${run ? `<p class="muted">Осталось секунд: <b id="gymtime">${gym.left}</b></p>` : gym && gym.ex === gymOpen ? `<p class="note">Молодец! Разминка выполнена.</p>` : ""}
-    <div class="actions">${run ? `<button class="btn ghost" id="gstop">Стоп</button>` : `<button class="btn" id="gstart">Начать, 30 секунд</button>`}
-      ${gymOpen + 1 < GYM.length ? `<button class="btn ghost" id="gnext">Следующее упражнение</button>` : ""}<button class="btn ghost" id="gback">К списку</button></div>
+    <div class="actions">${gymOpen + 1 < GYM.length ? `<button class="btn ghost" id="gnext">Следующий ролик</button>` : ""}<button class="btn ghost" id="gback">К списку</button></div>
   </section>`;
-  const gs = $("#gstart"); if (gs) gs.onclick = () => { gymRun(gymOpen, 30, () => { if (view === "gym") render(); }); render(); };
-  const st = $("#gstop"); if (st) st.onclick = () => { gymStop(); gym = null; render(); };
+  bindPlayer(gymOpen, () => { if (view === "gym") { if (voiceMode && store.autoSpeak !== false) speakText("Молодец! Разминка выполнена.", "ru"); render(); } }, ex.name + ". " + ex.how.join(" "));
   const gn = $("#gnext"); if (gn) gn.onclick = () => { gymStop(); gym = null; gymOpen++; render(); };
   $("#gback").onclick = () => { gymStop(); gym = null; gymOpen = null; render(); };
 }
 /* разминка перед уроком в 1–4 классах: идёт, пока урок готовится */
 function renderWarm(S, name){
-  const ex = GYM[topic.warm], ready = topic.phase !== "load";
+  const ex = GYM[topic.warm], ready = topic.phase !== "load", run = gym && gym.running;
   app.innerHTML = `<section class="sheet">
     <span class="step">${S.name} · тема ${topic.i + 1} · разминка</span>
     <h1>Разминка: ${ex.name}</h1>
+    ${teacherSays(`${GREET} Сегодня у нас тема «${esc(name)}». Сначала разомнём пальчики: смотри ролик и повторяй.`)}
+    ${playerHtml(topic.warm)}
     <p>${ex.how[0]}</p>
-    <div class="gymlive" id="gympic">${gymPic(ex, gym ? gym.step : 0)}</div>
-    ${gym && gym.running ? `<p class="muted">Осталось секунд: <b id="gymtime">${gym.left}</b></p>` : `<p class="note">Молодец! Пальцы и голова готовы к уроку.</p>`}
-    <p class="muted">${ready ? "Урок готов." : "Учитель готовит урок, а мы пока разминаемся."} Тема: ${esc(name)}.</p>
-    <div class="actions"><button class="btn" id="wgo">${gym && gym.running ? "Пропустить разминку" : "Начать урок"}</button><button class="btn ghost" id="tback">К списку тем</button></div>
+    <p class="muted">${ready ? "Урок готов." : "Урок готовится, а мы пока разминаемся."}</p>
+    <div class="actions"><button class="btn" id="wgo">${run ? "Пропустить разминку" : "Начать урок"}</button><button class="btn ghost" id="tback">К списку тем</button></div>
   </section>`;
+  bindPlayer(topic.warm, () => { if (topic && !topic.warmDone && view === "topics") render(); });
   $("#wgo").onclick = () => { gymStop(); topic.warmDone = true; render(); };
   $("#tback").onclick = () => { gymStop(); if (topicCtl) topicCtl.abort(); topic = null; render(); };
 }
@@ -1367,7 +1434,7 @@ function renderRead(){
 let sampleFn;            // undefined — подключается, null — недоступен, функция — готов
 let aiOff = false;       // зритель не разрешил или ИИ отключён для аккаунта
 let turns = [];          // переписка хранится только в памяти страницы
-let busy = false, streamText = "", ctl = null, teacherNote = "", draft = "", teacherSubj = "";
+let busy = false, streamText = "", ctl = null, teacherNote = "", draft = "", teacherSubj = "", chatBye = false;
 const STARTERS = ["Дай мне задачу для моего класса и проверь ответ", "Устрой мини-контрольную из 3 вопросов", "Расскажи интересный факт и спроси меня о нём"];
 const ERR = {
   rate_limited:"Слишком много вопросов подряд или закончился лимит аккаунта Claude. Попробуй позже.",
@@ -1385,7 +1452,7 @@ const HIDE = ["not_granted","sampling_disabled","not_declared","capability_disab
 
 function rules(){
   const subj = teacherSubj==="log" ? {name:"Логика", prog:""} : subjects().find(s => s.id===teacherSubj);
-  return `Ты — добрый и терпеливый школьный учитель на детской обучающей платформе «Учись на пятёрки». Твой ученик учится в ${store.grade} классе российской школы. ${subj ? "Сейчас предмет: "+subj.name+(subj.prog ? " ("+subj.prog+")" : "")+"." : "Предмет ученик выбирает сам."}
+  return `Ты — ${TNAME}, добрая и терпеливая школьная учительница на детской обучающей платформе «Учись на пятёрки». О себе говори в женском роде. Твой ученик учится в ${store.grade} классе российской школы. ${subj ? "Сейчас предмет: "+subj.name+(subj.prog ? " ("+subj.prog+")" : "")+"." : "Предмет ученик выбирает сам."}
 Правила:
 - Отвечай по-русски (английские слова используй, когда учим английский).
 - Пиши коротко: не больше 6–8 предложений, простыми словами под возраст ученика. Объясняй на примерах из жизни.
@@ -1393,6 +1460,7 @@ function rules(){
 - В конце задай один короткий вопрос или задание для проверки понимания.
 - Говори тепло и ласково, как любимый учитель: обращайся на «ты», хвали за старание, не ругай за ошибки.
 - ${turns.length <= 1 ? "Это начало разговора: первой фразой поздоровайся словами «Привет, дорогой мой ученик!»." : "Вы уже поздоровались, повторно не здоровайся."}
+- Если ученик прощается или говорит, что закончил, похвали его и попрощайся словами «Пока, дорогой мой ученик!».
 - Если не уверен в факте, честно скажи об этом. Ничего не выдумывай.
 - Темы, не подходящие ребёнку или не связанные с учёбой, не обсуждай: мягко верни разговор к уроку.
 - Пиши обычным текстом без разметки: без звёздочек, решёток и таблиц. Формулы — обычными символами.`;
@@ -1401,7 +1469,7 @@ function rules(){
 async function send(text){
   text = String(text||"").trim();
   if (!text || busy || typeof sampleFn!=="function" || aiOff) { render(); return; }
-  turns.push({role:"user", content:text});
+  turns.push({role:"user", content:text}); chatBye = false;
   busy = true; streamText = ""; teacherNote = ""; draft = "";
   ctl = new AbortController();
   render();
@@ -1434,8 +1502,7 @@ function renderTeacher(){
       ${subjects().map(s=>`<button class="chip" data-s="${s.id}" aria-pressed="${teacherSubj===s.id}">${s.name}</button>`).join("")}
     </div>
     <div class="chat" id="chat" aria-live="polite">
-      <div class="hello"><svg class="owl" viewBox="0 0 80 96" aria-hidden="true"><path class="cap" d="M40 2 8 14l32 12 32-12z"/><path class="tassel" d="M66 16v14"/><ellipse class="body" cx="40" cy="58" rx="30" ry="34"/><ellipse class="belly" cx="40" cy="68" rx="17" ry="20"/><circle class="eye" cx="28" cy="46" r="11"/><circle class="eye" cx="52" cy="46" r="11"/><circle class="pupil" cx="30" cy="47" r="5"/><circle class="pupil" cx="50" cy="47" r="5"/><path class="beak" d="M34 56h12l-6 9z"/></svg>
-      <div class="msg t"><span class="who">Учитель</span>${GREET} Я твой учитель. Выбери предмет и напиши или скажи, что хочешь узнать, — или нажми одну из кнопок ниже.</div></div>
+      ${chatBye ? teacherSays(BYE + " Захочешь ещё позаниматься — напиши мне.") : `<div class="hello">${AVATAR}<div class="msg t"><span class="who">${TNAME}</span>${GREET} Я твоя учительница, ${TNAME}. Выбери предмет и напиши или скажи, что хочешь узнать, — или нажми одну из кнопок ниже.</div></div>`}
     </div>
     ${ready && !turns.length ? `<div class="chips">${STARTERS.map((t,i)=>`<button class="chip" data-start="${i}">${t}</button>`).join("")}</div>` : ""}
     ${status ? `<p class="note miss">${status}</p>` : ""}
@@ -1453,7 +1520,7 @@ function renderTeacher(){
       ${dict && ready ? `<button class="btn ghost" type="button" id="mic">${micState==="idle"?"Говорить":"Готово"}</button>` : ""}
       ${busy ? `<button class="btn ghost" type="button" id="stop">Стоп</button>` : `<button class="btn" type="submit" ${ready?"":"disabled"}>Спросить</button>`}
     </form>
-    ${turns.length && !busy ? `<div class="actions"><button class="btn ghost" id="newchat">Начать новый разговор</button></div>` : ""}
+    ${turns.length && !busy ? `<div class="actions"><button class="btn ghost" id="byechat">Закончить урок и попрощаться</button><button class="btn ghost" id="newchat">Начать новый разговор</button></div>` : ""}
   </section>`;
   const chat = $("#chat");
   const bubble = (cls, who, text, id) => { const d = document.createElement("div"); d.className = "msg "+cls;
@@ -1461,9 +1528,9 @@ function renderTeacher(){
     const b = document.createElement("span"); b.textContent = text; if (id) b.id = id; d.append(b);
     if (voiceMode && cls==="t" && !id) { const l = document.createElement("button"); l.type = "button"; l.className = "chip listen"; l.textContent = "Слушать"; l.onclick = () => speakText(text); d.append(l); }
     chat.append(d); return d; };
-  turns.forEach(t => bubble(t.role==="user"?"me":"t", t.role==="user"?"":"Учитель", t.content));
+  turns.forEach(t => bubble(t.role==="user"?"me":"t", t.role==="user"?"":TNAME, t.content));
   let last = chat.lastElementChild;
-  if (busy) last = bubble("t", "Учитель", streamText || "Учитель думает…", "live");
+  if (busy) last = bubble("t", TNAME, streamText || "Думаю…", "live");
   if (turns.length) last.scrollIntoView({block:"nearest"});
   const inp = $("#ask-input"); inp.value = draft; inp.oninput = () => { draft = inp.value; };
   inp.onkeydown = e => { if (e.key==="Enter" && !e.shiftKey) { e.preventDefault(); send(inp.value); } };
@@ -1476,7 +1543,8 @@ function renderTeacher(){
   const au = $("#autospeak"); if (au) au.onchange = () => { store.autoSpeak = au.checked; save(); };
   const mic = $("#mic"); if (mic) mic.onclick = toggleMic;
   const st = $("#stop"); if (st) st.onclick = () => ctl && ctl.abort();
-  const nc = $("#newchat"); if (nc) nc.onclick = () => { turns = []; teacherNote = ""; render(); };
+  const nc = $("#newchat"); if (nc) nc.onclick = () => { turns = []; teacherNote = ""; chatBye = false; render(); };
+  const bc = $("#byechat"); if (bc) bc.onclick = () => { turns = []; teacherNote = ""; chatBye = true; sayBye(true); render(); };
 }
 
 /* ---------- голос: чтение вслух и диктовка ---------- */
@@ -1493,7 +1561,7 @@ document.addEventListener("click", e => {
 }, true);
 let tts = null, voiceMode = null, speaking = false;   // voiceMode: "claude" | "browser" | null
 let dict = null, micState = "idle", micRu = true;
-function updateVoicebar(){ $("#voicebar").hidden = !speaking; }
+function updateVoicebar(){ $("#voicebar").hidden = !speaking; document.documentElement.classList.toggle("talking", speaking); }
 function chunks(text){
   const out = []; let cur = "";
   String(text).split(/\n+/).map(t => t.trim()).filter(Boolean).forEach(par => {
@@ -1514,7 +1582,7 @@ function speakText(text, lang){
     try {
       const ss = window.speechSynthesis; ss.cancel(); speaking = true; updateVoicebar();
       parts.forEach((t, i) => { const u = new SpeechSynthesisUtterance(t); u.lang = "ru-RU"; u.rate = curRate(); u.pitch = 1.1;
-        const rv = ss.getVoices().find(v => /^ru/i.test(v.lang)); if (rv) u.voice = rv;
+        const ru = ss.getVoices().filter(v => /^ru/i.test(v.lang)), rv = ru.find(v => /milena|irina|alena|alyona|svetlana|katya|ekaterina|anna|женск|female|google/i.test(v.name)) || ru[0]; if (rv) u.voice = rv;
         if (i === parts.length-1) u.onend = u.onerror = () => { speaking = false; updateVoicebar(); };
         ss.speak(u); });
     } catch(e) { speaking = false; updateVoicebar(); }
