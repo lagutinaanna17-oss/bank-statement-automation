@@ -7,7 +7,7 @@
   --paper:#f9fbff; --sheet:#ffffff; --grid:#dbe5f7; --line:#c3d0ea;
   --ink:#1b2759; --ink-soft:#56628c; --pen:#d2283b; --ok:#16794a; --ok-bg:#e3f5ea; --bad-bg:#fde8ea;
   --blue:#2a5fe0; --on-blue:#ffffff; --blue-deep:#1b3fa3; color-scheme:light;
-  --c1:#ff6b6b; --c2:#ffb020; --c3:#2fbf71; --c4:#2d9cff; --c5:#9b5de5; --c6:#ff5fa2;
+  --skin:#ffd8b0; --sand:#e9a23b; --c1:#ff6b6b; --c2:#ffb020; --c3:#2fbf71; --c4:#2d9cff; --c5:#9b5de5; --c6:#ff5fa2;
   --f-display:"Unbounded","Trebuchet MS",sans-serif;
   --f-body:"Golos Text","Segoe UI",Roboto,Arial,sans-serif;
   --f-hand:"Caveat","Comic Sans MS",cursive;
@@ -225,6 +225,39 @@ details .theory{margin-top:8px}
 .accform input[type=email],.accform input[type=password]{font:inherit;padding:10px 12px;border:2px solid var(--ink);border-radius:6px;background:var(--paper);color:var(--ink);min-height:48px}
 .sheet a{color:var(--blue)}
 
+/* гимнастика */
+.hand{width:110px;height:auto;flex:none}
+.hand g{fill:var(--skin);stroke:var(--ink);stroke-width:2.5;stroke-linejoin:round}
+.hand .ringmark{fill:none;stroke:var(--pen);stroke-width:3}
+.hands{display:flex;justify-content:center;gap:18px}
+.gymcap{font-weight:700;text-align:center;max-width:none}
+.gymlive{border:2px solid var(--line);border-radius:12px;background:var(--paper);padding:14px;align-self:stretch}
+.gymlive .hand{width:min(150px,38vw)}
+.gymsteps{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.gymfig{margin:0;font-size:13px} .gymfig .hand{width:58px} .gymfig .hands{gap:4px}
+.row .glyph .hand{width:40px}
+/* чтение */
+.readrow{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.hourglass{width:90px;height:auto;flex:none}
+.hourglass .sand{fill:var(--sand)} .hourglass .glass{fill:none;stroke:var(--ink);stroke-width:3;stroke-linejoin:round}
+.hourglass .cap{fill:var(--ink)} .hourglass .stream{stroke:var(--sand);stroke-width:2}
+.readtext{font-size:clamp(19px,4.6vw,23px);line-height:1.7;max-width:60ch}
+.word{font:inherit;color:inherit;background:none;border:0;border-bottom:2px dotted var(--line);padding:2px 1px;margin:0}
+.word:hover{background:var(--ok-bg);border-bottom-color:var(--ok)}
+.flipbox{border:2px solid var(--line);border-radius:12px;background:var(--paper);padding:18px;overflow:hidden}
+.fliptext{font-size:clamp(19px,4.6vw,24px);line-height:1.6;max-width:none;margin:0}
+.fliptext.up{transform:rotate(180deg)} .fliptext.mirror{transform:scaleX(-1)} .fliptext.both{transform:scaleY(-1)}
+.schulte{display:grid;gap:6px;max-width:420px}
+.scell{aspect-ratio:1;border:2px solid var(--ink);border-radius:8px;background:var(--sheet);font-family:var(--f-display);font-size:clamp(16px,5vw,24px);padding:0}
+.scell.found{background:var(--ok-bg);border-color:var(--ok);color:var(--ink-soft)} .scell.miss{background:var(--bad-bg);border-color:var(--pen)}
+.maze{width:100%;max-width:420px;height:auto;background:var(--paper);border-radius:8px}
+.mwall{stroke:var(--ink);stroke-width:2.5;stroke-linecap:round;fill:none} .ball{fill:var(--pen)} .star{fill:var(--sand);font-size:15px}
+.pad{display:flex;flex-direction:column;align-items:center;gap:6px;align-self:flex-start}
+.pad div{display:flex;gap:6px} .pad .btn{min-width:56px;font-size:20px;padding:8px}
+.kid .tab:nth-child(7){background:color-mix(in srgb,var(--c4) 28%,white);border-color:var(--c4)}
+.kid .tab:nth-child(8){background:color-mix(in srgb,var(--c3) 28%,white);border-color:var(--c3)}
+.kid .tab:nth-child(9){background:color-mix(in srgb,var(--c1) 28%,white);border-color:var(--c1)}
+
 /* дневник */
 .tablebox{overflow-x:auto}
 table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
@@ -242,6 +275,8 @@ td .mark{font-size:32px}
     <nav class="tabs" aria-label="Разделы">
       <button class="tab" id="tab-teacher" data-view="teacher">Учитель</button>
       <button class="tab" id="tab-topics" data-view="topics">Темы</button>
+      <button class="tab" id="tab-read" data-view="read">Чтение</button>
+      <button class="tab" id="tab-gym" data-view="gym">Гимнастика</button>
       <button class="tab" id="tab-abacus" data-view="abacus">Абакус</button>
       <button class="tab" id="tab-logic" data-view="logic">Логика</button>
       <button class="tab" id="tab-trainer" data-view="trainer">Счёт</button>
@@ -283,7 +318,7 @@ const CURR = {
  C("rus","Русский язык",KN,"Наша речь: виды речи, диалог и монолог|Текст: тема, главная мысль, части текста|Предложение, члены предложения|Слово и его значение, синонимы и антонимы|Однокоренные слова|Слог, ударение, перенос слова|Звуки и буквы, алфавит|Безударный гласный звук в корне слова|Согласный звук [й] и буква «и краткое»|Слова с удвоенными согласными|Твёрдые и мягкие согласные, мягкий знак|Буквосочетания с шипящими звуками|Парные по глухости-звонкости согласные|Разделительный мягкий знак|Имя существительное: одушевлённые и неодушевлённые, собственные и нарицательные, число|Глагол, текст-повествование|Имя прилагательное, текст-описание|Местоимение, текст-рассуждение|Предлоги"),
  C("read","Литературное чтение",SR,"Самое великое чудо на свете|Устное народное творчество|Люблю природу русскую. Осень|Русские писатели: Пушкин, Крылов, Толстой|О братьях наших меньших|Люблю природу русскую. Зима|Писатели — детям|Я и мои друзья|Люблю природу русскую. Весна|И в шутку и всерьёз|Литература зарубежных стран"),
  C("world","Окружающий мир",SR,"Родная страна, город и село|Живая и неживая природа, явления природы|Погода, звёздное небо|Воздух и вода|Растения и животные, Красная книга|Жизнь города и села: экономика, транспорт, профессии|Строение тела и здоровье|Безопасность дома, на дороге и на воде|Семья и общение|Горизонт, стороны света, компас|Формы земной поверхности и водоёмы|Россия на карте, материки"),
- C("eng","Английский язык",ST,"Знакомство и приветствия|Алфавит и звуки|Числа от 1 до 10|Цвета|Моя семья|Животные|Игрушки и школьные вещи|Глагол to be|Глагол have got|Что я умею: can")],
+ C("eng","Английский язык",ST,"Английский алфавит: буквы от A до H|Английский алфавит: буквы от I до Q|Английский алфавит: буквы от R до Z|Звуки и чтение коротких слов|Знакомство и приветствия|Числа от 1 до 10|Цвета|Моя семья|Животные|Игрушки и школьные вещи|Глагол to be|Глагол have got|Что я умею: can")],
 3:[C("math","Математика",P,"Множество и его элементы, пустое множество|Подмножество, диаграммы Эйлера — Венна|Пересечение и объединение множеств|Многозначные числа: классы и разряды|Сложение и вычитание многозначных чисел|Умножение и деление на 10, 100, 1000|Единицы длины и массы|Умножение многозначного числа на однозначное|Деление многозначного числа на однозначное|Симметрия и преобразование фигур|Единицы времени, календарь|Переменная, выражения с переменной|Высказывания, равенства и неравенства|Уравнение и его корень, составные уравнения|Формулы: путь, стоимость, работа|Задачи на движение, работу и стоимость|Формула деления с остатком|Умножение на двузначное и трёхзначное число"),
  C("mathm","Математика",MR,"Сложение и вычитание в пределах 100: повторение|Уравнения с неизвестным слагаемым, уменьшаемым, вычитаемым|Таблица умножения и деления с числами 2 и 3|Цена, количество, стоимость|Порядок действий|Таблица умножения с числами 4, 5, 6, 7|Задачи на увеличение и уменьшение в несколько раз|Площадь и её единицы, площадь прямоугольника|Таблица умножения с числами 8 и 9|Умножение на 1 и на 0, деление нуля|Доли|Окружность и круг|Единицы времени|Внетабличное умножение и деление|Деление с остатком|Числа от 1 до 1000: нумерация|Сложение и вычитание в пределах 1000|Умножение и деление в пределах 1000, письменные приёмы"),
  C("rus","Русский язык",KN,"Язык и речь|Текст и предложение, виды предложений|Обращение, состав предложения|Простое и сложное предложения, словосочетание|Лексическое значение слова, омонимы, фразеологизмы|Части речи, имя числительное|Однокоренные слова, звуки и буквы|Состав слова: корень, окончание, приставка, суффикс, основа|Безударные гласные в корне|Парные согласные в корне|Удвоенные и непроизносимые согласные|Правописание суффиксов и приставок, приставки и предлоги|Разделительный твёрдый знак|Имя существительное: число, род, падеж|Имя прилагательное: род, число, падеж|Местоимение: лицо, число, род|Глагол: формы, число, времена|Род глаголов в прошедшем времени, НЕ с глаголами"),
@@ -401,6 +436,8 @@ function render(){
   if (view==="teacher") renderTeacher();
   else if (view==="topics") topic ? renderTopic() : renderTopics();
   else if (view==="logic") renderLogic();
+  else if (view==="read") renderRead();
+  else if (view==="gym") renderGym();
   else if (view==="abacus") renderAbacus();
   else if (view==="trainer") renderTrainer();
   else if (view==="account" && window.SITE) renderAccount();
@@ -446,9 +483,10 @@ function lessonPrompt(S, name){
 - Перепроверь каждый ответ: вычисления пересчитай, факты и правила сверь. Не включай вопрос, если не уверен в ответе.
 - Вопрос должен быть понятен без картинок и без учебника. Не ссылайся на страницы и номера заданий, не выдумывай цитаты из произведений.
 - В "why" коротко объясни, почему верный ответ верен.
+- Ещё 3 письменных задания для рабочей тетради ("workbook"): то, что ученик выполняет ручкой на бумаге (решить, вписать, составить, записать). Без вариантов ответа и без картинок.
 - Обычный текст без разметки.
 Ответь только JSON такого вида:
-{"explain":["абзац","абзац","абзац"],"questions":[{"q":"вопрос","options":["а","б","в","г"],"correct":0,"why":"объяснение"}]}`;
+{"explain":["абзац","абзац","абзац"],"questions":[{"q":"вопрос","options":["а","б","в","г"],"correct":0,"why":"объяснение"}],"workbook":["задание","задание","задание"]}`;
 }
 function validLesson(d){
   if (!d || !Array.isArray(d.explain) || !Array.isArray(d.questions)) return null;
@@ -457,13 +495,15 @@ function validLesson(d){
     && q.options.every(o => typeof o === "string" || typeof o === "number") && new Set(q.options.map(String)).size === 4
     && Number.isInteger(q.correct) && q.correct >= 0 && q.correct < 4).slice(0, QN)
     .map(q => ({q:q.q, options:q.options.map(String), correct:q.correct, why:typeof q.why === "string" ? q.why : ""}));
-  return explain.length && questions.length === QN ? {explain, questions} : null;
+  const workbook = Array.isArray(d.workbook) ? d.workbook.filter(x => typeof x === "string" && x.trim()).slice(0, 5) : [];
+  return explain.length && questions.length === QN ? {explain, questions, workbook} : null;
 }
 function startTopic(subjId, i){
   if (typeof sampleFn !== "function" || aiOff) return;
   const S = CURR[store.grade].find(s => s.id === subjId), mine = topic = {subj:subjId, i, phase:"load", qi:0, right:0, picked:null, order:null};
   if (topicCtl) topicCtl.abort();
   topicCtl = new AbortController();
+  if (store.grade <= 4) { mine.warm = rnd(0, GYM.length - 1); mine.warmDone = false; gymRun(mine.warm, 30, () => { if (topic === mine && !mine.warmDone && view === "topics") render(); }); }
   render();
   sampleFn.json(lessonPrompt(S, S.topics[i]), {cache:false, signal:topicCtl.signal, meta:{grade:store.grade, subj:subjId, i}}).then(d => {
     if (topic !== mine) return;
@@ -484,6 +524,7 @@ function renderTopic(){
   const S = CURR[store.grade].find(s => s.id === topic.subj), name = S.topics[topic.i], lang = S.id === "eng" ? undefined : "ru";
   const head = step => `<span class="step">${S.name} · тема ${topic.i+1} · ${step}</span>`;
   const back = `<button class="btn ghost" id="tback">К списку тем</button>`;
+  if (topic.warm !== undefined && !topic.warmDone) { renderWarm(S, name); return; }
   if (topic.phase === "load") {
     app.innerHTML = `<section class="sheet">${head("подготовка")}<h1>${esc(name)}</h1>
       <p>Учитель готовит урок… Обычно это занимает до минуты.</p><div class="actions"><button class="btn ghost" id="tstop">Отменить</button></div></section>`;
@@ -503,7 +544,9 @@ function renderTopic(){
     app.innerHTML = `<section class="sheet">${head("объяснение")}<h1>${esc(name)}</h1>
       <div class="theory">${D.explain.map(t=>`<p>${esc(t)}</p>`).join("")}</div>
       <p class="muted">Урок составил ИИ-учитель. Он может ошибаться — важное сверяй с учебником.</p>
-      <div class="actions">${listenBtn(name+".\n"+D.explain.join("\n"), lang)}<button class="btn" id="tgo">К вопросам</button>${back}</div></section>`;
+      ${wbNote()}
+      <div class="actions">${listenBtn(name+".\n"+D.explain.join("\n"), lang)}<button class="btn" id="tgo">К вопросам</button>${wbBtn()}${back}</div></section>`;
+    $("#twb").onclick = () => saveWorkbook(S, name, D);
     $("#tgo").onclick = () => { topic.phase = "q"; render(); };
     $("#tback").onclick = () => { topic = null; render(); };
     return;
@@ -516,7 +559,8 @@ function renderTopic(){
     app.innerHTML = `<section class="sheet">${head("итог")}
       <div class="result"><span class="bigmark" aria-hidden="true">${pts}</span>
         <div><h1>${pts} из ${QN*PER_Q} баллов</h1><p>${passed ? (hasNext ? "Тема пройдена! Следующая тема открыта." : "Тема пройдена! Это была последняя тема по предмету.") : `Чтобы открыть следующую тему, нужно ${PASS} баллов. Перечитай объяснение и попробуй ещё раз — вопросы будут новые.`}</p></div></div>
-      <div class="actions">${passed && hasNext ? `<button class="btn" id="tnext">К списку тем</button>` : ""}<button class="btn ${passed?"ghost":""}" id="tagain">Пройти тему заново</button>${passed && hasNext ? "" : back}</div></section>`;
+      <div class="actions">${passed && hasNext ? `<button class="btn" id="tnext">К списку тем</button>` : ""}<button class="btn ${passed?"ghost":""}" id="tagain">Пройти тему заново</button>${wbBtn()}${passed && hasNext ? "" : back}</div>${wbNote()}</section>`;
+    $("#twb").onclick = () => saveWorkbook(S, name, D);
     const n = $("#tnext"); if (n) n.onclick = () => { topic = null; render(); };
     $("#tagain").onclick = () => { flipKey = ""; startTopic(topic.subj, topic.i); };
     const b = $("#tback"); if (b) b.onclick = () => { topic = null; render(); };
@@ -626,6 +670,9 @@ function renderDiary(){
       <thead><tr><th>Тренировки</th><th>Результат</th></tr></thead>
       <tbody><tr><td>Абакус, ступеней пройдено</td><td>${abDone} из ${AB.length}</td></tr>
       <tr><td>Логические игры, решено задач</td><td>${lg}</td></tr>
+      <tr><td>Скорочтение, лучший результат</td><td>${(store.read||{})["wpm-"+LV()] ? store.read["wpm-"+LV()] + " слов в минуту" : "—"}</td></tr>
+      <tr><td>Таблица Шульте 5 × 5, лучшее время</td><td>${(store.read||{})["schulte-5"] ? store.read["schulte-5"].toFixed(1) + " с" : "—"}</td></tr>
+      <tr><td>Лабиринты, пройдено</td><td>${(store.read||{}).maze || 0}</td></tr>
       <tr><td>Быстрый счёт, лучший раунд</td><td>${tr !== undefined ? tr + " из " + ROUND : "—"}</td></tr></tbody>
     </table></div>
     <p class="muted">Результаты хранятся только в этом браузере на этом устройстве. На другом телефоне или компьютере дневник будет пустым.</p>
@@ -634,7 +681,7 @@ function renderDiary(){
       : `<button class="btn ghost" id="reset">Очистить дневник</button>`}</div>
   </section>`;
   if (confirmReset){
-    $("#yes").onclick = () => { store.topics = {}; store.trainer = {}; store.logic = {}; store.abacus = {open:0, pts:{}}; save(); confirmReset = false; render(); };
+    $("#yes").onclick = () => { store.topics = {}; store.trainer = {}; store.logic = {}; store.abacus = {open:0, pts:{}}; store.read = {}; save(); confirmReset = false; render(); };
     $("#no").onclick = () => { confirmReset = false; render(); };
   } else $("#reset").onclick = () => { confirmReset = true; render(); };
 }
@@ -982,6 +1029,340 @@ function renderAbacus(){
   $("#abback").onclick = () => { clearTimeout(abTimer); ab = null; render(); };
 }
 
+/* ---------- рабочая тетрадь к уроку ---------- */
+let dlCap;   // undefined — ещё не спрашивали, null — недоступно
+function buildWorkbook(S, name, D){
+  const kid = store.grade <= 4, math = /^(math|mathm|alg|geom)$/.test(S.id);
+  const lines = n => `<div class="${math ? "grid" : "lines"}" style="height:${n * (kid ? 12 : 9)}mm"></div>`;
+  const extra = D.workbook && D.workbook.length ? D.workbook : ["Запиши главное правило темы своими словами.", "Придумай и запиши свой пример по теме.", "Что в этой теме было самым трудным? Запиши вопрос, который хочешь задать учителю."];
+  const L = "АБВГ";
+  return `<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Рабочая тетрадь: ${esc(name)}</title><style>
+@page{size:A4;margin:14mm}
+body{font-family:Arial,Helvetica,sans-serif;font-size:${kid ? 15 : 12.5}pt;line-height:1.45;color:#111;max-width:180mm;margin:0 auto;padding:8mm}
+h1{font-size:${kid ? 20 : 17}pt;margin:0 0 2mm} h2{font-size:${kid ? 16 : 14}pt;margin:8mm 0 3mm;border-bottom:2px solid #111;padding-bottom:1mm}
+.top{display:flex;justify-content:space-between;gap:6mm;flex-wrap:wrap;font-size:11pt;color:#444}
+.name{margin:5mm 0;display:flex;gap:8mm;flex-wrap:wrap} .name span{flex:1;min-width:60mm;border-bottom:1px solid #111;padding-bottom:1mm}
+.rule{border:2px solid #111;border-radius:3mm;padding:3mm 5mm} .rule p{margin:1.5mm 0}
+.task{margin:5mm 0;break-inside:avoid} .task b{display:block;margin-bottom:2mm}
+.opt{display:inline-block;margin:1mm 8mm 1mm 0} .box{display:inline-block;width:4.5mm;height:4.5mm;border:1.5px solid #111;vertical-align:-0.8mm;margin-right:2mm}
+.lines{background:repeating-linear-gradient(transparent 0,transparent calc(${kid ? 12 : 9}mm - 1px),#777 calc(${kid ? 12 : 9}mm - 1px),#777 ${kid ? 12 : 9}mm)}
+.grid{background-image:linear-gradient(#9ab 1px,transparent 1px),linear-gradient(90deg,#9ab 1px,transparent 1px);background-size:5mm 5mm;border:1px solid #9ab}
+.answers{break-before:page;font-size:11pt;color:#333} .mark{margin-top:8mm;display:flex;gap:10mm;flex-wrap:wrap}
+@media print{body{padding:0}}
+</style></head><body>
+<div class="top"><span>Учись на пятёрки · рабочая тетрадь</span><span>${esc(S.name)}, ${store.grade} класс</span></div>
+<h1>Тема ${topic.i + 1}. ${esc(name)}</h1>
+<div class="name"><span>Имя: </span><span>Дата: </span></div>
+<h2>Запомни</h2><div class="rule">${D.explain.map(t => `<p>${esc(t)}</p>`).join("")}</div>
+<h2>Выбери верный ответ</h2>
+${D.questions.map((q, n) => `<div class="task"><b>${n + 1}. ${esc(q.q)}</b>${q.options.map((o, k) => `<span class="opt"><span class="box"></span>${L[k]}) ${esc(o)}</span>`).join("")}</div>`).join("")}
+<h2>Выполни письменно</h2>
+${extra.map((t, n) => `<div class="task"><b>${n + 1 + D.questions.length}. ${esc(t)}</b>${lines(kid ? 4 : 5)}</div>`).join("")}
+<div class="mark"><span>Верных ответов: ____ из ${D.questions.length}</span><span>Оценка: ____</span><span>Подпись взрослого: __________</span></div>
+<div class="answers"><h2>Ответы для взрослых</h2>${D.questions.map((q, n) => `<p>${n + 1}. ${L[q.correct]}) ${esc(q.options[q.correct])}${q.why ? " — " + esc(q.why) : ""}</p>`).join("")}
+<p>Тетрадь и ответы составил ИИ-учитель. Он может ошибаться — сверяйте с учебником.</p></div>
+</body></html>`;
+}
+async function saveWorkbook(S, name, D){
+  const filename = `rabochaya-tetrad-${store.grade}-klass-${S.id}-tema-${topic.i + 1}.html`, html = buildWorkbook(S, name, D);
+  try {
+    if (window.SITE) {   // на своём сайте — обычное скачивание файла
+      const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([html], {type:"text/html"})); a.download = filename;
+      document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+    } else {
+      if (dlCap === undefined) dlCap = await useCap("downloads");
+      if (!dlCap) throw {code:"unavailable"};
+      await dlCap.save({filename, data:html});
+    }
+    topic.wbMsg = "Тетрадь сохранена. Открой файл в браузере и распечатай.";
+  } catch (e) {
+    const code = e && e.code;
+    topic.wbMsg = code === "declined" ? "" : code === "rate_limited" ? "Подожди немного и нажми ещё раз." : "Скачать тетрадь здесь не получилось.";
+  }
+  render();
+}
+const wbBtn = () => `<button class="btn ghost" id="twb" type="button">Скачать рабочую тетрадь</button>`;
+const wbNote = () => topic.wbMsg ? `<p class="note">${topic.wbMsg}</p>` : "";
+
+/* ---------- пальчиковая гимнастика ---------- */
+function hand(pose, left){
+  const FX = [27, 39, 51, 63], LEN = [34, 42, 38, 28];
+  const POSES = {fist:[0,0,0,0,0], palm:[1,1,1,1,1], rabbit:[0,1,1,0,0], goat:[0,1,0,0,1], like:[2,0,0,0,0], pinky:[0,0,0,0,1]};
+  let body;
+  if (pose === "edge") body = `<rect x="41" y="14" width="18" height="96" rx="9"/><path d="M41 70q-12 4-12 16" fill="none"/>`;
+  else {
+    const ring = /^ring/.test(pose) ? +pose[4] : 0, f = ring ? [1,1,1,1,1] : POSES[pose];
+    body = FX.map((x, k) => ring === k + 1 ? `<rect x="${x}" y="38" width="10" height="28" rx="5"/>`
+        : f[k + 1] ? `<rect x="${x}" y="${60 - LEN[k]}" width="10" height="${LEN[k] + 10}" rx="5"/>` : `<rect x="${x}" y="52" width="10" height="14" rx="5"/>`).join("")
+      + `<rect x="25" y="60" width="50" height="46" rx="14"/>`
+      + (ring ? `<rect x="14" y="52" width="11" height="34" rx="5.5" transform="rotate(${-18 - ring * 9} 22 84)"/><circle class="ringmark" cx="${FX[ring - 1] + 5}" cy="36" r="8"/>`
+        : f[0] === 2 ? `<rect x="13" y="36" width="12" height="40" rx="6"/>`
+        : f[0] ? `<rect x="4" y="68" width="28" height="11" rx="5.5" transform="rotate(-32 30 74)"/>` : `<rect x="29" y="76" width="24" height="11" rx="5.5"/>`);
+  }
+  return `<svg class="hand" viewBox="0 0 100 120" aria-hidden="true"${left ? ` style="transform:scaleX(-1)"` : ""}><g>${body}</g></svg>`;
+}
+const GYM = [
+  {name:"Кулак — ребро — ладонь", tempo:1300, how:["Положи руку на стол. По очереди показывай три положения: кулак, ребро ладони, раскрытая ладонь.", "Сначала правой рукой, потом левой, потом двумя руками вместе. Старайся не сбиваться с порядка."],
+   steps:[{r:"fist", cap:"Кулак"}, {r:"edge", cap:"Ребро"}, {r:"palm", cap:"Ладонь"}]},
+  {name:"Колечки", tempo:1100, how:["Соединяй большой палец по очереди с указательным, средним, безымянным и мизинцем — получаются колечки.", "Дойди до мизинца и вернись обратно. Потом попробуй двумя руками сразу."],
+   steps:[{r:"ring1", cap:"Указательный"}, {r:"ring2", cap:"Средний"}, {r:"ring3", cap:"Безымянный"}, {r:"ring4", cap:"Мизинец"}, {r:"ring3", cap:"Безымянный"}, {r:"ring2", cap:"Средний"}]},
+  {name:"Кулак — ладонь", tempo:1400, how:["Левая рука сжата в кулак, правая раскрыта ладонью.", "Одновременно поменяй: левая — ладонь, правая — кулак. Меняй руки в ровном темпе."],
+   steps:[{l:"fist", r:"palm", cap:"Левая — кулак, правая — ладонь"}, {l:"palm", r:"fist", cap:"Левая — ладонь, правая — кулак"}]},
+  {name:"Зайчик — коза", tempo:1400, how:["Зайчик: подними указательный и средний пальцы, остальные прижми.", "Коза: подними указательный палец и мизинец. Меняй зайчика на козу обеими руками."],
+   steps:[{l:"rabbit", r:"rabbit", cap:"Зайчик"}, {l:"goat", r:"goat", cap:"Коза"}]},
+  {name:"Класс — мизинец", tempo:1600, how:["Левая рука показывает «класс» — большой палец вверх. Правая показывает мизинец.", "Одновременно поменяй руки местами: левая — мизинец, правая — «класс»."],
+   steps:[{l:"like", r:"pinky", cap:"Левая — класс, правая — мизинец"}, {l:"pinky", r:"like", cap:"Левая — мизинец, правая — класс"}]},
+  {name:"Фонарики", tempo:900, how:["Подними обе руки. Сожми пальцы в кулаки — фонарики погасли.", "Широко раскрой ладони — фонарики зажглись. Повторяй быстро и чётко."],
+   steps:[{l:"fist", r:"fist", cap:"Погасли"}, {l:"palm", r:"palm", cap:"Зажглись"}]},
+  {name:"Зайчик и колечко", tempo:1600, how:["Правая рука показывает зайчика, левая — колечко из большого и указательного пальцев.", "Одновременно поменяй: правая — колечко, левая — зайчик."],
+   steps:[{l:"ring1", r:"rabbit", cap:"Левая — колечко, правая — зайчик"}, {l:"rabbit", r:"ring1", cap:"Левая — зайчик, правая — колечко"}]}
+];
+let gym = null, gymTimer = null;
+const gymFrame = s => `<div class="hands">${s.l ? hand(s.l, true) : ""}${s.r ? hand(s.r, false) : ""}</div><p class="gymcap">${s.cap}</p>`;
+const gymPic = (ex, step) => gymFrame(ex.steps[step % ex.steps.length]);
+function gymStop(){ clearInterval(gymTimer); gymTimer = null; if (gym) gym.running = false; }
+function gymRun(exI, secs, onEnd){
+  gymStop();
+  const ex = GYM[exI], t0 = Date.now();
+  gym = {ex:exI, step:0, left:secs, running:true};
+  gymTimer = setInterval(() => {
+    gym.step++; gym.left = Math.max(0, secs - Math.round((Date.now() - t0) / 1000));
+    const p = $("#gympic"); if (p) p.innerHTML = gymPic(ex, gym.step);
+    const tm = $("#gymtime"); if (tm) tm.textContent = gym.left;
+    if (gym.left <= 0) { gymStop(); if (onEnd) onEnd(); }
+  }, ex.tempo);
+}
+let gymOpen = null;
+function renderGym(){
+  if (gymOpen === null) {
+    app.innerHTML = `<section class="sheet">
+      <h1>Пальчиковая гимнастика</h1>
+      <p class="muted">Разминка для пальцев и внимания. Выбери упражнение, посмотри картинки и повторяй движения вместе с ними. Для 1–4 классов одна такая разминка идёт перед каждым уроком.</p>
+      <ol class="schedule">${GYM.map((g, i) => `<li><button class="row" data-gym="${i}">
+        <span class="num">${i + 1}</span><span class="glyph" aria-hidden="true">${hand(g.steps[0].r || g.steps[0].l, false)}</span>
+        <span><span class="title">${g.name}</span><span class="subj">${g.steps.length} движения по кругу</span></span><span class="count">30 секунд</span></button></li>`).join("")}</ol>
+    </section>`;
+    app.querySelectorAll("[data-gym]").forEach(b => b.onclick = () => { gymOpen = +b.dataset.gym; gym = null; render(); });
+    return;
+  }
+  const ex = GYM[gymOpen], run = gym && gym.running && gym.ex === gymOpen;
+  app.innerHTML = `<section class="sheet">
+    <span class="step">Гимнастика · упражнение ${gymOpen + 1} из ${GYM.length}</span>
+    <h1>${ex.name}</h1>
+    <div class="theory">${ex.how.map(h => `<p>${h}</p>`).join("")}</div>
+    <div class="actions">${listenBtn(ex.name + ".\n" + ex.how.join("\n"), "ru")}</div>
+    <p class="pictitle">Все движения по порядку</p>
+    <div class="gymsteps">${ex.steps.map(s => `<figure class="gymfig">${gymFrame(s)}</figure>`).join(`<span class="arrow" aria-hidden="true">→</span>`)}</div>
+    <p class="pictitle">Повторяй вместе с картинкой</p>
+    <div class="gymlive" id="gympic">${gymPic(ex, run ? gym.step : 0)}</div>
+    ${run ? `<p class="muted">Осталось секунд: <b id="gymtime">${gym.left}</b></p>` : gym && gym.ex === gymOpen ? `<p class="note">Молодец! Разминка выполнена.</p>` : ""}
+    <div class="actions">${run ? `<button class="btn ghost" id="gstop">Стоп</button>` : `<button class="btn" id="gstart">Начать, 30 секунд</button>`}
+      ${gymOpen + 1 < GYM.length ? `<button class="btn ghost" id="gnext">Следующее упражнение</button>` : ""}<button class="btn ghost" id="gback">К списку</button></div>
+  </section>`;
+  const gs = $("#gstart"); if (gs) gs.onclick = () => { gymRun(gymOpen, 30, () => { if (view === "gym") render(); }); render(); };
+  const st = $("#gstop"); if (st) st.onclick = () => { gymStop(); gym = null; render(); };
+  const gn = $("#gnext"); if (gn) gn.onclick = () => { gymStop(); gym = null; gymOpen++; render(); };
+  $("#gback").onclick = () => { gymStop(); gym = null; gymOpen = null; render(); };
+}
+/* разминка перед уроком в 1–4 классах: идёт, пока урок готовится */
+function renderWarm(S, name){
+  const ex = GYM[topic.warm], ready = topic.phase !== "load";
+  app.innerHTML = `<section class="sheet">
+    <span class="step">${S.name} · тема ${topic.i + 1} · разминка</span>
+    <h1>Разминка: ${ex.name}</h1>
+    <p>${ex.how[0]}</p>
+    <div class="gymlive" id="gympic">${gymPic(ex, gym ? gym.step : 0)}</div>
+    ${gym && gym.running ? `<p class="muted">Осталось секунд: <b id="gymtime">${gym.left}</b></p>` : `<p class="note">Молодец! Пальцы и голова готовы к уроку.</p>`}
+    <p class="muted">${ready ? "Урок готов." : "Учитель готовит урок, а мы пока разминаемся."} Тема: ${esc(name)}.</p>
+    <div class="actions"><button class="btn" id="wgo">${gym && gym.running ? "Пропустить разминку" : "Начать урок"}</button><button class="btn ghost" id="tback">К списку тем</button></div>
+  </section>`;
+  $("#wgo").onclick = () => { gymStop(); topic.warmDone = true; render(); };
+  $("#tback").onclick = () => { gymStop(); if (topicCtl) topicCtl.abort(); topic = null; render(); };
+}
+
+/* ---------- чтение и внимание ---------- */
+const TEXTS = {
+a:[{t:"Кот и дождь", x:"Утром пошёл дождь. Кот Барсик сидел на окне и смотрел во двор. По лужам прыгали капли. Мимо пробежала мокрая собака. Барсик не любил воду и радовался, что он дома. Потом вышло солнце. На небе появилась радуга. Кот спрыгнул с окна и побежал на кухню. Там его ждала миска с молоком. Барсик поел, умылся лапой и лёг спать на тёплый коврик."},
+   {t:"Зимняя кормушка", x:"Зимой птицам трудно найти еду. Миша с папой решили сделать кормушку. Они взяли пустую коробку и вырезали в ней окошко. Потом привязали верёвку и повесили кормушку на берёзу. Миша насыпал семечки и крошки. Сначала птицы боялись. Первой прилетела смелая синица. Она схватила семечко и улетела. Скоро у кормушки собралась целая стая. Теперь Миша каждое утро подсыпает корм и смотрит на птиц из окна."}],
+b:[{t:"Как разговаривают муравьи", x:"Муравьи не умеют говорить, но отлично понимают друг друга. Главный их язык — запахи. Когда муравей находит еду, он возвращается домой и оставляет на земле пахучий след. Другие муравьи чувствуют его усиками и идут по этой дорожке, как по стрелкам на карте. Чем больше муравьёв прошло по тропе, тем сильнее запах и тем легче её найти. Если еда закончилась, след никто не обновляет, и он постепенно исчезает. Так муравейник без слов и без начальника решает, куда идти за едой. Учёные называют такие пахучие вещества феромонами. С их помощью муравьи могут не только показать дорогу, но и подать сигнал тревоги."},
+   {t:"Первый поход", x:"В июле Даша впервые пошла с классом в поход. К вечеру ребята поставили палатки на берегу реки и развели костёр. Учитель показал, как правильно складывать дрова, чтобы огонь горел ровно. На ужин сварили кашу с тушёнкой, и Даше показалось, что вкуснее она ничего не ела. Когда стемнело, над лесом высыпали звёзды. В городе их никогда не бывает так много. Ребята лежали на траве и искали ковш Большой Медведицы. Ночью в палатке было прохладно, зато утром Дашу разбудили птицы, а над рекой стоял белый туман. Домой она вернулась уставшая, с комариными укусами и с твёрдым решением пойти в поход ещё раз."}],
+c:[{t:"Зачем мозгу сон", x:"Долгое время сон считали простым отдыхом: тело лежит, мозг молчит. Исследования показали, что это не так. Пока человек спит, мозг продолжает работать, только занят он другим. Он перебирает то, что произошло за день: важное закрепляет в памяти, лишнее отбрасывает. Поэтому выученное вечером правило после хорошего сна вспоминается легче, чем после бессонной ночи. Сон нужен и телу. Во сне восстанавливаются мышцы, а у детей и подростков активнее выделяется гормон роста. Тот, кто постоянно недосыпает, хуже сосредотачивается, чаще ошибается и быстрее раздражается. Подросткам врачи советуют спать не меньше восьми часов. Яркий экран телефона перед сном мешает заснуть, поэтому гаджеты лучше отложить заранее. Получается, что лечь вовремя — это не потеря времени, а часть подготовки к завтрашнему дню."},
+   {t:"Последняя партия", x:"Тимур проигрывал. На доске у него оставались король, ладья и две пешки, а у соперника — на слона больше. Зал затих: шла последняя партия школьного турнира. Тимур посмотрел на часы. Времени было мало, и первой мыслью было сдаться. Но тренер всегда повторял: пока на доске есть фигуры, есть и шансы. Тимур заставил себя не спешить и ещё раз осмотрел позицию. Король соперника стоял в углу, закрытый собственными пешками. Если поставить ладью на последнюю линию, ему некуда будет уйти. Одно мешало: это поле охранял слон. Тогда Тимур двинул вперёд пешку, предлагая слону её забрать. Соперник задумался, улыбнулся и взял. Слон ушёл с важной диагонали. Тимур передвинул ладью и тихо сказал: «Мат». Потом они пожали друг другу руки, и соперник попросил показать, где он ошибся."}]
+};
+const READ_ITEMS = [
+  {id:"speed", glyph:"⌛", name:"Скорочтение", desc:"Читай, пока сыплется песок, и узнай свою скорость"},
+  {id:"flip", glyph:"ɐq", name:"Перевёрнутый текст", desc:"Прочитай текст вверх ногами или в зеркале"},
+  {id:"schulte", glyph:"1→25", name:"Таблица Шульте", desc:"Найди все числа по порядку как можно быстрее"},
+  {id:"maze", glyph:"▚", name:"Лабиринт", desc:"Проведи шарик к звезде"}
+];
+let rd = null, rdTimer = null;   // rd — открытое упражнение раздела «Чтение»
+const rdStore = () => (store.read = store.read || {}, store.read);
+const wordsOf = x => x.split(/\s+/).filter(w => /[A-Za-zА-Яа-яЁё0-9]/.test(w));
+function rdStop(){ clearInterval(rdTimer); rdTimer = null; }
+const mmss = s => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
+
+function hourglass(frac){   // frac: какая часть песка уже пересыпалась, от 0 до 1
+  return `<svg class="hourglass" viewBox="0 0 100 160" role="img" aria-label="Песочные часы">
+    <defs><clipPath id="hg-top"><rect id="hg-topr" x="0" y="${14 + 66 * frac}" width="100" height="${66 * (1 - frac)}"/></clipPath>
+    <clipPath id="hg-bot"><rect id="hg-botr" x="0" y="${146 - 66 * frac}" width="100" height="${66 * frac}"/></clipPath></defs>
+    <polygon class="sand" points="22,14 78,14 50,80" clip-path="url(#hg-top)"/>
+    <polygon class="sand" points="50,80 78,146 22,146" clip-path="url(#hg-bot)"/>
+    <line class="stream" id="hg-stream" x1="50" y1="80" x2="50" y2="146" ${frac > 0 && frac < 1 ? "" : `style="display:none"`}/>
+    <path class="glass" d="M20 14H80L54 80 80 146H20L46 80Z"/>
+    <rect class="cap" x="12" y="4" width="76" height="10" rx="4"/><rect class="cap" x="12" y="146" width="76" height="10" rx="4"/></svg>`;
+}
+function setHourglass(frac){
+  const a = $("#hg-topr"), b = $("#hg-botr"), s = $("#hg-stream"); if (!a) return;
+  a.setAttribute("y", 14 + 66 * frac); a.setAttribute("height", 66 * (1 - frac));
+  b.setAttribute("y", 146 - 66 * frac); b.setAttribute("height", 66 * frac);
+  s.style.display = frac > 0 && frac < 1 ? "" : "none";
+}
+
+function genMaze(n){
+  const cells = Array.from({length:n * n}, () => 15), seen = new Set([0]), stack = [0];   // стены: 1 верх, 2 право, 4 низ, 8 лево
+  const DIRS = [[0, -1, 1, 4], [1, 0, 2, 8], [0, 1, 4, 1], [-1, 0, 8, 2]];
+  while (stack.length) {
+    const c = stack[stack.length - 1], x = c % n, y = Math.floor(c / n);
+    const next = shuffle(DIRS).map(([dx, dy, w, back]) => ({nx:x + dx, ny:y + dy, w, back})).find(d => d.nx >= 0 && d.ny >= 0 && d.nx < n && d.ny < n && !seen.has(d.ny * n + d.nx));
+    if (!next) { stack.pop(); continue; }
+    const k = next.ny * n + next.nx; cells[c] &= ~next.w; cells[k] &= ~next.back; seen.add(k); stack.push(k);
+  }
+  return cells;
+}
+function mazeMove(dx, dy){
+  if (!rd || rd.id !== "maze" || rd.done) return;
+  const n = rd.n, c = rd.pos, wall = dx === 1 ? 2 : dx === -1 ? 8 : dy === 1 ? 4 : 1;
+  if (rd.cells[c] & wall) return;
+  rd.pos = c + dx + dy * n; rd.steps++;
+  if (!rd.start) rd.start = Date.now();
+  if (rd.pos === n * n - 1) { rd.done = true; rd.time = (Date.now() - rd.start) / 1000; const s = rdStore(); s.maze = (s.maze || 0) + 1; save(); }
+  render();
+}
+document.addEventListener("keydown", e => {
+  if (view !== "read" || !rd || rd.id !== "maze") return;
+  const m = {ArrowUp:[0, -1], ArrowDown:[0, 1], ArrowLeft:[-1, 0], ArrowRight:[1, 0]}[e.key];
+  if (m) { e.preventDefault(); mazeMove(m[0], m[1]); }
+});
+
+function rdOpen(id){
+  rdStop();
+  const lv = LV();
+  if (id === "speed") rd = {id, ti:0, dur:60, phase:"setup"};
+  else if (id === "flip") rd = {id, mode:"up", ti:rnd(0, TEXTS[lv].length - 1), from:0, show:false};
+  else if (id === "schulte") rd = {id, n:store.grade <= 2 ? 3 : store.grade <= 4 ? 4 : 5, phase:"setup"};
+  else rd = {id, n:lv === "a" ? 8 : lv === "b" ? 11 : 14, cells:null, pos:0, steps:0, start:0, done:false};
+  if (id === "maze") rd.cells = genMaze(rd.n);
+}
+function renderRead(){
+  const lv = LV(), S = rdStore();
+  if (!rd) {
+    app.innerHTML = `<section class="sheet">
+      <h1>Чтение и внимание</h1>
+      <p class="muted">Упражнения для быстрого чтения, внимания и мышления. Лучшая скорость чтения: ${S["wpm-" + lv] ? S["wpm-" + lv] + " слов в минуту" : "пока не измерена"}.</p>
+      <ol class="schedule">${READ_ITEMS.map((g, i) => `<li><button class="row" data-rd="${g.id}">
+        <span class="num">${i + 1}</span><span class="glyph" aria-hidden="true" style="font-size:13px">${g.glyph}</span>
+        <span><span class="title">${g.name}</span><span class="subj">${g.desc}</span></span></button></li>`).join("")}</ol>
+    </section>`;
+    app.querySelectorAll("[data-rd]").forEach(b => b.onclick = () => { rdOpen(b.dataset.rd); render(); });
+    return;
+  }
+  const item = READ_ITEMS.find(x => x.id === rd.id), head = `<span class="step">Чтение · ${item.name}</span>`;
+  const backBtn = `<button class="btn ghost" id="rback">К списку упражнений</button>`;
+  let body = "";
+  if (rd.id === "speed") {
+    const T = TEXTS[lv][rd.ti], words = wordsOf(T.x);
+    if (rd.phase === "setup") {
+      body = `<h1>Скорочтение</h1><p>Выбери текст и время. Нажми «Начать» и читай про себя, пока в часах сыплется песок. Когда песок закончится, отметь слово, до которого дочитал.</p>
+        <div class="chips" role="group" aria-label="Текст">${TEXTS[lv].map((t, i) => `<button class="chip" data-ti="${i}" aria-pressed="${rd.ti === i}">${t.t} · ${wordsOf(t.x).length} слов</button>`).join("")}</div>
+        <div class="chips" role="group" aria-label="Время">${[[30, "30 секунд"], [60, "1 минута"], [120, "2 минуты"]].map(([d, n]) => `<button class="chip" data-dur="${d}" aria-pressed="${rd.dur === d}">${n}</button>`).join("")}</div>
+        <div class="readrow">${hourglass(0)}<p class="muted">Лучший результат: ${S["wpm-" + lv] ? S["wpm-" + lv] + " слов в минуту" : "пока нет"}.</p></div>
+        <div class="actions"><button class="btn" id="rgo">Начать</button>${backBtn}</div>`;
+    } else if (rd.phase === "run" || rd.phase === "mark") {
+      const run = rd.phase === "run", left = Math.max(0, rd.dur - (Date.now() - rd.start) / 1000);
+      body = `<div class="readrow">${hourglass(run ? 1 - left / rd.dur : 1)}<div><p class="task" id="rtime">${run ? mmss(Math.ceil(left)) : "0:00"}</p>
+          <p class="muted">${run ? "Читай про себя. Не торопись глотать слова — важно понимать." : "Время вышло! Нажми на слово, до которого ты дочитал."}</p></div></div>
+        <h2>${T.t}</h2>
+        <p class="readtext ${run ? "" : "pick"}">${words.map((w, i) => run ? esc(w) : `<button class="word" data-w="${i}">${esc(w)}</button>`).join(" ")}</p>
+        <div class="actions">${run ? `<button class="btn" id="rall">Я дочитал весь текст</button>` : `<button class="btn ghost" id="rall2">Я дочитал весь текст</button>`}${backBtn}</div>`;
+    } else {
+      const best = S["wpm-" + lv] || 0;
+      body = `<h1>${rd.wpm} слов в минуту</h1>
+        <div class="readrow">${hourglass(1)}<div><p>Ты прочитал ${rd.count} ${rd.count % 10 === 1 && rd.count % 100 !== 11 ? "слово" : "слов"} за ${mmss(Math.round(rd.secs))}.</p>
+          <p class="muted">${rd.record ? "Это твой новый лучший результат!" : "Твой лучший результат: " + best + " слов в минуту."} Скорость важна только вместе с пониманием: перескажи взрослому, о чём был текст.</p></div></div>
+        <div class="actions"><button class="btn" id="ragain">Ещё раз</button>${backBtn}</div>`;
+    }
+  } else if (rd.id === "flip") {
+    const sents = TEXTS[lv][rd.ti].x.match(/[^.!?]+[.!?»]+/g) || [TEXTS[lv][rd.ti].x], piece = sents.slice(rd.from, rd.from + 2).join(" ").trim();
+    body = `<h1>Перевёрнутый текст</h1><p>Прочитай отрывок, не поворачивая экран и голову. Так глаза и мозг учатся узнавать слова быстрее.</p>
+      <div class="chips" role="group" aria-label="Как перевернуть">${[["up", "Вверх ногами"], ["mirror", "В зеркале"], ["both", "Справа налево и вверх ногами"]].map(([m, n]) => `<button class="chip" data-mode="${m}" aria-pressed="${rd.mode === m}">${n}</button>`).join("")}</div>
+      <div class="flipbox"><p class="fliptext ${rd.mode}" aria-label="Перевёрнутый отрывок">${esc(piece)}</p></div>
+      ${rd.show ? `<p class="note">${esc(piece)}</p>` : ""}
+      <div class="actions"><button class="btn" id="fnext">Другой отрывок</button><button class="btn ghost" id="fshow">${rd.show ? "Спрятать обычный текст" : "Показать обычный текст"}</button>${backBtn}</div>`;
+    rd.sentCount = sents.length;
+  } else if (rd.id === "schulte") {
+    const key = "schulte-" + rd.n, best = S[key];
+    if (rd.phase === "setup") {
+      body = `<h1>Таблица Шульте</h1><p>В таблице перемешаны числа. Смотри в центр таблицы и нажимай числа по порядку, начиная с 1. Старайся находить их боковым зрением, не бегая глазами.</p>
+        <div class="chips" role="group" aria-label="Размер">${[3, 4, 5].map(n => `<button class="chip" data-n="${n}" aria-pressed="${rd.n === n}">${n} × ${n}</button>`).join("")}</div>
+        <p class="muted">Лучшее время для таблицы ${rd.n} × ${rd.n}: ${best ? best.toFixed(1) + " с" : "пока нет"}.</p>
+        <div class="actions"><button class="btn" id="sgo">Старт</button>${backBtn}</div>`;
+    } else {
+      const done = rd.phase === "done";
+      body = `<p class="task">${done ? "Готово за " + rd.time.toFixed(1) + " с" : `Найди: ${rd.next} · <span id="stime">${((Date.now() - rd.start) / 1000).toFixed(1)}</span> с`}</p>
+        <div class="schulte" style="grid-template-columns:repeat(${rd.n},1fr)">${rd.cells.map(v => `<button class="scell ${v < rd.next ? "found" : ""}" data-v="${v}" ${done ? "disabled" : ""}>${v}</button>`).join("")}</div>
+        ${done ? `<p class="note">${rd.record ? "Новый рекорд!" : "Лучшее время: " + best.toFixed(1) + " с."} Ошибочных нажатий: ${rd.wrong}.</p>` : ""}
+        <div class="actions">${done ? `<button class="btn" id="sgo">Ещё раз</button>` : ""}${backBtn}</div>`;
+    }
+  } else {
+    const n = rd.n, C = 20, walls = [];
+    rd.cells.forEach((w, i) => { const x = (i % n) * C, y = Math.floor(i / n) * C;
+      if (w & 1) walls.push(`M${x} ${y}h${C}`); if (w & 8) walls.push(`M${x} ${y}v${C}`);
+      if (i % n === n - 1 && w & 2) walls.push(`M${x + C} ${y}v${C}`); if (i >= n * (n - 1) && w & 4) walls.push(`M${x} ${y + C}h${C}`); });
+    const px = (rd.pos % n) * C + C / 2, py = Math.floor(rd.pos / n) * C + C / 2, fx = (n - 1) * C + C / 2;
+    body = `<h1>Лабиринт</h1><p>Проведи шарик из левого верхнего угла к звезде. Двигай стрелками на экране или на клавиатуре.</p>
+      <svg class="maze" viewBox="-2 -2 ${n * C + 4} ${n * C + 4}" role="img" aria-label="Лабиринт ${n} на ${n}">
+        <text class="star" x="${fx}" y="${fx + 6}" text-anchor="middle">★</text><path class="mwall" d="${walls.join("")}"/><circle class="ball" cx="${px}" cy="${py}" r="6"/></svg>
+      ${rd.done ? `<p class="note">Ты дошёл до звезды за ${mmss(Math.round(rd.time))} и ${rd.steps} шагов! Пройдено лабиринтов: ${S.maze || 0}.</p>` : `<div class="pad">
+        <button class="btn ghost" data-mv="0,-1" aria-label="Вверх">↑</button><div><button class="btn ghost" data-mv="-1,0" aria-label="Влево">←</button><button class="btn ghost" data-mv="0,1" aria-label="Вниз">↓</button><button class="btn ghost" data-mv="1,0" aria-label="Вправо">→</button></div></div>`}
+      <div class="actions"><button class="btn ${rd.done ? "" : "ghost"}" id="mnew">Новый лабиринт</button>${backBtn}</div>`;
+  }
+  app.innerHTML = `<section class="sheet">${head}${body}</section>`;
+  $("#rback").onclick = () => { rdStop(); rd = null; render(); };
+
+  if (rd.id === "speed") {
+    const T = TEXTS[lv][rd.ti], total = wordsOf(T.x).length;
+    const finish = (count, secs) => { rdStop(); rd.count = count; rd.secs = secs; rd.wpm = Math.max(1, Math.round(count / secs * 60));
+      const key = "wpm-" + lv; rd.record = rd.wpm > (S[key] || 0); if (rd.record) { S[key] = rd.wpm; save(); } rd.phase = "done"; render(); };
+    app.querySelectorAll("[data-ti]").forEach(b => b.onclick = () => { rd.ti = +b.dataset.ti; render(); });
+    app.querySelectorAll("[data-dur]").forEach(b => b.onclick = () => { rd.dur = +b.dataset.dur; render(); });
+    const go = $("#rgo"); if (go) go.onclick = () => { rd.phase = "run"; rd.start = Date.now(); render();
+      rdTimer = setInterval(() => { const left = rd.dur - (Date.now() - rd.start) / 1000;
+        if (left <= 0) { rdStop(); rd.phase = "mark"; if (view === "read") render(); return; }
+        setHourglass(1 - left / rd.dur); const t = $("#rtime"); if (t) t.textContent = mmss(Math.ceil(left)); }, 200); };
+    const all = $("#rall"); if (all) all.onclick = () => finish(total, Math.max(1, (Date.now() - rd.start) / 1000));
+    const all2 = $("#rall2"); if (all2) all2.onclick = () => finish(total, rd.dur);
+    app.querySelectorAll("[data-w]").forEach(b => b.onclick = () => finish(+b.dataset.w + 1, rd.dur));
+    const ag = $("#ragain"); if (ag) ag.onclick = () => { rd = {id:"speed", ti:(rd.ti + 1) % TEXTS[lv].length, dur:rd.dur, phase:"setup"}; render(); };
+  } else if (rd.id === "flip") {
+    app.querySelectorAll("[data-mode]").forEach(b => b.onclick = () => { rd.mode = b.dataset.mode; render(); });
+    $("#fnext").onclick = () => { rd.from += 2; rd.show = false; if (rd.from >= rd.sentCount) { rd.from = 0; rd.ti = (rd.ti + 1) % TEXTS[lv].length; } render(); };
+    $("#fshow").onclick = () => { rd.show = !rd.show; render(); };
+  } else if (rd.id === "schulte") {
+    app.querySelectorAll("[data-n]").forEach(b => b.onclick = () => { rd.n = +b.dataset.n; render(); });
+    const go = $("#sgo"); if (go) go.onclick = () => { rdStop(); rd = {id:"schulte", n:rd.n, phase:"run", cells:shuffle(Array.from({length:rd.n * rd.n}, (_, i) => i + 1)), next:1, wrong:0, start:Date.now()}; render();
+      rdTimer = setInterval(() => { const t = $("#stime"); if (t && rd && rd.phase === "run") t.textContent = ((Date.now() - rd.start) / 1000).toFixed(1); }, 100); };
+    app.querySelectorAll("[data-v]").forEach(b => b.onclick = () => {
+      if (+b.dataset.v !== rd.next) { rd.wrong++; b.classList.add("miss"); setTimeout(() => b.classList.remove("miss"), 300); return; }
+      rd.next++;
+      if (rd.next > rd.n * rd.n) { rdStop(); rd.time = (Date.now() - rd.start) / 1000; rd.phase = "done"; const key = "schulte-" + rd.n; rd.record = !S[key] || rd.time < S[key]; if (rd.record) { S[key] = rd.time; save(); } }
+      render(); });
+  } else {
+    app.querySelectorAll("[data-mv]").forEach(b => b.onclick = () => { const [dx, dy] = b.dataset.mv.split(",").map(Number); mazeMove(dx, dy); });
+    $("#mnew").onclick = () => { rdOpen("maze"); render(); };
+  }
+}
+
 /* ---------- ИИ-учитель ---------- */
 let sampleFn;            // undefined — подключается, null — недоступен, функция — готов
 let aiOff = false;       // зритель не разрешил или ИИ отключён для аккаунта
@@ -1232,8 +1613,11 @@ if (window.SITE) {
 }
 
 /* ---------- навигация ---------- */
-function leave(){ if (topicCtl) topicCtl.abort(); clearTimeout(abTimer); topic = null; drill = null; logic = null; ab = null; }
-document.querySelectorAll(".tab").forEach(t => t.onclick = () => { if (view===t.dataset.view) leave(); if (view==="abacus" && t.dataset.view!=="abacus") { clearTimeout(abTimer); ab = null; } view = t.dataset.view; confirmReset = false; render(); });
+function leave(){ if (topicCtl) topicCtl.abort(); clearTimeout(abTimer); gymStop(); rdStop(); topic = null; drill = null; logic = null; ab = null; rd = null; gym = null; gymOpen = null; }
+document.querySelectorAll(".tab").forEach(t => t.onclick = () => { if (view===t.dataset.view) leave(); if (view==="abacus" && t.dataset.view!=="abacus") { clearTimeout(abTimer); ab = null; }
+  if (view==="read" && t.dataset.view!=="read") { rdStop(); rd = null; }
+  if (view!==t.dataset.view) { gymStop(); if (view==="gym") gym = null; }
+  view = t.dataset.view; confirmReset = false; render(); });
 document.querySelectorAll(".lvl").forEach(b => b.onclick = () => { store.grade = +b.dataset.grade; save(); leave(); teacherSubj = ""; render(); });
 render();
 </script>

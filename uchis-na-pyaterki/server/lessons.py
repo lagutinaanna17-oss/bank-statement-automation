@@ -16,9 +16,10 @@ def lesson_prompt(grade: int, subject: dict, topic: str) -> str:
 - Перепроверь каждый ответ: вычисления пересчитай, факты и правила сверь. Не включай вопрос, если не уверен в ответе.
 - Вопрос должен быть понятен без картинок и без учебника. Не ссылайся на страницы и номера заданий, не выдумывай цитаты из произведений.
 - В "why" коротко объясни, почему верный ответ верен.
+- Ещё 3 письменных задания для рабочей тетради ("workbook"): то, что ученик выполняет ручкой на бумаге (решить, вписать, составить, записать). Без вариантов ответа и без картинок.
 - Обычный текст без разметки.
 Ответь только JSON такого вида:
-{{"explain":["абзац","абзац","абзац"],"questions":[{{"q":"вопрос","options":["а","б","в","г"],"correct":0,"why":"объяснение"}}]}}"""
+{{"explain":["абзац","абзац","абзац"],"questions":[{{"q":"вопрос","options":["а","б","в","г"],"correct":0,"why":"объяснение"}}],"workbook":["задание","задание","задание"]}}"""
 
 
 def parse_json(text: str):
@@ -54,4 +55,6 @@ def valid_lesson(data):
                           "why": q["why"] if isinstance(q.get("why"), str) else ""})
     if not explain or len(questions) < LESSON_QN:
         return None
-    return {"explain": explain, "questions": questions[:LESSON_QN]}
+    raw = data.get("workbook")
+    workbook = [x.strip() for x in raw if isinstance(x, str) and x.strip()][:5] if isinstance(raw, list) else []
+    return {"explain": explain, "questions": questions[:LESSON_QN], "workbook": workbook}
