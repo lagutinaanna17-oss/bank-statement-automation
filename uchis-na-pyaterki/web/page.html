@@ -433,6 +433,7 @@ if (!CURR[store.grade]) store.grade = 3;
 function save(){ try { localStorage.setItem(KEY, JSON.stringify(store)); } catch(e){} if (window.SITE) SITE.push(store); }
 const LV = () => store.grade <= 4 ? "a" : store.grade <= 6 ? "b" : "c";   // сложность игр и счёта
 const subjects = () => CURR[store.grade].filter(s => s.id === "math" ? store.mathProg !== "m" : s.id === "mathm" ? store.mathProg === "m" : true);
+const allOpen = () => { const v = (store.openAll || {})[store.grade]; return v === undefined ? store.grade === 2 : v; };   // 2 класс открыт целиком
 const PASS = 40, PER_Q = 10, QN = 5;   // 5 вопросов по 10 баллов, тема сдана с 40
 
 let view = "teacher";
@@ -479,7 +480,7 @@ const tkey = (subj, i) => `${store.grade}-${subj}-${i}`;
 const curSubj = () => subjects().find(s => s.id === store.subj) || subjects()[0];
 function renderTopics(){
   const S = curSubj(), pts = i => store.topics[tkey(S.id, i)] || 0;
-  const isOpen = i => i === 0 || pts(i-1) >= PASS;
+  const isOpen = i => i === 0 || pts(i-1) >= PASS || allOpen();
   const done = S.topics.filter((_, i) => pts(i) >= PASS).length;
   const ai = typeof sampleFn === "function" && !aiOff;
   app.innerHTML = `<section class="sheet">
@@ -487,7 +488,8 @@ function renderTopics(){
     <div class="chips" role="group" aria-label="Предмет">${subjects().map(s=>`<button class="chip" data-subj="${s.id}" aria-pressed="${s.id===S.id}">${s.name}</button>`).join("")}</div>
     ${store.grade <= 4 && (S.id === "math" || S.id === "mathm") ? `<div class="chips" role="group" aria-label="Учебник математики"><span class="muted">Учебник:</span>
       <button class="chip" data-mp="p" aria-pressed="${store.mathProg !== "m"}">Петерсон</button><button class="chip" data-mp="m" aria-pressed="${store.mathProg === "m"}">Моро</button></div>` : ""}
-    <p class="muted">${S.name}, ${S.prog}. Пройдено тем: ${done} из ${S.topics.length}. ${window.SITE ? "В каждой теме" : "Урок по теме ведёт ИИ-учитель:"} объяснение и ${QN} вопросов по ${PER_Q} баллов. Набери ${PASS} баллов — и откроется следующая тема.</p>
+    <p class="muted">${S.name}, ${S.prog}. Пройдено тем: ${done} из ${S.topics.length}. ${window.SITE ? "В каждой теме" : "Урок по теме ведёт ИИ-учитель:"} объяснение и ${QN} вопросов по ${PER_Q} баллов. ${allOpen() ? "Все темы этого класса открыты — можно проходить в любом порядке." : `Набери ${PASS} баллов — и откроется следующая тема.`}</p>
+    <label class="check"><input type="checkbox" id="openall" ${allOpen() ? "checked" : ""}> Для родителей: открыть все темы и ступени ${store.grade} класса сразу</label>
     ${ai ? "" : `<p class="note miss">${sampleFn===undefined ? "Подключаю учителя…" : "Уроки по темам ведёт ИИ-учитель. Сейчас он недоступен: открой страницу в Claude под аккаунтом и разреши доступ."}</p>`}
     <ol class="tgrid">${S.topics.map((t,i)=>{ const p = pts(i), open = isOpen(i);
       return `<li><button class="tcard ${p>=PASS?"done":open?"open":"locked"} ${flipKey===tkey(S.id,i)?"flip":""}" data-t="${i}" ${open && ai ? "" : "disabled"}>
@@ -498,6 +500,7 @@ function renderTopics(){
   flipKey = "";
   app.querySelectorAll("[data-subj]").forEach(b => b.onclick = () => { store.subj = b.dataset.subj; save(); render(); });
   app.querySelectorAll("[data-t]").forEach(b => b.onclick = () => startTopic(S.id, +b.dataset.t));
+  $("#openall").onchange = e => { store.openAll = store.openAll || {}; store.openAll[store.grade] = e.target.checked; save(); render(); };
   app.querySelectorAll("[data-mp]").forEach(b => b.onclick = () => { store.mathProg = b.dataset.mp; store.subj = b.dataset.mp === "m" ? "mathm" : "math"; save(); render(); });
 }
 
@@ -1014,7 +1017,7 @@ function renderAbacus(){
     app.innerHTML = `<section class="sheet">
       <h1>Абакус: счёт в уме</h1>
       <p class="muted">Сначала учимся считать на счётах, потом переходим к примерам в уме. Следующая ступень открывается, когда наберёшь нужное число баллов. За каждый верный ответ — 1 балл.</p>
-      <ol class="schedule">${AB.map((a,i)=>{ const p = Math.min(st.pts[i]||0, a.need), open = i <= st.open;
+      <ol class="schedule">${AB.map((a,i)=>{ const p = Math.min(st.pts[i]||0, a.need), open = i <= st.open || allOpen();
         return `<li><button class="row" data-ab="${i}" ${open?"":"disabled"}>
           <span class="num">${i+1}</span><span class="glyph" aria-hidden="true" style="font-size:12px">${p>=a.need?"✓":open?"→":"×"}</span>
           <span><span class="title">${open ? a.name : "Закрыто"}</span><span class="subj">${open ? "" : "Сначала пройди ступень "+i}</span></span>
@@ -1501,7 +1504,8 @@ function rules(){
   return `Ты — ${TNAME}, добрая и терпеливая школьная учительница на детской обучающей платформе «Учись на пятёрки». О себе говори в женском роде. Твой ученик учится в ${store.grade} классе российской школы. ${subj ? "Сейчас предмет: "+subj.name+(subj.prog ? " ("+subj.prog+")" : "")+"." : "Предмет ученик выбирает сам."}
 Правила:
 - Отвечай по-русски (английские слова используй, когда учим английский).
-- Пиши коротко: не больше 6–8 предложений, простыми словами под возраст ученика. Объясняй на примерах из жизни.
+- Объясняй чётко и по порядку: сначала правило одной фразой, потом один пример из жизни, потом что нужно сделать ученику. Одно предложение — одна мысль. Не больше 6–8 коротких предложений, простыми словами под возраст.
+- Твой ответ читается вслух, поэтому пиши так, как говорят: числа и знаки называй словами там, где иначе непонятно на слух.
 - Не выдавай сразу готовый ответ на задачу ученика: подсказывай по шагам и дай решить самому. Если ученик прислал своё решение — проверь его и объясни ошибку.
 - В конце задай один короткий вопрос или задание для проверки понимания.
 - Говори тепло и ласково, как любимый учитель: обращайся на «ты», хвали за старание, не ругай за ошибки.
@@ -1617,7 +1621,16 @@ function chunks(text){
   if (cur) out.push(cur);
   return out.slice(0, 40);
 }
+function speechify(text){
+  return String(text)
+    .replace(/(\d)\s*[×xх*]\s*(?=\d)/g, "$1 умножить на ").replace(/(\d)\s*[÷:]\s*(?=\d)/g, "$1 разделить на ")
+    .replace(/(\d)\s*\+\s*(?=\d)/g, "$1 плюс ").replace(/(\d)\s*[−–-]\s*(?=\d)/g, "$1 минус ")
+    .replace(/\s*=\s*/g, " равно ").replace(/\s*>\s*/g, " больше ").replace(/\s*<\s*/g, " меньше ")
+    .replace(/[▲]/g, " треугольник ").replace(/[●]/g, " круг ").replace(/[■]/g, " квадрат ")
+    .replace(/(\d)\s*%/g, "$1 процентов").replace(/№\s*/g, "номер ").replace(/[«»*#_]/g, "").replace(/\s+—\s+/g, ", ").replace(/[ \t]{2,}/g, " ");
+}
 function speakText(text, lang){
+  if (lang === "ru" || !lang) text = speechify(text);
   const parts = chunks(text); if (!parts.length || !voiceMode) return Promise.resolve(false);
   let done; const finished = new Promise(r => { done = r; });
   if (voiceMode === "claude") {
