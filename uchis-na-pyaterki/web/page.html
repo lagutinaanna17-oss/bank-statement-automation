@@ -235,33 +235,9 @@ details .theory{margin-top:8px}
 .accform input[type=email],.accform input[type=password]{font:inherit;padding:10px 12px;border:2px solid var(--ink);border-radius:6px;background:var(--paper);color:var(--ink);min-height:48px}
 .sheet a{color:var(--blue)}
 
-/* гимнастика */
-.hand{width:110px;height:auto;flex:none}
-.hand{filter:drop-shadow(0 3px 3px rgba(40,20,10,.28))}
-.hand .hbody{transform-box:fill-box;transform-origin:center;transition:transform .35s ease}
-.hand .skin{fill:url(#skin-g);stroke:#c58d68;stroke-width:1.1;stroke-linejoin:round}
-.hand .mound{fill:#fbe0c8;opacity:.75}
-.hand .crease{fill:none;stroke:#c08660;stroke-width:1.05;stroke-linecap:round;transition:opacity .3s}
-.hand .nail{fill:#fbe6dc;stroke:#d3a188;stroke-width:.8}
-.hand .curl{transition:opacity .3s}
-.hand.left{transform:scaleX(-1)}
-.hand .fg{transform-box:fill-box;transform-origin:50% 100%;transition:transform .35s ease}
-.hand .th{transform-box:fill-box;transform-origin:100% 50%;transition:transform .35s ease}
-.hand .ringmark{fill:none;stroke:var(--pen);stroke-width:3;transition:transform .35s ease,opacity .2s}
-.player{border:3px solid var(--ink);border-radius:14px;overflow:hidden;background:var(--sheet);align-self:stretch;max-width:560px}
-.screen{position:relative;background:var(--board);min-height:250px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:16px 10px 12px}
-.screen .hand{width:min(130px,32vw)} .screen .hands{gap:20px}
-.subtitle{color:var(--chalk);font-weight:700;font-size:clamp(16px,4.4vw,22px);text-align:center;margin:0;max-width:none}
-.playbig{position:absolute;inset:0;margin:auto;width:84px;height:84px;border-radius:50%;border:0;background:var(--chalk);color:var(--board);font-size:34px;display:grid;place-items:center;padding-left:6px;box-shadow:0 4px 0 rgba(0,0,0,.25)}
 .pbar{height:8px;background:var(--line)} .pbar div{height:100%;background:var(--pen);transition:width .9s linear}
 .pctl{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 10px;font-variant-numeric:tabular-nums;font-weight:700}
 .pctl .btn{min-height:40px;padding:6px 14px;box-shadow:none}
-@media (prefers-reduced-motion:reduce){ .hand .hbody,.hand .fg,.hand .th,.hand .ringmark,.pbar div{transition:none} }
-.hands{display:flex;justify-content:center;gap:18px}
-.gymcap{font-weight:700;text-align:center;max-width:none}
-.gymsteps{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.gymfig{margin:0;font-size:13px} .gymfig .hand{width:58px} .gymfig .hands{gap:4px}
-.row .glyph .hand{width:40px}
 /* чтение */
 .readrow{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
 .hourglass{width:90px;height:auto;flex:none}
@@ -302,7 +278,7 @@ td .mark{font-size:32px}
       <button class="tab" id="tab-teacher" data-view="teacher">Учитель</button>
       <button class="tab" id="tab-topics" data-view="topics">Темы</button>
       <button class="tab" id="tab-read" data-view="read">Чтение</button>
-      <button class="tab" id="tab-gym" data-view="gym">Гимнастика</button>
+      <button class="tab" id="tab-schulte" data-view="schulte">Шульте</button>
       <button class="tab" id="tab-abacus" data-view="abacus">Абакус</button>
       <button class="tab" id="tab-logic" data-view="logic">Логика</button>
       <button class="tab" id="tab-trainer" data-view="trainer">Счёт</button>
@@ -327,8 +303,6 @@ td .mark{font-size:32px}
     </div>
   </div>
   <main id="app"></main>
-  <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
-    <linearGradient id="skin-g" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#f9d6b8"/><stop offset=".6" stop-color="#f0bf98"/><stop offset="1" stop-color="#e3a981"/></linearGradient></defs></svg>
   <div class="voicebar" id="voicebar" hidden><span>Читаю вслух…</span><button id="vstop">Остановить</button></div>
 </div>
 
@@ -475,7 +449,7 @@ function render(){
   else if (view==="topics") topic ? renderTopic() : renderTopics();
   else if (view==="logic") renderLogic();
   else if (view==="read") renderRead();
-  else if (view==="gym") renderGym();
+  else if (view==="schulte") { if (!rd || rd.id !== "schulte") rdOpen("schulte"); renderRead(); }
   else if (view==="abacus") renderAbacus();
   else if (view==="trainer") renderTrainer();
   else if (view==="account" && window.SITE) renderAccount();
@@ -546,7 +520,7 @@ function startTopic(subjId, i){
   const S = CURR[store.grade].find(s => s.id === subjId), mine = topic = {subj:subjId, i, phase:"load", qi:0, right:0, picked:null, order:null};
   if (topicCtl) topicCtl.abort();
   topicCtl = new AbortController();
-  if (store.grade <= 4) { mine.warm = rnd(0, GYM.length - 1); mine.warmDone = false; gymRun(mine.warm, () => { if (topic === mine && !mine.warmDone && view === "topics") render(); }); }
+  if (store.grade <= 4) { const n = store.grade <= 2 ? 3 : 4; mine.warm = {n, cells:shuffle(Array.from({length:n * n}, (_, k) => k + 1)), next:1, start:0, time:0}; mine.warmDone = false; }
   sayHello(S.topics[i]);
   render();
   sampleFn.json(lessonPrompt(S, S.topics[i]), {cache:false, signal:topicCtl.signal, meta:{grade:store.grade, subj:subjId, i}}).then(d => {
@@ -1179,143 +1153,27 @@ async function saveWorkbook(S, name, D){
 const wbBtn = () => `<button class="btn ghost" id="twb" type="button">Скачать рабочую тетрадь</button>`;
 const wbNote = () => topic.wbMsg ? `<p class="note">${topic.wbMsg}</p>` : "";
 
-/* ---------- пальчиковая гимнастика: видеоролики-анимации ---------- */
-const FINGER_X = [26, 38, 50, 62], FINGER_LEN = [36, 44, 40, 29], FINGER_SPREAD = [-7, -2, 3, 9];
-const HAND_POSES = {fist:[0,0,0,0,0], palm:[1,1,1,1,1], rabbit:[0,1,1,0,0], goat:[0,1,0,0,1], like:[2,0,0,0,0], pinky:[0,0,0,0,1]};
-function poseStyle(pose){   // как стоят пальцы в каждой позе; между позами они двигаются плавно
-  const ring = /^ring/.test(pose) ? +pose[4] : 0, edge = pose === "edge", f = ring || edge ? [1,1,1,1,1] : HAND_POSES[pose];
-  const up = [1,2,3,4].map(k => ring === k ? 0.6 : f[k] ? 1 : 0.27), open = up.every(v => v === 1);
-  return {
-    fingers: up.map((v, k) => `rotate(${open ? FINGER_SPREAD[k] : 0}deg) scaleY(${v})`),
-    nails: up.map(v => v < 0.5 ? 1 : 0),            // у согнутого пальца виден ноготь
-    lines: up.filter(v => v < 0.5).length >= 3 ? 0 : 1,   // в кулаке линий ладони не видно
-    thumb: ring ? `rotate(${48 + ring * 7}deg)` : edge ? "rotate(70deg)" : f[0] === 2 ? "rotate(88deg)" : f[0] ? "rotate(32deg)" : "translate(22px,18px) scaleX(.82)",
-    ring: ring ? `translateX(${(ring - 1) * 12}px)` : "", ringOn: ring ? 1 : 0, edge
-  };
-}
-function hand(pose, left){
-  const st = poseStyle(pose);
-  return `<svg class="hand${left ? " left" : ""}" viewBox="0 0 100 130" aria-hidden="true"><g class="hbody" style="transform:${st.edge ? "scaleX(.34)" : "none"}">
-    <path class="skin" d="M34 100Q33 116 30 130H70Q67 116 66 100Z"/>
-    ${FINGER_X.map((x, k) => { const top = 62 - FINGER_LEN[k], len = FINGER_LEN[k];
-      return `<g class="fg" style="transform:${st.fingers[k]}"><rect class="skin" x="${x}" y="${top}" width="11.5" height="${len + 8}" rx="5.7"/>
-        <path class="crease" d="M${x + 2.5} ${top + len * .38}h6.5M${x + 2.5} ${top + len * .72}h6.5"/>
-</g>`; }).join("")}
-    <path class="skin" d="M24 76Q24 58 39 58H63Q78 58 78 73V91Q78 107 62 107H40Q24 107 24 91Z"/>
-    <ellipse class="mound" cx="38" cy="89" rx="11" ry="14"/>
-    <path class="crease palmlines" style="opacity:${st.lines}" d="M33 71Q52 63 73 71M35 81Q51 75 67 83M47 101Q40 85 51 68"/>
-    ${FINGER_X.map((x, k) => `<g class="curl" style="opacity:${st.nails[k]}"><rect class="skin" x="${x}" y="${59 + (k === 3 ? 3 : k === 0 ? 1 : 0)}" width="11.5" height="23" rx="5.7"/>
-      <ellipse class="nail" cx="${x + 5.7}" cy="${75 + (k === 3 ? 3 : k === 0 ? 1 : 0)}" rx="3.6" ry="4.6"/></g>`).join("")}
-    <g class="th" style="transform:${st.thumb}"><rect class="skin" x="2" y="67" width="30" height="13.5" rx="6.7"/><path class="crease" d="M15 69.5v8.5"/></g>
-    <circle class="ringmark" cx="32" cy="38" r="8" style="transform:${st.ring || "none"};opacity:${st.ringOn}"/></g></svg>`;
-}
-function setHand(svg, pose){
-  const st = poseStyle(pose);
-  svg.querySelector(".hbody").style.transform = st.edge ? "scaleX(.34)" : "none";
-  svg.querySelectorAll(".fg").forEach((g, k) => { g.style.transform = st.fingers[k]; });
-  svg.querySelectorAll(".curl").forEach((g, k) => { g.style.opacity = st.nails[k]; });
-  svg.querySelector(".palmlines").style.opacity = st.lines;
-  svg.querySelector(".th").style.transform = st.thumb;
-  const ring = svg.querySelector(".ringmark"); if (st.ringOn) ring.style.transform = st.ring; ring.style.opacity = st.ringOn;
-}
-const GYM = [
-  {name:"Кулак — ребро — ладонь", tempo:1300, how:["Положи руку на стол. По очереди показывай три положения: кулак, ребро ладони, раскрытая ладонь.", "Сначала правой рукой, потом левой, потом двумя руками вместе. Старайся не сбиваться с порядка."],
-   steps:[{r:"fist", cap:"Кулак"}, {r:"edge", cap:"Ребро"}, {r:"palm", cap:"Ладонь"}]},
-  {name:"Колечки", tempo:1100, how:["Соединяй большой палец по очереди с указательным, средним, безымянным и мизинцем — получаются колечки.", "Дойди до мизинца и вернись обратно. Потом попробуй двумя руками сразу."],
-   steps:[{r:"ring1", cap:"Указательный"}, {r:"ring2", cap:"Средний"}, {r:"ring3", cap:"Безымянный"}, {r:"ring4", cap:"Мизинец"}, {r:"ring3", cap:"Безымянный"}, {r:"ring2", cap:"Средний"}]},
-  {name:"Кулак — ладонь", tempo:1400, how:["Левая рука сжата в кулак, правая раскрыта ладонью.", "Одновременно поменяй: левая — ладонь, правая — кулак. Меняй руки в ровном темпе."],
-   steps:[{l:"fist", r:"palm", cap:"Левая — кулак, правая — ладонь"}, {l:"palm", r:"fist", cap:"Левая — ладонь, правая — кулак"}]},
-  {name:"Зайчик — коза", tempo:1400, how:["Зайчик: подними указательный и средний пальцы, остальные прижми.", "Коза: подними указательный палец и мизинец. Меняй зайчика на козу обеими руками."],
-   steps:[{l:"rabbit", r:"rabbit", cap:"Зайчик"}, {l:"goat", r:"goat", cap:"Коза"}]},
-  {name:"Класс — мизинец", tempo:1600, how:["Левая рука показывает «класс» — большой палец вверх. Правая показывает мизинец.", "Одновременно поменяй руки местами: левая — мизинец, правая — «класс»."],
-   steps:[{l:"like", r:"pinky", cap:"Левая — класс, правая — мизинец"}, {l:"pinky", r:"like", cap:"Левая — мизинец, правая — класс"}]},
-  {name:"Фонарики", tempo:900, how:["Подними обе руки. Сожми пальцы в кулаки — фонарики погасли.", "Широко раскрой ладони — фонарики зажглись. Повторяй быстро и чётко."],
-   steps:[{l:"fist", r:"fist", cap:"Погасли"}, {l:"palm", r:"palm", cap:"Зажглись"}]},
-  {name:"Зайчик и колечко", tempo:1600, how:["Правая рука показывает зайчика, левая — колечко из большого и указательного пальцев.", "Одновременно поменяй: правая — колечко, левая — зайчик."],
-   steps:[{l:"ring1", r:"rabbit", cap:"Левая — колечко, правая — зайчик"}, {l:"rabbit", r:"ring1", cap:"Левая — зайчик, правая — колечко"}]}
-];
-let gym = null, gymTimer = null;
-const GYM_SECS = 30;
-const gymFrame = s => `<div class="hands">${s.l ? hand(s.l, true) : ""}${s.r ? hand(s.r, false) : ""}</div><p class="gymcap">${s.cap}</p>`;
-function gymStop(){ clearInterval(gymTimer); gymTimer = null; if (gym) gym.running = false; }
-function gymSync(){   // обновляет ролик на экране без перерисовки всей страницы
-  if (!gym) return;
-  const ex = GYM[gym.ex], s = ex.steps[gym.step % ex.steps.length], box = $("#gymhands"); if (!box) return;
-  const hands = box.querySelectorAll(".hand"); let n = 0;
-  if (s.l) setHand(hands[n++], s.l); if (s.r) setHand(hands[n++], s.r);
-  $("#gymcap").textContent = s.cap;
-  $("#gymbar").style.width = Math.min(100, gym.done / GYM_SECS * 100) + "%";
-  $("#gymtime").textContent = mmss(Math.min(GYM_SECS, gym.done)) + " / " + mmss(GYM_SECS);
-}
-function gymRun(exI, onEnd){
-  gymStop();
-  const ex = GYM[exI], t0 = Date.now();
-  gym = {ex:exI, step:0, done:0, running:true, finished:false};
-  gymTimer = setInterval(() => {
-    gym.step++; gym.done = (Date.now() - t0) / 1000;
-    if (gym.done >= GYM_SECS) { gym.done = GYM_SECS; gym.finished = true; gymSync(); gymStop(); if (onEnd) onEnd(); return; }
-    gymSync();
-  }, ex.tempo);
-}
-function playerHtml(exI){
-  const ex = GYM[exI], mine = gym && gym.ex === exI, run = mine && gym.running, s = ex.steps[(mine ? gym.step : 0) % ex.steps.length], done = mine ? gym.done : 0;
-  return `<div class="player">
-    <div class="screen"><div id="gymhands">${`<div class="hands">${s.l ? hand(s.l, true) : ""}${s.r ? hand(s.r, false) : ""}</div>`}</div>
-      <p class="subtitle" id="gymcap">${s.cap}</p>
-      ${run ? "" : `<button class="playbig" id="gplay" aria-label="Смотреть ролик"><span aria-hidden="true">▶</span></button>`}</div>
-    <div class="pbar"><div id="gymbar" style="width:${done / GYM_SECS * 100}%"></div></div>
-    <div class="pctl"><button class="btn ghost" id="${run ? "gstop" : "gplay2"}">${run ? "❚❚ Стоп" : "▶ Смотреть"}</button><span id="gymtime">${mmss(done)} / ${mmss(GYM_SECS)}</span></div>
-  </div>`;
-}
-function bindPlayer(exI, onEnd, speak){
-  const start = () => { gymRun(exI, onEnd); if (speak && voiceMode && store.autoSpeak !== false) speakText(speak, "ru"); render(); };
-  ["#gplay", "#gplay2"].forEach(q => { const b = $(q); if (b) b.onclick = start; });
-  const st = $("#gstop"); if (st) st.onclick = () => { gymStop(); if (speaking) stopVoice(); render(); };
-}
-let gymOpen = null;
-function renderGym(){
-  if (gymOpen === null) {
-    app.innerHTML = `<section class="sheet">
-      <h1>Нейрогимнастика для пальчиков</h1>
-      ${teacherSays("Привет, дорогой мой ученик! Выбери ролик, смотри на руки и повторяй движения вместе со мной.")}
-      <p class="muted">Семь коротких роликов-анимаций по 30 секунд. Для 1–4 классов один такой ролик идёт перед каждым уроком.</p>
-      <ol class="schedule">${GYM.map((g, i) => `<li><button class="row" data-gym="${i}">
-        <span class="num">${i + 1}</span><span class="glyph" aria-hidden="true">${hand(g.steps[0].r || g.steps[0].l, false)}</span>
-        <span><span class="title">${g.name}</span><span class="subj">${g.steps.length} движения по кругу</span></span><span class="count">▶ 0:30</span></button></li>`).join("")}</ol>
-    </section>`;
-    app.querySelectorAll("[data-gym]").forEach(b => b.onclick = () => { gymOpen = +b.dataset.gym; gym = null; render(); });
-    return;
-  }
-  const ex = GYM[gymOpen], fin = gym && gym.ex === gymOpen && gym.finished;
-  app.innerHTML = `<section class="sheet">
-    <span class="step">Гимнастика · ролик ${gymOpen + 1} из ${GYM.length}</span>
-    <h1>${ex.name}</h1>
-    ${playerHtml(gymOpen)}
-    ${fin ? teacherSays("Молодец! Разминка выполнена. Пока, дорогой мой ученик!") : ""}
-    <div class="theory">${ex.how.map(h => `<p>${h}</p>`).join("")}</div>
-    <p class="pictitle">Все движения по порядку</p>
-    <div class="gymsteps">${ex.steps.map(s => `<figure class="gymfig">${gymFrame(s)}</figure>`).join(`<span class="arrow" aria-hidden="true">→</span>`)}</div>
-    <div class="actions">${gymOpen + 1 < GYM.length ? `<button class="btn ghost" id="gnext">Следующий ролик</button>` : ""}<button class="btn ghost" id="gback">К списку</button></div>
-  </section>`;
-  bindPlayer(gymOpen, () => { if (view === "gym") { if (voiceMode && store.autoSpeak !== false) speakText("Молодец! Разминка выполнена.", "ru"); render(); } }, ex.name + ". " + ex.how.join(" "));
-  const gn = $("#gnext"); if (gn) gn.onclick = () => { gymStop(); gym = null; gymOpen++; render(); };
-  $("#gback").onclick = () => { gymStop(); gym = null; gymOpen = null; render(); };
-}
-/* разминка перед уроком в 1–4 классах: идёт, пока урок готовится */
+/* ---------- разминка перед уроком в 1–4 классах: таблица Шульте, пока урок готовится ---------- */
 function renderWarm(S, name){
-  const ex = GYM[topic.warm], ready = topic.phase !== "load", run = gym && gym.running;
+  const w = topic.warm, ready = topic.phase !== "load", done = w.next > w.n * w.n;
   app.innerHTML = `<section class="sheet">
     <span class="step">${S.name} · тема ${topic.i + 1} · разминка</span>
-    <h1>Разминка: ${ex.name}</h1>
-    ${teacherSays(`${GREET} Сегодня у нас тема «${esc(name)}». Сначала разомнём пальчики: смотри ролик и повторяй.`)}
-    ${playerHtml(topic.warm)}
-    <p>${ex.how[0]}</p>
+    <h1>Разминка: таблица Шульте</h1>
+    ${teacherSays(`${GREET} Сегодня у нас тема «${esc(name)}». Сначала разбудим внимание: смотри в центр таблицы и нажимай числа по порядку, от 1 до ${w.n * w.n}.`)}
+    <p class="task">${done ? "Готово за " + w.time.toFixed(1) + " с" : "Найди: " + w.next}</p>
+    <div class="schulte" style="grid-template-columns:repeat(${w.n},1fr)">${w.cells.map(v => `<button class="scell ${v < w.next ? "found" : ""}" data-v="${v}" ${done ? "disabled" : ""}>${v}</button>`).join("")}</div>
+    ${done ? `<p class="note">Молодец! Внимание включено, можно начинать урок.</p>` : ""}
     <p class="muted">${ready ? "Урок готов." : "Урок готовится, а мы пока разминаемся."}</p>
-    <div class="actions"><button class="btn" id="wgo">${run ? "Пропустить разминку" : "Начать урок"}</button><button class="btn ghost" id="tback">К списку тем</button></div>
+    <div class="actions"><button class="btn" id="wgo">${done ? "Начать урок" : "Пропустить разминку"}</button><button class="btn ghost" id="tback">К списку тем</button></div>
   </section>`;
-  bindPlayer(topic.warm, () => { if (topic && !topic.warmDone && view === "topics") render(); });
-  $("#wgo").onclick = () => { gymStop(); topic.warmDone = true; render(); };
-  $("#tback").onclick = () => { gymStop(); if (topicCtl) topicCtl.abort(); topic = null; render(); };
+  app.querySelectorAll("[data-v]").forEach(b => b.onclick = () => {
+    if (+b.dataset.v !== w.next) { b.classList.add("miss"); setTimeout(() => b.classList.remove("miss"), 300); return; }
+    if (!w.start) w.start = Date.now();
+    w.next++;
+    if (w.next > w.n * w.n) w.time = (Date.now() - w.start) / 1000;
+    render(); });
+  $("#wgo").onclick = () => { topic.warmDone = true; render(); };
+  $("#tback").onclick = () => { if (topicCtl) topicCtl.abort(); topic = null; render(); };
 }
 
 /* ---------- чтение и внимание ---------- */
@@ -1330,7 +1188,6 @@ c:[{t:"Зачем мозгу сон", x:"Долгое время сон счит
 const READ_ITEMS = [
   {id:"speed", glyph:"⌛", name:"Скорочтение", desc:"Читай, пока сыплется песок, и узнай свою скорость"},
   {id:"flip", glyph:"ɐq", name:"Перевёрнутый текст", desc:"Прочитай текст вверх ногами или в зеркале"},
-  {id:"schulte", glyph:"1→25", name:"Таблица Шульте", desc:"Найди все числа по порядку как можно быстрее"},
   {id:"maze", glyph:"▚", name:"Лабиринт", desc:"Проведи шарик к звезде"}
 ];
 let rd = null, rdTimer = null;   // rd — открытое упражнение раздела «Чтение»
@@ -1404,8 +1261,8 @@ function renderRead(){
     app.querySelectorAll("[data-rd]").forEach(b => b.onclick = () => { rdOpen(b.dataset.rd); render(); });
     return;
   }
-  const item = READ_ITEMS.find(x => x.id === rd.id), head = `<span class="step">Чтение · ${item.name}</span>`;
-  const backBtn = `<button class="btn ghost" id="rback">К списку упражнений</button>`;
+  const solo = view === "schulte", item = READ_ITEMS.find(x => x.id === rd.id), head = solo ? "" : `<span class="step">Чтение · ${item.name}</span>`;
+  const backBtn = solo ? "" : `<button class="btn ghost" id="rback">К списку упражнений</button>`;
   let body = "";
   if (rd.id === "speed") {
     const T = TEXTS[lv][rd.ti], words = wordsOf(T.x);
@@ -1449,7 +1306,7 @@ function renderRead(){
       body = `<p class="task">${done ? "Готово за " + rd.time.toFixed(1) + " с" : `Найди: ${rd.next} · <span id="stime">${((Date.now() - rd.start) / 1000).toFixed(1)}</span> с`}</p>
         <div class="schulte" style="grid-template-columns:repeat(${rd.n},1fr)">${rd.cells.map(v => `<button class="scell ${v < rd.next ? "found" : ""}" data-v="${v}" ${done ? "disabled" : ""}>${v}</button>`).join("")}</div>
         ${done ? `<p class="note">${rd.record ? "Новый рекорд!" : "Лучшее время: " + best.toFixed(1) + " с."} Ошибочных нажатий: ${rd.wrong}.</p>` : ""}
-        <div class="actions">${done ? `<button class="btn" id="sgo">Ещё раз</button>` : ""}${backBtn}</div>`;
+        <div class="actions">${done ? `<button class="btn" id="sgo">Ещё раз</button>` : ""}${solo ? `<button class="btn ghost" id="ssetup">Выбрать размер</button>` : ""}${backBtn}</div>`;
     }
   } else {
     const n = rd.n, C = 20, walls = [];
@@ -1465,7 +1322,7 @@ function renderRead(){
       <div class="actions"><button class="btn ${rd.done ? "" : "ghost"}" id="mnew">Новый лабиринт</button>${backBtn}</div>`;
   }
   app.innerHTML = `<section class="sheet">${head}${body}</section>`;
-  $("#rback").onclick = () => { rdStop(); rd = null; render(); };
+  const rb = $("#rback"); if (rb) rb.onclick = () => { rdStop(); rd = null; render(); };
 
   if (rd.id === "speed") {
     const T = TEXTS[lv][rd.ti], total = wordsOf(T.x).length;
@@ -1487,6 +1344,7 @@ function renderRead(){
     $("#fshow").onclick = () => { rd.show = !rd.show; render(); };
   } else if (rd.id === "schulte") {
     app.querySelectorAll("[data-n]").forEach(b => b.onclick = () => { rd.n = +b.dataset.n; render(); });
+    const ss = $("#ssetup"); if (ss) ss.onclick = () => { rdStop(); rd = {id:"schulte", n:rd.n, phase:"setup"}; render(); };
     const go = $("#sgo"); if (go) go.onclick = () => { rdStop(); rd = {id:"schulte", n:rd.n, phase:"run", cells:shuffle(Array.from({length:rd.n * rd.n}, (_, i) => i + 1)), next:1, wrong:0, start:Date.now()}; render();
       rdTimer = setInterval(() => { const t = $("#stime"); if (t && rd && rd.phase === "run") t.textContent = ((Date.now() - rd.start) / 1000).toFixed(1); }, 100); };
     app.querySelectorAll("[data-v]").forEach(b => b.onclick = () => {
@@ -1764,10 +1622,10 @@ if (window.SITE) {
 }
 
 /* ---------- навигация ---------- */
-function leave(){ webStop(); if (topicCtl) topicCtl.abort(); clearTimeout(abTimer); gymStop(); rdStop(); topic = null; drill = null; logic = null; ab = null; rd = null; gym = null; gymOpen = null; }
+function leave(){ webStop(); if (topicCtl) topicCtl.abort(); clearTimeout(abTimer); rdStop(); topic = null; drill = null; logic = null; ab = null; rd = null; }
 document.querySelectorAll(".tab").forEach(t => t.onclick = () => { if (view===t.dataset.view) leave(); if (view==="abacus" && t.dataset.view!=="abacus") { clearTimeout(abTimer); ab = null; }
-  if (view==="read" && t.dataset.view!=="read") { rdStop(); rd = null; }
-  if (view!==t.dataset.view) { gymStop(); if (view==="topics") webStop(); if (view==="gym") gym = null; }
+  if ((view==="read" || view==="schulte") && t.dataset.view!==view) { rdStop(); rd = null; }
+  if (view!==t.dataset.view && view==="topics") webStop();
   view = t.dataset.view; confirmReset = false; render(); });
 document.querySelectorAll(".lvl").forEach(b => b.onclick = () => { store.grade = +b.dataset.grade; save(); leave(); teacherSubj = ""; render(); });
 render();
