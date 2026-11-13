@@ -17,9 +17,10 @@ def lesson_prompt(grade: int, subject: dict, topic: str) -> str:
 - Вопрос должен быть понятен без картинок и без учебника. Не ссылайся на страницы и номера заданий, не выдумывай цитаты из произведений.
 - В "why" коротко объясни, почему верный ответ верен.
 - Ещё 3 письменных задания для рабочей тетради ("workbook"): то, что ученик выполняет ручкой на бумаге (решить, вписать, составить, записать). Без вариантов ответа и без картинок.
+- Вебинар ("webinar"): 5–6 слайдов, которые по порядку раскрывают всю тему. У каждого слайда "title" — короткий заголовок, "points" — 2–3 коротких пункта для экрана, "say" — что учительница рассказывает вслух: 3–5 предложений живым разговорным языком, от первого лица в женском роде, с примером. Без приветствия и прощания — их добавит платформа.
 - Обычный текст без разметки.
 Ответь только JSON такого вида:
-{{"explain":["абзац","абзац","абзац"],"questions":[{{"q":"вопрос","options":["а","б","в","г"],"correct":0,"why":"объяснение"}}],"workbook":["задание","задание","задание"]}}"""
+{{"explain":["абзац","абзац","абзац"],"questions":[{{"q":"вопрос","options":["а","б","в","г"],"correct":0,"why":"объяснение"}}],"workbook":["задание","задание","задание"],"webinar":[{{"title":"заголовок","points":["пункт","пункт"],"say":"рассказ учительницы"}}]}}"""
 
 
 def parse_json(text: str):
@@ -57,4 +58,9 @@ def valid_lesson(data):
         return None
     raw = data.get("workbook")
     workbook = [x.strip() for x in raw if isinstance(x, str) and x.strip()][:5] if isinstance(raw, list) else []
-    return {"explain": explain, "questions": questions[:LESSON_QN], "workbook": workbook}
+    webinar = []
+    for w in data.get("webinar") if isinstance(data.get("webinar"), list) else []:
+        if isinstance(w, dict) and isinstance(w.get("say"), str) and w["say"].strip():
+            points = [x for x in w["points"] if isinstance(x, str)][:4] if isinstance(w.get("points"), list) else []
+            webinar.append({"title": w["title"] if isinstance(w.get("title"), str) else "", "points": points, "say": w["say"].strip()})
+    return {"explain": explain, "questions": questions[:LESSON_QN], "workbook": workbook, "webinar": webinar[:8]}
